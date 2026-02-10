@@ -10,15 +10,15 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.TaskOverviewControler">
+<AnchorPane prefHeight="700.0" prefWidth="1081.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.TaskOverviewControler">
    <children>
       <MenuBar layoutX="4.0" layoutY="2.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="800.0" styleClass="menuConteiner" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -34,9 +34,9 @@
           </Menu>
         </menus>
       </MenuBar>
-      <ToolBar layoutY="25.0" prefHeight="80.0" prefWidth="980.0" styleClass="toolBox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
-         <items>
-            <VBox alignment="TOP_RIGHT" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="87.0">
+      <BorderPane layoutY="30.0" prefHeight="77.0" prefWidth="1000.0" styleClass="toolBox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+         <left>
+            <VBox minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="72.0" BorderPane.alignment="CENTER">
                <children>
                   <HBox nodeOrientation="LEFT_TO_RIGHT" prefHeight="31.0" prefWidth="258.0">
                      <children>
@@ -67,7 +67,7 @@
                         <TextField prefHeight="25.0" prefWidth="200.0" promptText="C:\desktop\Dokumenty" styleClass="folderPathImput" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
-                  <HBox alignment="TOP_RIGHT" prefHeight="49.0" prefWidth="254.0">
+                  <HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="254.0">
                      <children>
                         <VBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="194.0" HBox.hgrow="ALWAYS">
                            <children>
@@ -82,7 +82,7 @@
                                  <children>
                                     <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="18.0" styleClass="lightMidText" text="GB" />
                                     <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="28.0" styleClass="lightMidText" text="0000" />
-                                    <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="55.0" styleClass="lightMidText" text="Volných:  " textAlignment="RIGHT" />
+                                    <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="51.0" styleClass="lightMidText" text="Volných: " />
                                     <Region prefHeight="21.0" prefWidth="51.0" HBox.hgrow="ALWAYS" />
                                     <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="18.0" styleClass="lightMidText" text="GB" />
                                     <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="28.0" styleClass="lightMidText" text="0000" />
@@ -101,8 +101,13 @@
                      </children>
                   </HBox>
                </children>
+               <BorderPane.margin>
+                  <Insets left="5.0" top="5.0" />
+               </BorderPane.margin>
             </VBox>
-            <HBox minWidth="-Infinity" prefHeight="115.0">
+         </left>
+         <center>
+            <HBox alignment="CENTER" minWidth="-Infinity" prefHeight="125.0" prefWidth="402.0" BorderPane.alignment="CENTER">
                <children>
                   <VBox prefHeight="115.0" prefWidth="47.0">
                      <children>
@@ -273,7 +278,9 @@
                   </VBox>
                </children>
             </HBox>
-            <VBox minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="72.0">
+         </center>
+         <right>
+            <VBox alignment="TOP_RIGHT" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="87.0" BorderPane.alignment="CENTER">
                <children>
                   <HBox nodeOrientation="LEFT_TO_RIGHT" prefHeight="31.0" prefWidth="258.0">
                      <children>
@@ -304,7 +311,7 @@
                         <TextField prefHeight="25.0" prefWidth="200.0" promptText="C:\desktop\Dokumenty" styleClass="folderPathImput" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
-                  <HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="254.0">
+                  <HBox alignment="TOP_RIGHT" prefHeight="49.0" prefWidth="254.0">
                      <children>
                         <VBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="194.0" HBox.hgrow="ALWAYS">
                            <children>
@@ -319,7 +326,7 @@
                                  <children>
                                     <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="18.0" styleClass="lightMidText" text="GB" />
                                     <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="28.0" styleClass="lightMidText" text="0000" />
-                                    <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="51.0" styleClass="lightMidText" text="Volných: " />
+                                    <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="55.0" styleClass="lightMidText" text="Volných:  " textAlignment="RIGHT" />
                                     <Region prefHeight="21.0" prefWidth="51.0" HBox.hgrow="ALWAYS" />
                                     <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="18.0" styleClass="lightMidText" text="GB" />
                                     <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="28.0" styleClass="lightMidText" text="0000" />
@@ -338,9 +345,13 @@
                      </children>
                   </HBox>
                </children>
+               <BorderPane.margin>
+                  <Insets right="5.0" top="5.0" />
+               </BorderPane.margin>
             </VBox>
-         </items>
-      </ToolBar>
+         </right>
+      </BorderPane>
+      <BorderPane layoutY="155.0" prefHeight="543.0" prefWidth="1081.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="155.0" />
    </children>
    <stylesheets>
       <URL value="@../css/taskOverviewStyl.css" />
