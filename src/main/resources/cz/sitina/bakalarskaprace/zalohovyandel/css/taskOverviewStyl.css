@@ -1,0 +1,96 @@
+@import "variables.css";
+
+
+
+/*  ===========================================
+            ToolBar
+    =========================================== */
+.toolBox {
+    -fx-background-color: -fx-color-darkBackground;
+}
+
+/*------------------------------------
+          leví panel        */
+.findFolderPatchBtn {
+    -fx-background-color: -fx-color-primary1;
+    -fx-border-color: -fx-color-mark5;
+    -fx-border-style: solid;
+    -fx-border-width: 1;
+}
+
+.folderPathImput {
+    -fx-background-color: -fx-color-primary2;
+    -fx-prompt-text-fill: -fx-color-lightBackground;
+    -fx-text-fill: -fx-color-textLight;
+}
+
+.lightMidText {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-color-textLight;
+}
+
+.FolderFreeSpaceIndicator {
+    -fx-background-color: -fx-color-primary2;
+    -fx-background-radius: 15;
+}
+/* 2. TRACK = Černé pozadí (kolejnice) */
+.FolderFreeSpaceIndicator .track {
+    -fx-background-color: -fx-color-primary2;
+    -fx-background-radius: 15;
+    -fx-background-insets: 0;
+}
+/* 3. BAR = Žlutý postup (výplň) */
+.FolderFreeSpaceIndicator .bar {
+    -fx-background-color: -fx-color-primary1;
+    -fx-background-radius: 15;
+    -fx-background-insets: 0;
+}
+
+
+/*------------------------------------
+          Prostřední panel        */
+
+.toolBarButton {
+    -fx-background-color: -fx-color-primary2;
+    -fx-background-radius: 17px;
+
+    /* Tady je to kouzlo: */
+    /* 1. Rámeček necháme na okraji (0) */
+    -fx-border-insets: 0;
+
+    /* 2. Pozadí posuneme dovnitř o tloušťku rámečku (3px) */
+    -fx-background-insets: 1;
+
+    -fx-border-color: -fx-color-mark5;
+    -fx-border-style: solid;
+    -fx-border-width: 4;
+    -fx-border-radius: 17px;
+}
+
+.toolBarButtonLite {
+    -fx-background-color: -fx-color-darkBackground;
+}
+
+.modificator_compareButton {
+    -fx-border-color: -fx-color-mark3;
+}
+.modificator_blockedListButton {
+    -fx-border-color: -fx-color-mark5;
+}
+
+.modificator_snychronizationButton {
+    -fx-border-color: -fx-color-mark2;
+}
+.modificator_jurnalButton {
+    -fx-border-color: -fx-color-mark6;
+}
+.modificator_autobackupButton {
+    -fx-border-color: -fx-color-mark1;
+}
+
+.CenterPanel {
+    -fx-border-style: solid;
+    -fx-border-color: -fx-color-primary2;
+    -fx-border-width: 0 7 0 7;
+    -fx-padding: 10 0 10 0;
+}

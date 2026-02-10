@@ -6,15 +6,21 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        var resource = getClass().getResource("/cz/sitina/bakalarskaprace/zalohovyandel/fxml/taskOverviewView.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader(resource);
 
-        Scene scene = new Scene(fxmlLoader.load(), 800, 580);
+        String resourcesPath = "/cz/sitina/bakalarskaprace/zalohovyandel/";
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass()
+                .getResource( resourcesPath+"fxml/taskOverviewView.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
+        scene.getStylesheets().add(Objects.requireNonNull(
+                getClass().getResource(resourcesPath+"css/taskOverviewStyl.css")
+                ).toExternalForm());
 
         stage.setTitle("Zálohový Anděl");
         stage.setScene(scene);
