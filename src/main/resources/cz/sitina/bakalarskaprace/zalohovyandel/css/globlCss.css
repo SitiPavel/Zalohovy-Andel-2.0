@@ -37,7 +37,6 @@
 
 
 
-
 /*  ===========================================
             ToolBar
     =========================================== */
@@ -75,4 +74,21 @@
 }
 .modificator_autobackupButton {
     -fx-border-color: -fx-color-mark1;
+}
+.modificator-offButton {
+    -fx-border-color: -fx-color-darkBackground;
+}
+
+
+
+/*  ===========================================
+            Hlavní obsah
+    =========================================== */
+.mainConteinerStyle {
+    -fx-background-color: -fx-color-lightBackground;
+}
+
+
+.bottomBar {
+    -fx-background-color: -fx-color-primary2;
 }

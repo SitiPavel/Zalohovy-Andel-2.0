@@ -50,4 +50,13 @@
     -fx-border-color: -fx-color-primary2;
     -fx-border-width: 0 7 0 7;
     -fx-padding: 10 0 10 0;
+    -fx-background-color: -fx-color-darkBackground;
+}
+
+
+/*  ===========================================
+            Blavní obsah
+    =========================================== */
+.bottomBarButton {
+    -fx-background-color: rgba(255, 255, 255, 0);
 }
