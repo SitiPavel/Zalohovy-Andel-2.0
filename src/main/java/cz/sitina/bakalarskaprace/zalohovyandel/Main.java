@@ -15,11 +15,11 @@ public class Main extends Application {
 
         String resourcesPath = "/cz/sitina/bakalarskaprace/zalohovyandel/";
         FXMLLoader fxmlLoader = new FXMLLoader(getClass()
-                .getResource( resourcesPath+"fxml/taskOverviewView.fxml"));
+                .getResource( resourcesPath+"fxml/compareOverviewView.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
         scene.getStylesheets().add(Objects.requireNonNull(
-                getClass().getResource(resourcesPath+"css/taskOverviewStyl.css")
+                getClass().getResource(resourcesPath+"css/compareOverviewStyl.css")
                 ).toExternalForm());
 
         stage.setTitle("Zálohový Anděl");

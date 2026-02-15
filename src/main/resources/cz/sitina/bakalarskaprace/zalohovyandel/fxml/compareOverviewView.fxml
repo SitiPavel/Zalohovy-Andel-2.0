@@ -10,6 +10,8 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -20,7 +22,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="500.0" minWidth="840.0" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.TaskOverviewControler">
+<AnchorPane minHeight="500.0" minWidth="840.0" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.CompareOverviewController">
    <children>
       <MenuBar layoutX="4.0" layoutY="2.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="800.0" styleClass="menuConteiner" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -367,9 +369,7 @@
           <RowConstraints maxHeight="-Infinity" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <HBox alignment="CENTER" prefHeight="240.0" prefWidth="70.0" styleClass="bottomBar" GridPane.hgrow="NEVER" GridPane.vgrow="ALWAYS" />
             <HBox alignment="CENTER" prefHeight="240.0" prefWidth="70.0" styleClass="bottomBar" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" />
-            <HBox alignment="CENTER" prefHeight="240.0" prefWidth="70.0" styleClass="bottomBar" GridPane.columnIndex="2" GridPane.hgrow="NEVER" GridPane.vgrow="ALWAYS" />
             <VBox prefHeight="200.0" prefWidth="100.0" styleClass="CenterPanel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <HBox alignment="CENTER" prefHeight="240.0" prefWidth="70.0" styleClass="bottomBar" GridPane.columnSpan="3" GridPane.rowIndex="2">
                <children>
@@ -511,11 +511,31 @@
                   <Insets bottom="5.0" left="3.0" right="5.0" top="5.0" />
                </padding>
             </HBox>
+            <TreeTableView fx:id="leftTreeTable" prefHeight="200.0" prefWidth="200.0" styleClass="fileItemTable" GridPane.rowSpan="2">
+              <columns>
+                <TreeTableColumn fx:id="leftColName" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
+                <TreeTableColumn fx:id="leftColSize" maxWidth="80.0" minWidth="80.0" text="Velikost" />
+                  <TreeTableColumn fx:id="leftColDate" maxWidth="80.0" minWidth="80.0" text="Datum" />
+              </columns>
+               <columnResizePolicy>
+                  <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TreeTableView>
+            <TreeTableView id="rightTreeTable" prefHeight="200.0" prefWidth="200.0" styleClass="fileItemTable" GridPane.columnIndex="2" GridPane.rowSpan="2">
+               <columns>
+                  <TreeTableColumn id="rightColName" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
+                  <TreeTableColumn id="rightColSize" maxWidth="80.0" minWidth="80.0" text="Velikost" />
+                  <TreeTableColumn id="rightColDate" maxWidth="80.0" minWidth="80.0" text="Datum" />
+               </columns>
+               <columnResizePolicy>
+                  <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TreeTableView>
          </children>
       </GridPane>
    </children>
    <stylesheets>
-      <URL value="@../css/taskOverviewStyl.css" />
+      <URL value="@../css/compareOverviewStyl.css" />
       <URL value="@../css/globlCss.css" />
    </stylesheets>
 </AnchorPane>

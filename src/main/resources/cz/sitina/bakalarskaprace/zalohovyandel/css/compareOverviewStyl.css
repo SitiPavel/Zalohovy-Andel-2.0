@@ -55,8 +55,49 @@
 
 
 /*  ===========================================
-            Blavní obsah
+            Hlavní obsah
     =========================================== */
 .bottomBarButton {
     -fx-background-color: rgba(255, 255, 255, 0);
+}
+
+/*----tabulka----*/
+.fileItemTable {}
+
+.fileItemTable.tree-table-view { /*celá tabulka*/
+    -fx-background-color: -fx-color-lightBackground;
+    -fx-padding: 0;
+}
+.tree-table-view .placeholder .label { /*Pokud tabulka neobsahuje data*/
+    -fx-text-fill: -fx-color-textDark;
+
+}
+.fileItemTable .column-header-background { /*Hlavička = panel za tlačítkama*/
+    -fx-background-color: -fx-color-primary2;
+    -fx-max-height: 30;
+    -fx-min-height: 30;
+    -fx-pref-height: 30;
+}
+.fileItemTable .column-header {  /*Hlavička = conteinery buněk vzáhlaví */
+    -fx-background-color: -fx-color-primary2;
+}
+.fileItemTable .column-header .label{  /*Hlavička = text v záhlaví buněk*/
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-color-textLight;
+    -fx-border-width: 0 2 0 0;
+    -fx-border-style: solid;
+    -fx-border-color: -fx-color-primary1;
+}
+
+.fileItemTable .filler { /*prázdné místo pokud buňky nevyplní celý řádek */
+    -fx-background-color: -fx-color-primary2;
+}
+
+.fileItemTable .tree-table-row-cell { /*Celý řádek položky*/
+    -fx-background-color: -fx-color-lightBackground;
+    -fx-text-fill: -fx-color-textDark;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: solid;
+    -fx-border-color: -fx-color-textDark;
+
 }
