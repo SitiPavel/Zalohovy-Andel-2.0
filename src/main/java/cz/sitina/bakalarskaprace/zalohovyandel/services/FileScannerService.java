@@ -17,7 +17,7 @@ public class FileScannerService {
         HashMap<String, FileItemModel> filesMap = new HashMap<>();
         Path rootPath = Path.of(rootDirectory);
 
-        if (!Files.exists(rootPath) || !Files.isDirectory(rootPath)) {
+        if (!isRightFolderPath(rootPath)) {
             return filesMap;
         }
 
@@ -45,8 +45,17 @@ public class FileScannerService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
+
+    /// kontroluje zda cesta existuje a jestli je to složka
+    public Boolean isRightFolderPath(Path path) {
+        if (!Files.exists(path) || !Files.isDirectory(path)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 
 
 }
