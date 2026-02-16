@@ -3,6 +3,7 @@
     -fx-color-primary2: #252422;  /*vstupy, ohraničení a detaily*/
     -fx-color-lightBackground: #CCC5B9;       /* světlé pozadí */
     -fx-color-darkBackground: #403D39;       /* tmavé pozadí */
+    -fx-color-Transparent: rgba(255, 0, 249, 0);
 
     -fx-color-mark1: #56E73F;                      /* barva značek */
     -fx-color-mark1-05: rgba(86, 231, 63, 0.5);    /* barva pozadí položky */

@@ -511,25 +511,22 @@
                   <Insets bottom="5.0" left="3.0" right="5.0" top="5.0" />
                </padding>
             </HBox>
-            <TreeTableView fx:id="leftTreeTable" prefHeight="200.0" prefWidth="200.0" styleClass="fileItemTable" GridPane.rowSpan="2">
+            <TreeTableView fx:id="filesTreeTable" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0" styleClass="fileItemTable" GridPane.columnSpan="3" GridPane.rowSpan="2">
               <columns>
                 <TreeTableColumn fx:id="leftColName" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
                 <TreeTableColumn fx:id="leftColSize" maxWidth="80.0" minWidth="80.0" text="Velikost" />
-                  <TreeTableColumn fx:id="leftColDate" maxWidth="80.0" minWidth="80.0" text="Datum" />
+                  <TreeTableColumn fx:id="leftColLastModifi" maxWidth="80.0" minWidth="80.0" text="Úprava" />
+                  <TreeTableColumn fx:id="operationCol" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Operace" />
+                  <TreeTableColumn fx:id="rightColName" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
+                  <TreeTableColumn fx:id="rightColSize" maxWidth="80.0" minWidth="80.0" text="Velikost" />
+                  <TreeTableColumn fx:id="rightColLastModifi" maxWidth="80.0" minWidth="80.0" text="Úprava" />
               </columns>
                <columnResizePolicy>
                   <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
-            </TreeTableView>
-            <TreeTableView id="rightTreeTable" prefHeight="200.0" prefWidth="200.0" styleClass="fileItemTable" GridPane.columnIndex="2" GridPane.rowSpan="2">
-               <columns>
-                  <TreeTableColumn id="rightColName" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
-                  <TreeTableColumn id="rightColSize" maxWidth="80.0" minWidth="80.0" text="Velikost" />
-                  <TreeTableColumn id="rightColDate" maxWidth="80.0" minWidth="80.0" text="Datum" />
-               </columns>
-               <columnResizePolicy>
-                  <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
             </TreeTableView>
          </children>
       </GridPane>
