@@ -41,7 +41,25 @@ public class FileItemModel {
         return new SimpleStringProperty(localDateTime.format(formatter));
     }
 
+    /**
+     * Velikost levého souboru jako formátovaný String
+     */
 
+    /**
+     * Datum levého souboru (NULL-SAFE)
+     */
+
+    /**
+     * Název pravého souboru (NULL-SAFE)
+     */
+
+    /**
+     * Velikost souboru jako formátovaný String
+     */
+
+
+
+    /// GETRY
     public String getFileName() {
         return fileName.get();
     }
@@ -65,14 +83,13 @@ public class FileItemModel {
     }
 
 
+    /// SETRY
     public void setFileName(String fileName) {
         this.fileName.set(fileName);
     }
-
     public void setFileAbsolutePath(Path fileAbsolutePath) {
         this.fileAbsolutePath = fileAbsolutePath;
     }
-
     public void setLastModified(long lastModified) {
         this.lastModified.set(lastModified);
     }

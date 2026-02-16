@@ -11,6 +11,7 @@ public enum CompareOperations {
     UPDATE_RIGHT,
     ADD_LEFT,
     ADD_RIGHT,
+    UNKNOW
 
 }
 
