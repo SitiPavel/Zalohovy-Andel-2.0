@@ -6,6 +6,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 
@@ -30,13 +31,15 @@ public class CompareOverviewController {
     private HashMap<String, FileItemModel> leftHashFileMap;
     /// =======^=======^=======^=======^=======
 
+    @FXML
+    private TreeTableColumn<FileItemModel, String> operationColumn;
 
     public CompareOverviewController(){}
 
     @FXML
     public void initialize() {
 
-
+        operationColumn = new TreeTableColumn<>();
 
 
         ///Definování obsahu sloupců ve filesTreeTable
@@ -71,23 +74,24 @@ public class CompareOverviewController {
 
 
         ///nastavení kořene celé struktury
-        TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>(new ComparedItemOperItemRowModel(
-                item1,
-                CompareOperations.ADD_LEFT,
-                item2));
+        TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
 
         root.setExpanded(true);
 
-
+        /*
         TreeItem<FileItemModel> treeBrancheData = new TreeItem<>(new FileItemModel(
                 "HlDokumenty", Paths.get("C:/user/pavel/dokumenty/HlDokumenty")));
 
 
         treeBrancheData.getChildren().add(new TreeItem<>());
         treeBrancheData.getChildren().add(new TreeItem<>());
+        */
 
+        root.getChildren().add(new TreeItem<>(new ComparedItemOperItemRowModel(
+                item1,
+                CompareOperations.ADD_LEFT,
+                item2)));
 
-        //root.getChildren().add(treeBrancheData);
 
         filesTreeTable.setRoot(root);
         filesTreeTable.setShowRoot(false);

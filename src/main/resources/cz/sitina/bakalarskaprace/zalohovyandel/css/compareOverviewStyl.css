@@ -99,5 +99,18 @@
     -fx-border-width: 0 0 1 0;
     -fx-border-style: solid;
     -fx-border-color: -fx-color-primary2;
-
 }
+
+
+
+#OperationColCompareOverview {
+    -fx-border-style: solid;
+    -fx-border-color: -fx-color-primary2;
+    -fx-border-width: 0 7 0 7;
+}
+
+
+
+
+
+
