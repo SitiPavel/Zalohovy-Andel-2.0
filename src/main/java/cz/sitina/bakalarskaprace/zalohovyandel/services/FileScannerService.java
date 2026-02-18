@@ -7,12 +7,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class FileScannerService {
 
 
-    public HashMap<String, FileItemModel> scanFolder(String rootDirectory) {
+    public Map<String, FileItemModel> scanFolder(String rootDirectory) {
 
         HashMap<String, FileItemModel> filesMap = new HashMap<>();
         Path rootPath = Path.of(rootDirectory);

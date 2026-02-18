@@ -3,6 +3,11 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.BiDirectionalStrategy;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.ComparationStrategy;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.MirroringStrategy;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.OneWayStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
@@ -11,7 +16,9 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class CompareOverviewController {
 
@@ -28,7 +35,11 @@ public class CompareOverviewController {
     /** daůší definované objekty*/
     /// ✪======V======V======V=======V========
     private final FileScannerService fileScannerService = new FileScannerService();
-    private HashMap<String, FileItemModel> leftHashFileMap;
+    private final ComparisonService comparisonService = new ComparisonService();
+    private final BiDirectionalStrategy biDirectionalStrategy = new BiDirectionalStrategy();
+    private final MirroringStrategy mirroringStrategy = new MirroringStrategy();
+    private final OneWayStrategy oneWayStrategy = new OneWayStrategy();
+    private List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
     /// =======^=======^=======^=======^=======
 
     @FXML
@@ -50,7 +61,6 @@ public class CompareOverviewController {
         leftColLastModifi.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getLeftItem().getFormatedDate());
 
-
         rightColName.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getRightItem().fileNameProperty());
         rightColSize.setCellValueFactory(cellData ->
@@ -58,34 +68,39 @@ public class CompareOverviewController {
         rightColLastModifi.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getRightItem().getFormatedDate());
 
-        /// ✪======V======V======V=======V========
-        FileItemModel item1  = new FileItemModel(
-                "bakalarka",
-                Paths.get("C:/user/pavel/dokumenty"),
-                552564885,
-                1522153);
 
-        FileItemModel item2 = new FileItemModel(
-                "Fotka testu",
-                Paths.get("C:/user/pavel/skola"),
-                455844455,
-                5265);
+
+        /// ✪======V======V======V=======V========
+        resultComparedList = comparisonService.compareFolders(
+                fileScannerService.scanFolder("D:\\testBakalarky\\Test01"),
+                fileScannerService.scanFolder("D:\\testBakalarky\\Test03"),
+                mirroringStrategy
+        );
         /// =======^=======^=======^=======^=======
+
+
+
+
+
+        /// ✪======V======V======V=======V========
+            FileItemModel item1 = new FileItemModel(
+                    "bakalarka",
+                    Paths.get("C:/user/pavel/dokumenty"),
+                    552564885,
+                    1522153);
+
+            FileItemModel item2 = new FileItemModel(
+                    "Fotka testu",
+                    Paths.get("C:/user/pavel/skola"),
+                    455844455,
+                    5265);
+        /// =======^=======^=======^=======^======= testovací blbosti
 
 
         ///nastavení kořene celé struktury
         TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
 
         root.setExpanded(true);
-
-        /*
-        TreeItem<FileItemModel> treeBrancheData = new TreeItem<>(new FileItemModel(
-                "HlDokumenty", Paths.get("C:/user/pavel/dokumenty/HlDokumenty")));
-
-
-        treeBrancheData.getChildren().add(new TreeItem<>());
-        treeBrancheData.getChildren().add(new TreeItem<>());
-        */
 
         root.getChildren().add(new TreeItem<>(new ComparedItemOperItemRowModel(
                 item1,
