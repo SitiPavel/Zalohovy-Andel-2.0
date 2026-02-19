@@ -67,6 +67,17 @@ public class CompareOverviewController {
         rightColLastModifi.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getRightItem().getFormatedLastModified());
 
+        /// Stylování sloupců
+        leftColName.getStyleClass().add("left-column");
+        rightColName.getStyleClass().add("left-column");
+
+        leftColSize.getStyleClass().add("center-column");
+        leftColLastModifi.getStyleClass().add("center-column");
+        operationCol.getStyleClass().add("center-column");
+        rightColSize.getStyleClass().add("center-column");
+        rightColLastModifi.getStyleClass().add("center-column");
+
+
         ///nastavení kořene celé struktury
         TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
         root.setExpanded(true);
@@ -79,8 +90,12 @@ public class CompareOverviewController {
         );
         /// =======^=======^=======^=======^=======
 
+        /// načtení do TreeTableView
         treeTableBuilder.loadComparedFilesToGUI(root, resultComparedList);
+        /// Obarvení řádků podle operace
         treeTableBuilder.rowFormatingByOperation(filesTreeTable);
+        ///  vloží ikony do sloupce operace
+        treeTableBuilder.setOperationColumnIcon(operationCol);
 
 
         filesTreeTable.setRoot(root);

@@ -92,3 +92,15 @@
 .bottomBar {
     -fx-background-color: -fx-color-primary2;
 }
+
+/* --------
+   styly sloupce
+-------*/
+
+.center-column {
+    -fx-alignment: center;
+}
+.left-column {
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 0 5px; /* horní, pravý, dolní, levý */
+}

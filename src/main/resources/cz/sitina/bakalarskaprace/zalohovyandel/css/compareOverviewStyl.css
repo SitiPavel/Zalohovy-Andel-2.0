@@ -67,6 +67,7 @@
 .fileItemTable.tree-table-view { /*celá tabulka*/
     -fx-background-color: -fx-color-Transparent;
     -fx-padding: 0;
+    -fx-table-cell-border-color: -fx-color-primary2;
 }
 .tree-table-view .placeholder .label { /*Pokud tabulka neobsahuje data*/
     -fx-text-fill: -fx-color-textDark;
@@ -109,8 +110,11 @@
 
 
 /*  ===========================================
-          Styly  řádku
+          Styly  řádku/buněk
     =========================================== */
+.operationCell {
+    -fx-background-color: -fx-color-darkBackground;
+}
 
 /* ------------
     vybraný
@@ -124,7 +128,6 @@
 }
 .fileItemTable .tree-table-row-cell:selected .text {
     -fx-fill: -fx-color-primary1;
-
 }
 
 /* ------------

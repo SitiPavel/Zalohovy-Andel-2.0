@@ -3,9 +3,9 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableRow;
-import javafx.scene.control.TreeTableView;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -16,7 +16,30 @@ public class CompareOverviewTreeTableBuilderService {
     FileItemModel notNullItem;
     byte whereIsntNullPath; /// říká kde byla není nalezena null cesta
 
-    public void loadComparedFilesToGUI(TreeItem root, List<ComparedItemOperItemRowModel> comparedFilesList) {
+    short iconSize = 20;
+
+    /// načítání obrázku operací do paměti
+    private final String BASE_PATH = "/cz/sitina/bakalarskaprace/zalohovyandel/images/iconsSmall/";
+
+    private final Image iconEquals       = new Image(getClass().getResourceAsStream(BASE_PATH + "EQUALS.png"));
+    private final Image iconIgnore       = new Image(getClass().getResourceAsStream(BASE_PATH + "IGNORE.png"));
+
+    private final Image iconAddLeft      = new Image(getClass().getResourceAsStream(BASE_PATH + "ADD_LEFT.png"));
+    private final Image iconAddRight     = new Image(getClass().getResourceAsStream(BASE_PATH + "ADD_RIGHT.png"));
+
+    private final Image iconDeleteBoth   = new Image(getClass().getResourceAsStream(BASE_PATH + "DELETE_BOTH.png"));
+    private final Image iconDeleteLeft   = new Image(getClass().getResourceAsStream(BASE_PATH + "DELETE_LEFT.png"));
+    private final Image iconDeleteRight  = new Image(getClass().getResourceAsStream(BASE_PATH + "DELETE_RIGHT.png"));
+
+    // Zvaž přejmenování souboru z UNKNOW na UNKNOWN.png
+    private final Image iconUnknown      = new Image(getClass().getResourceAsStream(BASE_PATH + "UNKNOWN.png"));
+
+    private final Image iconUpdateLeft   = new Image(getClass().getResourceAsStream(BASE_PATH + "UPDATE_LEFT.png"));
+    private final Image iconUpdateRight  = new Image(getClass().getResourceAsStream(BASE_PATH + "UPDATE_RIGHT.png"));
+
+
+
+    public void loadComparedFilesToGUI(TreeItem<ComparedItemOperItemRowModel> root, List<ComparedItemOperItemRowModel> comparedFilesList) {
         /// pro uložení všech větví v TreeTable
         HashMap<String ,TreeItem<ComparedItemOperItemRowModel>> treeFilesList = new HashMap<>();
         treeFilesList.put("", root);
@@ -109,35 +132,6 @@ public class CompareOverviewTreeTableBuilderService {
     }
 
 
-    private short operationSimbol(CompareOperations compareOperation) {
-        switch (compareOperation) {
-            case EQUALS -> {
-                return 1;
-            } case NO_EQUALS ->{
-                return 2;
-            } case IGNORE -> {
-                return 3;
-            }case DELETE_LEFT ->{
-                return 4;
-            } case DELETE_RIGHT ->{
-                return 5;
-            } case DELETE_BOTH ->{
-                return 6;
-            } case UPDATE_LEFT -> {
-                return 7;
-            } case UPDATE_RIGHT -> {
-                return 8;
-            } case ADD_LEFT -> {
-                return 9;
-            } case ADD_RIGHT -> {
-                return 10;
-            } case UNKNOW -> {
-                return 11;
-            }
-        }
-        return -1;
-    }
-
     public void rowFormatingByOperation(TreeTableView<ComparedItemOperItemRowModel> treeTable) {
 
         treeTable.setRowFactory(tv -> new TreeTableRow<ComparedItemOperItemRowModel>() {
@@ -157,6 +151,7 @@ public class CompareOverviewTreeTableBuilderService {
                     return; // Řádek je teď čistý a prázdný, končíme.
                 }
 
+
                 // 3. Přidání správné třídy podle operace
                 switch (item.getOperation()) {
                     case EQUALS, NO_EQUALS -> getStyleClass().add("row-equals");
@@ -169,4 +164,65 @@ public class CompareOverviewTreeTableBuilderService {
             }
         });
     }
+
+
+    public void setOperationColumnIcon(TreeTableColumn<ComparedItemOperItemRowModel, CompareOperations> operationCol) {
+        operationCol.setCellFactory(column ->
+            new TreeTableCell<ComparedItemOperItemRowModel, CompareOperations>() {
+
+            private final ImageView imageView = new ImageView();
+
+                { //Inicializační blok, spustí se pouze jednou
+
+                    getStyleClass().add("operationCell");
+
+
+                }
+
+                @Override
+                protected void updateItem(CompareOperations item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+                        setGraphic(null);
+                        setText(null);
+                        return;
+                    }
+                    Image icon = getIconForOperation(item);
+
+                    if (icon != null) {
+                        imageView.setImage(icon);
+                        imageView.setFitWidth(iconSize/0.6);
+                        imageView.setFitHeight(iconSize);
+                        setGraphic(imageView);
+                        setText(null);
+                    }else {
+                        setGraphic(null);
+                        setText(item.toString());
+                    }
+
+                }
+
+        });
+    }
+
+    ///  vrátí správnou ikonu operace
+    private Image getIconForOperation(CompareOperations operation) {
+        switch (operation) {
+            case EQUALS -> {return iconEquals;
+            } case NO_EQUALS ->{return null;
+            } case IGNORE -> {return iconIgnore;
+            }case DELETE_LEFT ->{return iconDeleteLeft;
+            } case DELETE_RIGHT ->{return iconDeleteRight;
+            } case DELETE_BOTH ->{return iconDeleteBoth;
+            } case UPDATE_LEFT -> {return iconUpdateLeft;
+            } case UPDATE_RIGHT -> {return iconUpdateRight;
+            } case ADD_LEFT -> {return iconAddLeft;
+            } case ADD_RIGHT -> {return iconAddRight;
+            } case UNKNOW -> {return iconUnknown;
+            }
+        }
+        return null;
+    }
+
 }
