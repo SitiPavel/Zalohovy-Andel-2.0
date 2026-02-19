@@ -12,6 +12,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
 
 import java.nio.file.Path;
@@ -24,11 +25,11 @@ public class CompareOverviewController {
     /// Nastavení sloupců v TreeTableView  a samotná tabulka
     @FXML private TreeTableView<ComparedItemOperItemRowModel> filesTreeTable;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> leftColName;
-    @FXML private TreeTableColumn<ComparedItemOperItemRowModel, Long> leftColSize;
+    @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> leftColSize;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> leftColLastModifi;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, CompareOperations> operationCol;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColName;
-    @FXML private TreeTableColumn<ComparedItemOperItemRowModel, Long> rightColSize;
+    @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColSize;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColLastModifi;
 
     /** daůší definované objekty*/
@@ -48,14 +49,13 @@ public class CompareOverviewController {
 
     @FXML
     public void initialize() {
-
         ///Definování obsahu sloupců ve filesTreeTable
         leftColName.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getLeftItem().fileNameProperty());
         leftColSize.setCellValueFactory(cellData ->
-                cellData.getValue().getValue().getLeftItem().fileSizeProperty().asObject());
+                cellData.getValue().getValue().getLeftItem().getFormatedSize());
         leftColLastModifi.setCellValueFactory(cellData ->
-                cellData.getValue().getValue().getLeftItem().getFormatedDate());
+                cellData.getValue().getValue().getLeftItem().getFormatedLastModified());
 
         operationCol.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().operationProperty());
@@ -63,9 +63,9 @@ public class CompareOverviewController {
         rightColName.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getRightItem().fileNameProperty());
         rightColSize.setCellValueFactory(cellData ->
-                cellData.getValue().getValue().getRightItem().fileSizeProperty().asObject());
+                cellData.getValue().getValue().getLeftItem().getFormatedSize());
         rightColLastModifi.setCellValueFactory(cellData ->
-                cellData.getValue().getValue().getRightItem().getFormatedDate());
+                cellData.getValue().getValue().getRightItem().getFormatedLastModified());
 
         ///nastavení kořene celé struktury
         TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
@@ -80,11 +80,8 @@ public class CompareOverviewController {
         /// =======^=======^=======^=======^=======
 
         treeTableBuilder.loadComparedFilesToGUI(root, resultComparedList);
-/*
-        root.getChildren().add(new TreeItem<>(new ComparedItemOperItemRowModel(
-                item1,
-                CompareOperations.ADD_LEFT,
-                item2)));*/
+        treeTableBuilder.rowFormatingByOperation(filesTreeTable);
+
 
         filesTreeTable.setRoot(root);
         filesTreeTable.setShowRoot(false);

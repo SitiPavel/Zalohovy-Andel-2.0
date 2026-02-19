@@ -108,7 +108,54 @@
 }
 
 
+/*  ===========================================
+          Styly  řádku
+    =========================================== */
 
+/* ------------
+    vybraný
+ ------------*/
+.fileItemTable .tree-table-row-cell:selected {
+    -fx-background-color: -fx-color-primary2; /* Klasická modrá barva výběru */
+    -fx-control-inner-background: -fx-color-primary2;
+    -fx-border-color: -fx-color-textLight;
+    -fx-border-width: 1 0 1 0;
+    -fx-border-style: solid;
+}
+.fileItemTable .tree-table-row-cell:selected .text {
+    -fx-fill: -fx-color-primary1;
+
+}
+
+/* ------------
+    podle operace
+  ------------*/
+
+.fileItemTable .row-equals {
+    -fx-text-fill: -fx-color-textDark;
+
+}
+.fileItemTable .row-ignore {
+    -fx-background-color: -fx-color-mark5-50;
+    -fx-control-inner-background:-fx-color-mark5-50;
+}
+.fileItemTable .row-delete {
+    -fx-background-color: -fx-color-mark2-50;
+    -fx-control-inner-background:-fx-color-mark2-50;
+
+}
+.fileItemTable .row-update {
+    -fx-background-color: -fx-color-mark3-50;
+    -fx-control-inner-background:-fx-color-mark3-50;
+}
+.fileItemTable .row-add {
+    -fx-background-color: -fx-color-mark1-50;
+    -fx-control-inner-background:-fx-color-mark1-50;
+}
+.fileItemTable .row-uknow {
+    -fx-background-color: -fx-color-mark6-50;
+    -fx-control-inner-background:-fx-color-mark6-50;
+}
 
 
 

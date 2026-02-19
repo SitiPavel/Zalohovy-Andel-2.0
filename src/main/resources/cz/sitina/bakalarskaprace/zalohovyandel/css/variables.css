@@ -6,7 +6,7 @@
     -fx-color-Transparent: rgba(255, 0, 249, 0);
 
     -fx-color-mark1: #56E73F;                      /* barva značek */
-    -fx-color-mark1-05: rgba(86, 231, 63, 0.5);    /* barva pozadí položky */
+    -fx-color-mark1-50: rgba(86, 231, 63, 0.5);    /* barva pozadí položky */
     -fx-color-mark2: #E74C3F;                      /* barva značek */
     -fx-color-mark2-50: rgba(231, 76, 63, 0.5);    /* barva pozadí položky */
     -fx-color-mark3: #3F92E7;                      /* barva značek */
@@ -15,7 +15,9 @@
     -fx-color-mark4-50: rgba(181, 63, 231, 0.5);   /* barva pozadí položky */
     -fx-color-mark5: #000000;                      /* barva značek */
     -fx-color-mark5-50: rgba(0, 0, 0, 0.5);        /* barva pozadí položky */
-    -fx-color-mark6: #B5783F;                       /* barva značek */
+    -fx-color-mark6: #B5783F;
+    -fx-color-mark6-50: rgba(181, 120, 63, 0.5);                       /* barva značek */
+    /* barva značek */
 
     -fx-color-textLight: #FFF;       /* světlá barva textu */
     -fx-color-textDark: #000;       /* tmavá barva textu */

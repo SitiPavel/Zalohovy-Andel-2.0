@@ -34,9 +34,9 @@ public class FileItemModel {
     }
 
     ///metoda převede číselný formát v milisekundách od nějakého roku 1970 do klasického datumu
-    public SimpleStringProperty  getFormatedDate() {
+    public SimpleStringProperty  getFormatedLastModified() {
         if (this.lastModified.get() <= 0) {
-            return new SimpleStringProperty("");
+            return new SimpleStringProperty("---");
         }
         Instant instant = Instant.ofEpochMilli(this.lastModified.get());
         LocalDateTime localDateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -45,22 +45,35 @@ public class FileItemModel {
         return new SimpleStringProperty(localDateTime.format(formatter));
     }
 
-    /**
-     * Velikost levého souboru jako formátovaný String
-     */
-
-    /**
-     * Datum levého souboru (NULL-SAFE)
-     */
-
-    /**
-     * Název pravého souboru (NULL-SAFE)
-     */
 
     /**
      * Velikost souboru jako formátovaný String
      */
+    public StringProperty getFormatedSize() {
+        StringProperty result = new SimpleStringProperty("");
+        long size = fileSize.get();
+        if (lastModified.get() == 0) {
+            result.set("---");
+            return result;
+        }
+        if (size < 1024) {
+            result.set( size + " B");
+            return result;
+        }
+        if (size < 1024*1024) {
+            result.set((size / 1024) + " KB");
+            return result;
+        }
+        if (size < 1024*1024*1024) {
+            result.set((size / 1024 / 1024) + " MB");
+            return result;
+        }
+        result.set(size /1024/1024/1024 + " GB");
+        return result;
 
+
+
+    }
 
 
     /// GETRY

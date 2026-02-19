@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="500.0" minWidth="840.0" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.CompareOverviewController">
+<AnchorPane minHeight="500.0" minWidth="700.0" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.CompareOverviewController">
    <children>
       <MenuBar layoutX="4.0" layoutY="2.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="800.0" styleClass="menuConteiner" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -38,7 +38,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <GridPane layoutX="300.0" layoutY="30.0" prefHeight="125.0" prefWidth="1081.0" styleClass="toolBox" AnchorPane.bottomAnchor="545.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+      <GridPane layoutX="300.0" layoutY="30.0" prefHeight="125.0" prefWidth="1081.0" styleClass="toolBox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" minWidth="260.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.0" minWidth="125.0" prefWidth="125.0" />
@@ -47,7 +47,7 @@
           <ColumnConstraints hgrow="ALWAYS" minWidth="260.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="125.0" minHeight="125.0" prefHeight="125.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <VBox minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="72.0" GridPane.vgrow="ALWAYS">

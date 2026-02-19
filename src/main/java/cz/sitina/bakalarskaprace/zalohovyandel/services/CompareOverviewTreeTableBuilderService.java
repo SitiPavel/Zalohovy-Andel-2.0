@@ -4,6 +4,8 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowMod
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableRow;
+import javafx.scene.control.TreeTableView;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -25,7 +27,7 @@ public class CompareOverviewTreeTableBuilderService {
             if (row.getRightItem().getRelativePath() == null) {
                     whereIsntNullPath = 01;
                 notNullItem = row.getLeftItem();
-            } if (row.getLeftItem().getRelativePath() == null) {
+            } else if (row.getLeftItem().getRelativePath() == null) {
                 whereIsntNullPath = 10;
                 notNullItem = row.getRightItem();
             } else {
@@ -134,5 +136,37 @@ public class CompareOverviewTreeTableBuilderService {
             }
         }
         return -1;
+    }
+
+    public void rowFormatingByOperation(TreeTableView<ComparedItemOperItemRowModel> treeTable) {
+
+        treeTable.setRowFactory(tv -> new TreeTableRow<ComparedItemOperItemRowModel>() {
+            @Override
+            protected void updateItem(ComparedItemOperItemRowModel item, boolean empty) {
+                super.updateItem(item, empty);
+
+                // 1. ZÁSADNÍ KROK: Než cokoliv uděláme, vymažeme VŠECHNY naše vlastní třídy.
+                // Tím zajistíme, že zrecyklovaný řádek je úplně čistý.
+                getStyleClass().removeAll(
+                        "row-equals", "row-ignore", "row-delete",
+                        "row-update", "row-add", "row-uknow"
+                );
+
+                // 2. Ošetření prázdného řádku nebo složky
+                if (item == null || empty || item.getOperation() == null) {
+                    return; // Řádek je teď čistý a prázdný, končíme.
+                }
+
+                // 3. Přidání správné třídy podle operace
+                switch (item.getOperation()) {
+                    case EQUALS, NO_EQUALS -> getStyleClass().add("row-equals");
+                    case IGNORE -> getStyleClass().add("row-ignore");
+                    case DELETE_LEFT, DELETE_RIGHT, DELETE_BOTH -> getStyleClass().add("row-delete");
+                    case UPDATE_LEFT, UPDATE_RIGHT -> getStyleClass().add("row-update");
+                    case ADD_LEFT, ADD_RIGHT -> getStyleClass().add("row-add");
+                    case UNKNOW -> getStyleClass().add("row-uknow");
+                }
+            }
+        });
     }
 }
