@@ -13,20 +13,24 @@ public class FileItemModel {
     private Path fileAbsolutePath;
     private final LongProperty lastModified = new SimpleLongProperty(0);
     private final LongProperty fileSize = new SimpleLongProperty(0);
+    private Path relativePath;
+
 
     public FileItemModel(){
     }
     public FileItemModel(String fileName, Path fileAbsolutePath,
-                         long lastModified, long fileSize) {
+                         long lastModified, long fileSize, Path relativePath) {
         this.fileName.set(fileName);
         this.fileAbsolutePath = fileAbsolutePath;
         this.lastModified.set(lastModified);
         this.fileSize.set(fileSize);
+        this.relativePath = relativePath;
     }
-    public FileItemModel(String fileName, Path fileAbsolutePath) {
+    public FileItemModel(String fileName, Path fileAbsolutePath, Path relativePath) {
         this.fileName.set(fileName);
         this.fileAbsolutePath = fileAbsolutePath;
         this.fileSize.set(-1);
+        this.relativePath = relativePath;
     }
 
     ///metoda převede číselný formát v milisekundách od nějakého roku 1970 do klasického datumu
@@ -81,7 +85,9 @@ public class FileItemModel {
     public LongProperty fileSizeProperty() {
         return fileSize;
     }
-
+    public Path getRelativePath() {
+        return relativePath;
+    }
 
     /// SETRY
     public void setFileName(String fileName) {
@@ -95,5 +101,8 @@ public class FileItemModel {
     }
     public void setFileSize(long fileSize) {
         this.fileSize.set(fileSize);
+    }
+    public void setRelativePath(Path relativePath) {
+        this.relativePath = relativePath;
     }
 }

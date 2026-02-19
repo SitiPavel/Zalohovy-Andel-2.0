@@ -32,6 +32,7 @@ public class FileScannerService {
                 FileItemModel newItem = new FileItemModel();
                 newItem.setFileName(file.getFileName().toString());
                 newItem.setFileAbsolutePath(file);
+                newItem.setRelativePath(rootPath.relativize(file));
                 try {
                     newItem.setFileSize(Files.size(file));
                     newItem.setLastModified(Files.getLastModifiedTime(file).toMillis());

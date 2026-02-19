@@ -8,6 +8,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.Com
 import java.util.*;
 
 public class ComparisonService {
+    ComparedItemOperItemRowModel rowModel;
 
 
     public List<ComparedItemOperItemRowModel> compareFolders(
@@ -25,6 +26,7 @@ public class ComparisonService {
         List<String> sortedKeys =  new ArrayList<>(allKeys);
         Collections.sort(sortedKeys);
 
+
         /// Průchod listu
         for (String relativePath : sortedKeys) {
 
@@ -40,7 +42,14 @@ public class ComparisonService {
             /// Vratí nám operaci pro tento soubor
             /** ✪ */CompareOperations operations = strategy.compare(leftItem,rightItem);
 
-            ComparedItemOperItemRowModel rowModel = new ComparedItemOperItemRowModel(leftItem, operations, rightItem);
+            if (leftItem == null && rightItem != null) {
+                rowModel = new ComparedItemOperItemRowModel(new FileItemModel(), operations, rightItem);
+            } else if (leftItem != null && rightItem == null) {
+                rowModel = new ComparedItemOperItemRowModel(leftItem, operations, new FileItemModel());
+            } else if (leftItem != null) {
+                rowModel = new ComparedItemOperItemRowModel(leftItem, operations, rightItem);
+            }
+
             resultComparedList.add(rowModel);
         }
         return resultComparedList;
