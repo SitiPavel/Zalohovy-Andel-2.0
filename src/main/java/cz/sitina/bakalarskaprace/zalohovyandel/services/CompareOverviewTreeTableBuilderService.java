@@ -47,13 +47,16 @@ public class CompareOverviewTreeTableBuilderService {
         for (ComparedItemOperItemRowModel row : comparedFilesList) {
 
             /// musíne dostat cestu z nenullového objektu a zaznamenat kde je nenulová cesta
-            if (row.getRightItem().getRelativePath() == null) {
-                    whereIsntNullPath = 01;
+            if (row.getLeftItem().getRelativePath() != null &&
+                    row.getRightItem().getRelativePath() == null) {
+                whereIsntNullPath = 01;
                 notNullItem = row.getLeftItem();
-            } else if (row.getLeftItem().getRelativePath() == null) {
+            } else if (row.getLeftItem().getRelativePath() == null &&
+                    row.getRightItem().getRelativePath() != null) {
                 whereIsntNullPath = 10;
                 notNullItem = row.getRightItem();
-            } else {
+            } else if (row.getLeftItem().getRelativePath() != null &&
+                    row.getRightItem().getRelativePath() != null) {
                 whereIsntNullPath = 11;
                 notNullItem = row.getLeftItem();
             }
@@ -132,6 +135,7 @@ public class CompareOverviewTreeTableBuilderService {
     }
 
 
+    /// nastaví barvu řádku podle operace
     public void rowFormatingByOperation(TreeTableView<ComparedItemOperItemRowModel> treeTable) {
 
         treeTable.setRowFactory(tv -> new TreeTableRow<ComparedItemOperItemRowModel>() {
@@ -166,6 +170,7 @@ public class CompareOverviewTreeTableBuilderService {
     }
 
 
+    /// nastaví ikonu operace každému řádku
     public void setOperationColumnIcon(TreeTableColumn<ComparedItemOperItemRowModel, CompareOperations> operationCol) {
         operationCol.setCellFactory(column ->
             new TreeTableCell<ComparedItemOperItemRowModel, CompareOperations>() {

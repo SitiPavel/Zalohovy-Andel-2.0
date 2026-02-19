@@ -66,7 +66,7 @@
                               <Insets bottom="-2.0" left="1.0" right="1.0" top="-2.0" />
                            </padding>
                         </Button>
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="findFolderPatchBtn" textAlignment="CENTER">
+                        <Button fx:id="btnLeftFileChoiser" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choseLeftFolder" prefHeight="25.0" prefWidth="25.0" styleClass="findFolderPatchBtn" textAlignment="CENTER">
                            <graphic>
                               <ImageView fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -78,7 +78,7 @@
                               <Insets bottom="-2.0" left="1.0" right="1.0" top="-2.0" />
                            </padding>
                         </Button>
-                        <TextField prefHeight="25.0" prefWidth="200.0" promptText="C:\desktop\Dokumenty" styleClass="folderPathImput" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="tfLeftFolderPath" prefHeight="25.0" prefWidth="200.0" promptText="C:\desktop\Dokumenty" styleClass="folderPathImput" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="254.0">
@@ -160,7 +160,7 @@
                               <Insets bottom="-2.0" left="1.0" right="1.0" top="-2.0" />
                            </padding>
                         </Button>
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="findFolderPatchBtn" textAlignment="CENTER">
+                        <Button fx:id="btnRightFileChoiser" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choseRightFolder" prefHeight="25.0" prefWidth="25.0" styleClass="findFolderPatchBtn" textAlignment="CENTER">
                            <graphic>
                               <ImageView fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -172,7 +172,7 @@
                               <Insets bottom="-2.0" left="1.0" right="1.0" top="-2.0" />
                            </padding>
                         </Button>
-                        <TextField prefHeight="25.0" prefWidth="200.0" promptText="C:\desktop\Dokumenty" styleClass="folderPathImput" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="tfRightFolderPath" prefHeight="25.0" prefWidth="200.0" promptText="C:\desktop\Dokumenty" styleClass="folderPathImput" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -293,7 +293,7 @@
                <children>
                   <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="73.0" styleClass="layout_justifyContent">
                      <children>
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                        <Button fx:id="btnCompareFolders" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startComparingFiles" prefHeight="50.0" prefWidth="50.0">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -369,6 +369,23 @@
           <RowConstraints maxHeight="-Infinity" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
+            <TreeTableView fx:id="filesTreeTable" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0" styleClass="fileItemTable" GridPane.columnSpan="3" GridPane.rowSpan="2">
+              <columns>
+                <TreeTableColumn fx:id="leftColName" editable="false" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
+                  <TreeTableColumn fx:id="leftColLastModifi" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Úprava" />
+                <TreeTableColumn fx:id="leftColSize" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Velikost" />
+                  <TreeTableColumn id="OperationColCompareOverview" fx:id="operationCol" editable="false" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" text="Operace" />
+                  <TreeTableColumn fx:id="rightColName" editable="false" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
+                  <TreeTableColumn fx:id="rightColLastModifi" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Úprava" />
+                  <TreeTableColumn fx:id="rightColSize" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Velikost" />
+              </columns>
+               <columnResizePolicy>
+                  <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </TreeTableView>
             <HBox alignment="CENTER" prefHeight="240.0" prefWidth="70.0" styleClass="bottomBar" GridPane.columnSpan="3" GridPane.rowIndex="2">
                <children>
                   <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
@@ -428,6 +445,23 @@
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
+                                    <Image url="@../images/icons/block.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets right="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                     <children>
+                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
                                     <Image url="@../images/icons/equal.png" />
                                  </image>
                               </ImageView>
@@ -445,7 +479,7 @@
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../images/icons/block.png" />
+                                    <Image url="@../images/icons/unknown.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -509,23 +543,6 @@
                   <Insets bottom="5.0" left="3.0" right="5.0" top="5.0" />
                </padding>
             </HBox>
-            <TreeTableView fx:id="filesTreeTable" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0" styleClass="fileItemTable" GridPane.columnSpan="3" GridPane.rowSpan="2">
-              <columns>
-                <TreeTableColumn fx:id="leftColName" editable="false" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
-                <TreeTableColumn fx:id="leftColSize" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Velikost" />
-                  <TreeTableColumn fx:id="leftColLastModifi" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Úprava" />
-                  <TreeTableColumn id="OperationColCompareOverview" fx:id="operationCol" editable="false" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" text="Operace" />
-                  <TreeTableColumn fx:id="rightColName" editable="false" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
-                  <TreeTableColumn fx:id="rightColSize" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Velikost" />
-                  <TreeTableColumn fx:id="rightColLastModifi" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Úprava" />
-              </columns>
-               <columnResizePolicy>
-                  <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-               <padding>
-                  <Insets left="5.0" right="5.0" />
-               </padding>
-            </TreeTableView>
          </children>
       </GridPane>
    </children>

@@ -35,7 +35,7 @@ public class FileItemModel {
 
     ///metoda převede číselný formát v milisekundách od nějakého roku 1970 do klasického datumu
     public SimpleStringProperty  getFormatedLastModified() {
-        if (this.lastModified.get() <= 0) {
+        if (this.lastModified.get() == 0) {
             return new SimpleStringProperty("---");
         }
         Instant instant = Instant.ofEpochMilli(this.lastModified.get());
@@ -70,9 +70,6 @@ public class FileItemModel {
         }
         result.set(size /1024/1024/1024 + " GB");
         return result;
-
-
-
     }
 
 
