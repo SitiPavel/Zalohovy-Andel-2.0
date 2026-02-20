@@ -7,6 +7,8 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.Com
 
 import java.util.*;
 
+
+
 public class ComparisonService {
     ComparedItemOperItemRowModel rowModel;
 
@@ -18,16 +20,19 @@ public class ComparisonService {
     {
         List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
 
-        /// Sjednotíme klíče z leva a zprava, odstraníme duplicity (objekty stále zůstávají, nic se nemaže)
+        // proměnné pro počítadla
+
+
+        // Sjednotíme klíče z leva a zprava, odstraníme duplicity (objekty stále zůstávají, nic se nemaže)
         Set<String> allKeys = new HashSet<>(leftFilesMap.keySet());
         allKeys.addAll(rightFilesMap.keySet());
 
-        /// Seřazení podle abecedy = důležité pro UI
+        // Seřazení podle abecedy = důležité pro UI
         List<String> sortedKeys =  new ArrayList<>(allKeys);
         Collections.sort(sortedKeys);
 
 
-        /// Průchod listu
+        // Průchod listu
         for (String relativePath : sortedKeys) {
 
             FileItemModel leftItem = leftFilesMap.get(relativePath);
@@ -40,7 +45,7 @@ public class ComparisonService {
              * */
 
             /// Vratí nám operaci pro tento soubor
-            /** ✪ */CompareOperations operations = strategy.compare(leftItem,rightItem);
+            /* ✪ */ CompareOperations operations = strategy.compare(leftItem,rightItem);
 
             if (leftItem == null && rightItem != null) {
                 rowModel = new ComparedItemOperItemRowModel(new FileItemModel(), operations, rightItem);
@@ -55,3 +60,4 @@ public class ComparisonService {
         return resultComparedList;
     }
 }
+

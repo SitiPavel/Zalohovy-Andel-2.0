@@ -1,5 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.models;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.services.Utility;
 import javafx.beans.property.*;
 
 import java.nio.file.Path;
@@ -14,6 +15,7 @@ public class FileItemModel {
     private final LongProperty lastModified = new SimpleLongProperty(0);
     private final LongProperty fileSize = new SimpleLongProperty(0);
     private Path relativePath;
+    private final Utility utility = new Utility();
 
 
     public FileItemModel(){
@@ -45,33 +47,10 @@ public class FileItemModel {
         return new SimpleStringProperty(localDateTime.format(formatter));
     }
 
-
-    /**
-     * Velikost souboru jako formátovaný String
-     */
     public StringProperty getFormatedSize() {
-        StringProperty result = new SimpleStringProperty("");
-        long size = fileSize.get();
-        if (lastModified.get() == 0) {
-            result.set("---");
-            return result;
-        }
-        if (size < 1024) {
-            result.set( size + " B");
-            return result;
-        }
-        if (size < 1024*1024) {
-            result.set((size / 1024) + " KB");
-            return result;
-        }
-        if (size < 1024*1024*1024) {
-            result.set((size / 1024 / 1024) + " MB");
-            return result;
-        }
-        result.set(size /1024/1024/1024 + " GB");
-        return result;
+        String result = utility.getFormatedSize(this.fileSize.get());
+        return new SimpleStringProperty(result);
     }
-
 
     /// GETRY
     public String getFileName() {

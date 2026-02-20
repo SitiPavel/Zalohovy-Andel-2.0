@@ -44,13 +44,25 @@ public class CompareOverviewController {
     private final CompareOverviewService compareOverviewService = new CompareOverviewService();
     private final TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
 
-
-    /// definocvané GUI objekty
+    //======================================
+    // definocvané GUI objekty
     @FXML private Button btnLeftFileChoiser;
     @FXML private TextField tfLeftFolderPath;
     @FXML private Button btnRightFileChoiser;
     @FXML private TextField tfRightFolderPath;
     @FXML private Button btnCompareFolders;
+    // definování ukazatelu
+    @FXML private Label lbLeftAddCount;
+    @FXML private Label lbLeftUpdateCount;
+    @FXML private Label lbLeftDeleteCount;
+    @FXML private Label lbBlockedCount;
+    @FXML private Label lbEqualsCount;
+    @FXML private Label lbUnknownCount;
+    @FXML private Label lbRightDeleteCount;
+    @FXML private Label lbRightUpdateCount;
+    @FXML private Label lbRightAddCount;
+    @FXML private Label lbDataTransportTotalSize;
+
 
 
 
@@ -58,7 +70,7 @@ public class CompareOverviewController {
 
     @FXML
     public void initialize() {
-        ///Definování obsahu sloupců ve filesTreeTable
+        //Definování obsahu sloupců ve filesTreeTable
         leftColName.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getLeftItem().fileNameProperty());
         leftColSize.setCellValueFactory(cellData ->
@@ -76,7 +88,7 @@ public class CompareOverviewController {
         rightColLastModifi.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getRightItem().getFormatedLastModified());
 
-        /// Stylování sloupců
+        // Stylování sloupců
         leftColName.getStyleClass().add("left-column");
         rightColName.getStyleClass().add("left-column");
         leftColSize.getStyleClass().add("center-column");
@@ -86,8 +98,13 @@ public class CompareOverviewController {
         rightColLastModifi.getStyleClass().add("center-column");
 
 
-        ///nastavení kořene celé struktury
+        //nastavení kořene celé struktury
         root.setExpanded(true);
+
+        /* ✪======V======V======V=======V========*/
+        tfLeftFolderPath.setText("D:\\testBakalarky\\Test01");
+        tfRightFolderPath.setText("D:\\testBakalarky\\Test02");
+        /* =======^=======^=======^=======^=======*/
 
 
 
@@ -96,9 +113,9 @@ public class CompareOverviewController {
 
     }
 
-    /**
-     Metody reagující na uživatele
-     */
+    //===================
+    // Metody reagující na uživatele
+
 
     @FXML
     public void choseLeftFolder(ActionEvent event) {
@@ -128,9 +145,9 @@ public class CompareOverviewController {
     }
 
 
-    /**
-     obecné nápomocné metody
-     */
+    //==================
+    // obecné nápomocné metody
+
 
     private void compareAndLoadFiles(TreeItem<ComparedItemOperItemRowModel> root,
                                      String leftFolder,
@@ -143,11 +160,14 @@ public class CompareOverviewController {
                 strategy
         );
 
-        /// načtení do TreeTableView
+        // načtení do TreeTableView
         treeTableBuilder.loadComparedFilesToGUI(root, resultComparedList);
-        /// Obarvení řádků podle operace
+        // Obarvení řádků podle operace
         treeTableBuilder.rowFormatingByOperation(filesTreeTable);
-        ///  vloží ikony do sloupce operace
+        //  vloží ikony do sloupce operace
         treeTableBuilder.setOperationColumnIcon(operationCol);
     }
+
 }
+
+

@@ -17,6 +17,7 @@ public class CompareOverviewService {
     int rightDeleteCount = 0;
     int rightUpdateCount = 0;
     int rightAddCount = 0;
+    int dataTransportSize = 0;
 
 
     public CompareOverviewService() {
@@ -31,4 +32,5 @@ public class CompareOverviewService {
 
         return directoryChooser.showDialog(stage);
     }
+
 }

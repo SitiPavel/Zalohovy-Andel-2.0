@@ -134,12 +134,7 @@
                   </ImageView>
                   <HBox alignment="CENTER" prefHeight="16.0" prefWidth="87.0">
                      <children>
-                        <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" styleClass="lightMidText" text="0" />
-                        <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" prefWidth="20.0" styleClass="lightMidText" text="GB">
-                           <padding>
-                              <Insets left="3.0" />
-                           </padding>
-                        </Label>
+                        <Label fx:id="lbDataTransportTotalSize" alignment="CENTER" maxHeight="18.0" maxWidth="56.0" minHeight="18.0" minWidth="56.0" prefHeight="18.0" prefWidth="56.0" styleClass="lightMidText" text="0" textAlignment="JUSTIFY" />
                      </children>
                   </HBox>
                </children>
@@ -399,7 +394,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbLeftAddCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
                      <HBox.margin>
                         <Insets right="10.0" />
@@ -416,7 +411,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbLeftUpdateCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets right="10.0" />
@@ -433,7 +428,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbLeftDeleteCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets right="10.0" />
@@ -450,7 +445,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbBlockedCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets right="10.0" />
@@ -467,7 +462,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbEqualsCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets right="10.0" />
@@ -484,7 +479,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbUnknownCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets right="10.0" />
@@ -501,7 +496,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbRightDeleteCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets right="10.0" />
@@ -518,7 +513,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbRightUpdateCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets right="10.0" />
@@ -535,7 +530,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbRightAddCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                </children>
