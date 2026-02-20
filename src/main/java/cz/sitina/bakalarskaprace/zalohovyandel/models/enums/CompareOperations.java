@@ -1,5 +1,8 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.models.enums;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+
 public enum CompareOperations {
     EQUALS,
     NO_EQUALS,
@@ -14,4 +17,3 @@ public enum CompareOperations {
     UNKNOW
 
 }
-

@@ -445,7 +445,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label fx:id="lbBlockedCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbIgnoreCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets right="10.0" />

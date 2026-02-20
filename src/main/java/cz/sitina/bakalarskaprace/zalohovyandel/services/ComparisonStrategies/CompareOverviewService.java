@@ -8,16 +8,7 @@ import javafx.stage.Window;
 import java.io.File;
 
 public class CompareOverviewService {
-    int leftAddCount = 0;
-    int leftUpdateCount = 0;
-    int leftDeleteCount = 0;
-    int blockedCount = 0;
-    int equalsCount = 0;
-    int unknownCount = 0;
-    int rightDeleteCount = 0;
-    int rightUpdateCount = 0;
-    int rightAddCount = 0;
-    int dataTransportSize = 0;
+
 
 
     public CompareOverviewService() {

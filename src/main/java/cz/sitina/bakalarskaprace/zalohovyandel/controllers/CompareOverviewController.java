@@ -1,11 +1,13 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.CompareOverviewTreeTableBuilderService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.Utility;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.Node;
@@ -31,7 +33,7 @@ public class CompareOverviewController {
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColSize;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColLastModifi;
 
-    /** daůší definované objekty*/
+    /// daůší definované objekty
 
     private final FileScannerService fileScannerService = new FileScannerService();
     private List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
@@ -43,6 +45,10 @@ public class CompareOverviewController {
     private final OneWayStrategy oneWayStrategy = new OneWayStrategy();
     private final CompareOverviewService compareOverviewService = new CompareOverviewService();
     private final TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
+    private final Utility utility = new Utility();
+
+    /// definované datové sady
+    private ComparedDataAndStatisticsForCompereOverview statisticsAndComparedData;
 
     //======================================
     // definocvané GUI objekty
@@ -55,7 +61,7 @@ public class CompareOverviewController {
     @FXML private Label lbLeftAddCount;
     @FXML private Label lbLeftUpdateCount;
     @FXML private Label lbLeftDeleteCount;
-    @FXML private Label lbBlockedCount;
+    @FXML private Label lbIgnoreCount;
     @FXML private Label lbEqualsCount;
     @FXML private Label lbUnknownCount;
     @FXML private Label lbRightDeleteCount;
@@ -135,7 +141,6 @@ public class CompareOverviewController {
         );
 
     }
-
     @FXML
     public void choseRightFolder(ActionEvent event) {
         File directory = compareOverviewService.findDirectory(event);
@@ -153,12 +158,30 @@ public class CompareOverviewController {
                                      String leftFolder,
                                      String rightFolder,
                                      ComparationStrategy strategy) {
-        root.getChildren().clear();
-        resultComparedList = comparisonService.compareFolders(
+        root.getChildren().clear(); //čistí TreeTableView
+
+        // získáme potřebná data
+         statisticsAndComparedData = comparisonService.compareFolders(
                 fileScannerService.scanFolder(leftFolder),
                 fileScannerService.scanFolder(rightFolder),
                 strategy
         );
+        resultComparedList = statisticsAndComparedData.getComparedFilesList();
+
+        // nastavení textu do labels
+        lbLeftAddCount.setText(String.valueOf(statisticsAndComparedData.getLeftAddCount()));
+        lbLeftUpdateCount.setText(String.valueOf(statisticsAndComparedData.getLeftUpdateCount()));
+        lbLeftDeleteCount.setText(String.valueOf(statisticsAndComparedData.getLeftDeleteCount()));
+        lbIgnoreCount.setText(String.valueOf(statisticsAndComparedData.getIgnoreCount()));
+        lbEqualsCount.setText(String.valueOf(statisticsAndComparedData.getEqualsCount()));
+        lbUnknownCount.setText(String.valueOf(statisticsAndComparedData.getUnknownCount()));
+        lbRightDeleteCount.setText(String.valueOf(statisticsAndComparedData.getRightDeleteCount()));
+        lbRightUpdateCount.setText(String.valueOf(statisticsAndComparedData.getRightUpdateCount()));
+        lbRightAddCount.setText(String.valueOf(statisticsAndComparedData.getRightAddCount()));
+        lbDataTransportTotalSize.setText(
+                utility.getFormatedSize(statisticsAndComparedData.getDataTransportSize())
+        );
+
 
         // načtení do TreeTableView
         treeTableBuilder.loadComparedFilesToGUI(root, resultComparedList);
@@ -167,6 +190,7 @@ public class CompareOverviewController {
         //  vloží ikony do sloupce operace
         treeTableBuilder.setOperationColumnIcon(operationCol);
     }
+
 
 }
 
