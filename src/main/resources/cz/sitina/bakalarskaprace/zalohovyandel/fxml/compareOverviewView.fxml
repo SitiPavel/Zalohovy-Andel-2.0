@@ -85,7 +85,7 @@
                      <children>
                         <VBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="194.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <ProgressBar prefHeight="12.0" prefWidth="205.0" progress="0.87" rotate="180.0" VBox.vgrow="ALWAYS">
+                              <ProgressBar fx:id="pbLeftUsedSpace" minWidth="270.0" prefHeight="12.0" prefWidth="270.0" progress="0.87" rotate="180.0" VBox.vgrow="ALWAYS">
                                  <styleClass>
                                     <String fx:value="track" />
                                     <String fx:value="FolderFreeSpaceIndicator" />
@@ -94,14 +94,12 @@
                               </ProgressBar>
                               <HBox alignment="TOP_RIGHT" prefHeight="21.0" prefWidth="207.0">
                                  <children>
-                                    <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="18.0" styleClass="lightMidText" text="GB" />
-                                    <Label maxWidth="28.0" minHeight="-Infinity" minWidth="28.0" prefHeight="20.0" prefWidth="28.0" styleClass="lightMidText" text="0" />
+                                    <Label fx:id="lbLeftFreeSpace" alignment="CENTER_RIGHT" maxWidth="60.0" minHeight="-Infinity" minWidth="60.0" prefHeight="20.0" prefWidth="60.0" styleClass="lightMidText" text="0" />
                                     <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="51.0" styleClass="lightMidText" text="Volných: " />
                                     <Region maxWidth="30.0" minWidth="30.0" prefHeight="21.0" prefWidth="30.0" HBox.hgrow="NEVER" />
-                                    <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="18.0" styleClass="lightMidText" text="GB" />
-                                    <Label alignment="CENTER_RIGHT" contentDisplay="BOTTOM" maxWidth="28.0" minHeight="-Infinity" minWidth="28.0" prefHeight="20.0" prefWidth="28.0" styleClass="lightMidText" text="0" />
+                                    <Label fx:id="lbLeftTotalSpace" alignment="CENTER_RIGHT" contentDisplay="BOTTOM" maxWidth="60.0" minHeight="-Infinity" minWidth="60.0" prefHeight="20.0" prefWidth="60.0" styleClass="lightMidText" text="0" />
                                     <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="7.0" styleClass="lightMidText" text="/" />
-                                    <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="28.0" styleClass="lightMidText" text="0" textOverrun="CLIP" />
+                                    <Label fx:id="lbLeftUsedSpace" maxWidth="60.0" minHeight="-Infinity" minWidth="60.0" prefHeight="20.0" prefWidth="60.0" styleClass="lightMidText" text="0" textOverrun="CLIP" />
                                  </children>
                               </HBox>
                            </children>
@@ -177,7 +175,7 @@
                      <children>
                         <VBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="194.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <ProgressBar prefHeight="12.0" prefWidth="205.0" progress="0.87" rotate="180.0" VBox.vgrow="ALWAYS">
+                              <ProgressBar fx:id="pbRightUsedSpace" minWidth="270.0" prefHeight="12.0" prefWidth="270.0" progress="0.87" rotate="180.0" VBox.vgrow="ALWAYS">
                                  <styleClass>
                                     <String fx:value="track" />
                                     <String fx:value="FolderFreeSpaceIndicator" />
@@ -186,14 +184,12 @@
                               </ProgressBar>
                               <HBox alignment="TOP_RIGHT" prefHeight="21.0" prefWidth="207.0">
                                  <children>
-                                    <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="18.0" styleClass="lightMidText" text="GB" />
-                                    <Label alignment="CENTER" maxWidth="28.0" minHeight="-Infinity" minWidth="28.0" prefHeight="20.0" prefWidth="28.0" styleClass="lightMidText" text="0" />
+                                    <Label fx:id="lbRightFreeSpace" alignment="CENTER_RIGHT" maxWidth="60.0" minHeight="-Infinity" minWidth="60.0" prefHeight="20.0" prefWidth="60.0" styleClass="lightMidText" text="0" />
                                     <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="55.0" styleClass="lightMidText" text="Volných:  " textAlignment="RIGHT" />
                                     <Region maxWidth="30.0" minWidth="30.0" prefHeight="21.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                                    <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="18.0" styleClass="lightMidText" text="GB" />
-                                    <Label alignment="CENTER_RIGHT" maxWidth="28.0" minHeight="-Infinity" minWidth="28.0" prefHeight="20.0" prefWidth="28.0" styleClass="lightMidText" text="0" />
+                                    <Label fx:id="lbRightTotalSpace" alignment="CENTER_RIGHT" maxWidth="60.0" minHeight="-Infinity" minWidth="60.0" prefHeight="20.0" prefWidth="60.0" styleClass="lightMidText" text="0" />
                                     <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="7.0" styleClass="lightMidText" text="/" />
-                                    <Label maxWidth="28.0" minHeight="-Infinity" minWidth="28.0" prefHeight="20.0" prefWidth="28.0" styleClass="lightMidText" text="0" textOverrun="CLIP" />
+                                    <Label fx:id="lbRightUsedSpace" maxWidth="60.0" minHeight="-Infinity" minWidth="60.0" prefHeight="20.0" prefWidth="60.0" styleClass="lightMidText" text="0" textOverrun="CLIP" />
                                  </children>
                               </HBox>
                            </children>

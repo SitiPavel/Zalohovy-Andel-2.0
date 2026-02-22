@@ -2,6 +2,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.CompareOverviewTreeTableBuilderService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonService;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class CompareOverviewController {
 
-    /// Nastavení sloupců v TreeTableView  a samotná tabulka
+    // Nastavení sloupců v TreeTableView  a samotná tabulka
     @FXML private TreeTableView<ComparedItemOperItemRowModel> filesTreeTable;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> leftColName;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> leftColSize;
@@ -33,7 +34,7 @@ public class CompareOverviewController {
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColSize;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColLastModifi;
 
-    /// daůší definované objekty
+    // daůší definované objekty
 
     private final FileScannerService fileScannerService = new FileScannerService();
     private List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
@@ -47,11 +48,11 @@ public class CompareOverviewController {
     private final TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
     private final Utility utility = new Utility();
 
-    /// definované datové sady
+    // definované datové sady
     private ComparedDataAndStatisticsForCompereOverview statisticsAndComparedData;
 
-    //======================================
-    // definocvané GUI objekty
+    ///======================================
+    /// definocvané GUI objekty
     @FXML private Button btnLeftFileChoiser;
     @FXML private TextField tfLeftFolderPath;
     @FXML private Button btnRightFileChoiser;
@@ -68,6 +69,17 @@ public class CompareOverviewController {
     @FXML private Label lbRightUpdateCount;
     @FXML private Label lbRightAddCount;
     @FXML private Label lbDataTransportTotalSize;
+
+    // ukazatelé statistik disků
+    @FXML private Label lbLeftUsedSpace;
+    @FXML private Label lbLeftTotalSpace;
+    @FXML private Label lbLeftFreeSpace;
+    @FXML private ProgressBar pbLeftUsedSpace;
+
+    @FXML private Label lbRightUsedSpace;
+    @FXML private Label lbRightTotalSpace;
+    @FXML private Label lbRightFreeSpace;
+    @FXML private ProgressBar pbRightUsedSpace;
 
 
 
@@ -137,7 +149,7 @@ public class CompareOverviewController {
                 root,
                 tfLeftFolderPath.getText(),
                 tfRightFolderPath.getText(),
-                mirroringStrategy
+                biDirectionalStrategy
         );
 
     }
@@ -168,6 +180,19 @@ public class CompareOverviewController {
         );
         resultComparedList = statisticsAndComparedData.getComparedFilesList();
 
+        // nastavení statistik o disku v GUI
+        DiskSpaceStatisticData leftFolderStatistic = utility.getDiskSpaceStatistics(leftFolder);
+        lbLeftUsedSpace.setText(utility.getFormatedSize(leftFolderStatistic.getUsedSpace()));
+        lbLeftTotalSpace.setText(utility.getFormatedSize(leftFolderStatistic.getTotalSpace()));
+        lbLeftFreeSpace.setText(utility.getFormatedSize(leftFolderStatistic.getFreeSpace()));
+        pbLeftUsedSpace.setProgress((double) leftFolderStatistic.getUsedSpace() /leftFolderStatistic.getTotalSpace());
+        DiskSpaceStatisticData rightFolderStatistic = utility.getDiskSpaceStatistics(rightFolder);
+        lbRightUsedSpace.setText(utility.getFormatedSize(rightFolderStatistic.getUsedSpace()));
+        lbRightTotalSpace.setText(utility.getFormatedSize(rightFolderStatistic.getTotalSpace()));
+        lbRightFreeSpace.setText(utility.getFormatedSize(rightFolderStatistic.getFreeSpace()));
+        pbRightUsedSpace.setProgress((double) rightFolderStatistic.getUsedSpace() /rightFolderStatistic.getTotalSpace());
+
+
         // nastavení textu do labels
         lbLeftAddCount.setText(String.valueOf(statisticsAndComparedData.getLeftAddCount()));
         lbLeftUpdateCount.setText(String.valueOf(statisticsAndComparedData.getLeftUpdateCount()));
@@ -190,6 +215,7 @@ public class CompareOverviewController {
         //  vloží ikony do sloupce operace
         treeTableBuilder.setOperationColumnIcon(operationCol);
     }
+
 
 
 }

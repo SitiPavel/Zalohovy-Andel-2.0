@@ -67,6 +67,10 @@
     -fx-background-color: -fx-color-Transparent;
     -fx-padding: 0;
     -fx-table-cell-border-color: -fx-color-primary2;
+
+    -fx-border-color: -fx-color-mark2;
+    -fx-border-style: solid;
+    -fx-border-width: 3 0 0 0;
 }
 .tree-table-view .placeholder .label { /*Pokud tabulka neobsahuje data*/
     -fx-text-fill: -fx-color-textDark;
