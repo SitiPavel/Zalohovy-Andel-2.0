@@ -11,14 +11,14 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 
-public class CompareOverviewTreeTableBuilderService {
+public class TreeTableBuilderService {
 
     FileItemModel notNullItem;
-    byte whereIsntNullPath; /// říká kde byla není nalezena null cesta
+    byte whereIsntNullPath; // říká kde byla není nalezena null cesta
 
     short iconSize = 20;
 
-    /// načítání obrázku operací do paměti
+    // načítání obrázku operací do paměti
     private final String BASE_PATH = "/cz/sitina/bakalarskaprace/zalohovyandel/images/iconsSmall/";
 
     private final Image iconEquals       = new Image(getClass().getResourceAsStream(BASE_PATH + "EQUALS.png"));
@@ -37,16 +37,26 @@ public class CompareOverviewTreeTableBuilderService {
     private final Image iconUpdateLeft   = new Image(getClass().getResourceAsStream(BASE_PATH + "UPDATE_LEFT.png"));
     private final Image iconUpdateRight  = new Image(getClass().getResourceAsStream(BASE_PATH + "UPDATE_RIGHT.png"));
 
-
+    public void setTreeTable(TreeItem<ComparedItemOperItemRowModel> root,
+                                                             List<ComparedItemOperItemRowModel> comparedList,
+                                                             TreeTableView<ComparedItemOperItemRowModel> treeTable,
+                                                             TreeTableColumn<ComparedItemOperItemRowModel, CompareOperations> operationCol ) {
+        // načtení do TreeTableView
+        loadComparedFilesToGUI(root, comparedList);
+        // Obarvení řádků podle operace
+        rowFormatingByOperation(treeTable);
+        //  vloží ikony do sloupce operace
+        setOperationColumnIcon(operationCol);
+    }
 
     public void loadComparedFilesToGUI(TreeItem<ComparedItemOperItemRowModel> root, List<ComparedItemOperItemRowModel> comparedFilesList) {
-        /// pro uložení všech větví v TreeTable
+        // pro uložení všech větví v TreeTable
         HashMap<String ,TreeItem<ComparedItemOperItemRowModel>> treeFilesList = new HashMap<>();
         treeFilesList.put("", root);
 
         for (ComparedItemOperItemRowModel row : comparedFilesList) {
 
-            /// musíne dostat cestu z nenullového objektu a zaznamenat kde je nenulová cesta
+            // musíne dostat cestu z nenullového objektu a zaznamenat kde je nenulová cesta
             if (row.getLeftItem().getRelativePath() != null &&
                     row.getRightItem().getRelativePath() == null) {
                 whereIsntNullPath = 01;
@@ -65,9 +75,9 @@ public class CompareOverviewTreeTableBuilderService {
 
             int pathLength = notNullPath.getNameCount();
 
-            /// pro postupné budování větví v TreeTable
+            // pro postupné budování větví v TreeTable
             String currentDir = "";
-            /// uchovává předchozí složku
+            // uchovává předchozí složku
 
 
             for (int i = 0; pathLength > i ; i++) {

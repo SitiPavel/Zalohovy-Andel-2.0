@@ -4,10 +4,10 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowMod
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.CompareOverviewTreeTableBuilderService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.TreeTableBuilderService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.Utility;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -38,7 +38,7 @@ public class CompareOverviewController {
 
     private final FileScannerService fileScannerService = new FileScannerService();
     private List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
-    private CompareOverviewTreeTableBuilderService treeTableBuilder = new CompareOverviewTreeTableBuilderService();
+    private TreeTableBuilderService treeTableBuilder = new TreeTableBuilderService();
 
     private final ComparisonService comparisonService = new ComparisonService();
     private final BiDirectionalStrategy biDirectionalStrategy = new BiDirectionalStrategy();
@@ -178,7 +178,6 @@ public class CompareOverviewController {
                 fileScannerService.scanFolder(rightFolder),
                 strategy
         );
-        resultComparedList = statisticsAndComparedData.getComparedFilesList();
 
         // nastavení statistik o disku v GUI
         DiskSpaceStatisticData leftFolderStatistic = utility.getDiskSpaceStatistics(leftFolder);
@@ -207,13 +206,13 @@ public class CompareOverviewController {
                 utility.getFormatedSize(statisticsAndComparedData.getDataTransportSize())
         );
 
+        resultComparedList = statisticsAndComparedData.getComparedFilesList();
 
-        // načtení do TreeTableView
-        treeTableBuilder.loadComparedFilesToGUI(root, resultComparedList);
-        // Obarvení řádků podle operace
-        treeTableBuilder.rowFormatingByOperation(filesTreeTable);
-        //  vloží ikony do sloupce operace
-        treeTableBuilder.setOperationColumnIcon(operationCol);
+        //  vložíme esitující objekty a metoda nám z nich do root nastaví řádky
+        treeTableBuilder.setTreeTable(root,
+                resultComparedList,
+                filesTreeTable,
+                operationCol);
     }
 
 
