@@ -10,6 +10,10 @@
     -fx-text-fill: -fx-color-textLight;
 }
 
+.colloredBoltText {
+    -fx-text-fill: -fx-color-primary1;
+}
+
 
 /*  ===========================================
             MenuBar

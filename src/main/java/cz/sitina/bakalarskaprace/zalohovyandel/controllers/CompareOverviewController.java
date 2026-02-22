@@ -11,14 +11,11 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.TreeTableBuilderService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.Utility;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.Node;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Window;
+
 
 import java.util.List;
 
@@ -143,6 +140,10 @@ public class CompareOverviewController {
         }
 
     }
+
+    @FXML
+    public void startSetingsOfComparing(ActionEvent event){
+    }
     @FXML
     public void startComparingFiles(ActionEvent event) {
         compareAndLoadFiles(
@@ -153,6 +154,8 @@ public class CompareOverviewController {
         );
 
     }
+
+
     @FXML
     public void choseRightFolder(ActionEvent event) {
         File directory = compareOverviewService.findDirectory(event);

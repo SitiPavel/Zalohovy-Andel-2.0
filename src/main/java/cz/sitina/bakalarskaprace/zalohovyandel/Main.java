@@ -1,5 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,6 +15,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
+        ManualSyncTask task1 = new ManualSyncTask("zaloha manual 1",
+                "D:\\testBakalarky\\Test01",
+                "D:\\testBakalarky\\Test02", ""
+                );
 
         String resourcesPath = "/cz/sitina/bakalarskaprace/zalohovyandel/";
         FXMLLoader fxmlLoader = new FXMLLoader(getClass()

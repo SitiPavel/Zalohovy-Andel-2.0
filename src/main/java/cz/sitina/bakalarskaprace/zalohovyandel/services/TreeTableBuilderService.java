@@ -37,6 +37,8 @@ public class TreeTableBuilderService {
     private final Image iconUpdateLeft   = new Image(getClass().getResourceAsStream(BASE_PATH + "UPDATE_LEFT.png"));
     private final Image iconUpdateRight  = new Image(getClass().getResourceAsStream(BASE_PATH + "UPDATE_RIGHT.png"));
 
+
+
     public void setTreeTable(TreeItem<ComparedItemOperItemRowModel> root,
                                                              List<ComparedItemOperItemRowModel> comparedList,
                                                              TreeTableView<ComparedItemOperItemRowModel> treeTable,
@@ -111,7 +113,7 @@ public class TreeTableBuilderService {
 
                         ComparedItemOperItemRowModel folderRow = new ComparedItemOperItemRowModel(
                                 new FileItemModel(),
-                                CompareOperations.UNKNOW,  // Operace u složky nedává smysl (nebo dej SAME)
+                                CompareOperations.UNKNOWN,  // Operace u složky nedává smysl (nebo dej SAME)
                                 new FileItemModel()   // Pravá strana
                         );
 
@@ -173,7 +175,7 @@ public class TreeTableBuilderService {
                     case DELETE_LEFT, DELETE_RIGHT, DELETE_BOTH -> getStyleClass().add("row-delete");
                     case UPDATE_LEFT, UPDATE_RIGHT -> getStyleClass().add("row-update");
                     case ADD_LEFT, ADD_RIGHT -> getStyleClass().add("row-add");
-                    case UNKNOW -> getStyleClass().add("row-uknow");
+                    case UNKNOWN -> getStyleClass().add("row-uknow");
                 }
             }
         });
@@ -234,7 +236,7 @@ public class TreeTableBuilderService {
             } case UPDATE_RIGHT -> {return iconUpdateRight;
             } case ADD_LEFT -> {return iconAddLeft;
             } case ADD_RIGHT -> {return iconAddRight;
-            } case UNKNOW -> {return iconUnknown;
+            } case UNKNOWN -> {return iconUnknown;
             }
         }
         return null;

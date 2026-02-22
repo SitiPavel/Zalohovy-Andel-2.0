@@ -30,6 +30,6 @@ public class MirroringStrategy implements ComparationStrategy {
                 return CompareOperations.DELETE_RIGHT;
             }
         }
-        return CompareOperations.UNKNOW; /// pokud b vznikl neočekávaný scénář
+        return CompareOperations.UNKNOWN; /// pokud b vznikl neočekávaný scénář
     }
 }

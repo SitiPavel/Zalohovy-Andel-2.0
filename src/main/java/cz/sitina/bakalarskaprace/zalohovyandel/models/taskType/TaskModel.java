@@ -1,0 +1,76 @@
+package cz.sitina.bakalarskaprace.zalohovyandel.models.taskType;
+
+import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class TaskModel {
+    private final long id; // máme jako daatum a čas vytvoření v milisekundách
+    private final TaskTypes taskType;
+    private String name;
+    private String leftPath;
+    private String rightPath;
+    private String description;
+    private final LocalDate creationDate;
+    private List<String> blockList = new ArrayList<>();
+
+    public TaskModel( TaskTypes taskType,
+                     String name,
+                     String leftPath,
+                     String rightPath,
+                     String description) {
+
+        this.id = System.currentTimeMillis();
+        this.taskType = taskType;
+
+        this.name = name;
+        this.leftPath = leftPath;
+        this.rightPath = rightPath;
+        this.description = description;
+        this.creationDate = LocalDate.now();
+    }
+
+
+    public long getId() {
+        return id;
+    }
+    public TaskTypes getTaskType() {
+        return taskType;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getLeftPath() {
+        return leftPath;
+    }
+    public String getRightPath() {
+        return rightPath;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+    public List<String> getBlockList() {
+        return blockList;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setLeftPath(String leftPath) {
+        this.leftPath = leftPath;
+    }
+    public void setRightPath(String rightPath) {
+        this.rightPath = rightPath;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setBlockList(List<String> blockList) {
+        this.blockList = blockList;
+    }
+}

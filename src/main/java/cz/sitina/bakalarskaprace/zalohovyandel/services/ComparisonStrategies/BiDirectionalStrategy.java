@@ -31,7 +31,7 @@ public class BiDirectionalStrategy implements ComparationStrategy {
             /// velikosti jsou odličné ale modifikace stejná = nevíme
             else if (leftItem.getFileSize() != rightItem.getFileSize() &&
                     leftItem.getLastModified() == rightItem.getLastModified()) {
-                return CompareOperations.UNKNOW;
+                return CompareOperations.UNKNOWN;
             }
 
         } else { /// cesty se neshodují,
@@ -43,6 +43,6 @@ public class BiDirectionalStrategy implements ComparationStrategy {
                 return CompareOperations.ADD_RIGHT;
             }
         }
-        return CompareOperations.UNKNOW; /// pokud b vznikl neočekávaný scénář
+        return CompareOperations.UNKNOWN; /// pokud b vznikl neočekávaný scénář
     }
 }

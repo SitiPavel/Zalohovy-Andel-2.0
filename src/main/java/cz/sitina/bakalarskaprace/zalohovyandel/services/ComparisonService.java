@@ -74,7 +74,7 @@ public class ComparisonService {
                     dataModel.attributeRightAddCount(1);
                     dataModel.attributeDataTransportSize(leftItem.getFileSize());
                 }
-                case UNKNOW -> dataModel.attributeUnknownCount(1);
+                case UNKNOWN -> dataModel.attributeUnknownCount(1);
             }
 
             if (leftItem == null && rightItem != null) {
