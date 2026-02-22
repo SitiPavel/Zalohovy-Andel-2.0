@@ -5,9 +5,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeTableColumn?>
@@ -24,26 +21,7 @@
 
 <AnchorPane minHeight="500.0" minWidth="700.0" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.CompareOverviewController">
    <children>
-      <HBox maxHeight="30.0" minHeight="30.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="1000.0" styleClass="menuConteiner" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <MenuBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="507.0" styleClass="menuConteiner">
-              <menus>
-                <Menu mnemonicParsing="false" text="Soubor">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="gfdhgj" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" styleClass="menuItems" text="Nápověda">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="30.0" maxWidth="500.0" minHeight="30.0" minWidth="100.0" prefHeight="30.0" prefWidth="499.0" styleClass="colloredBoltText" text="nazevUlohy" />
-         </children>
-      </HBox>
-      <GridPane layoutX="300.0" layoutY="30.0" prefHeight="125.0" prefWidth="1081.0" styleClass="toolBox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+      <GridPane layoutX="300.0" layoutY="30.0" prefHeight="125.0" prefWidth="1081.0" styleClass="toolBox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" minWidth="260.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.0" minWidth="125.0" prefWidth="125.0" />
@@ -353,7 +331,7 @@
             </VBox>
          </children>
       </GridPane>
-      <GridPane layoutX="-3.0" layoutY="155.0" prefHeight="545.0" prefWidth="1081.0" styleClass="mainConteinerStyle" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="155.0">
+      <GridPane layoutX="-3.0" layoutY="155.0" prefHeight="545.0" prefWidth="1081.0" styleClass="mainConteinerStyle" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" minWidth="385.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="70.0" minWidth="63.0" prefWidth="70.0" />

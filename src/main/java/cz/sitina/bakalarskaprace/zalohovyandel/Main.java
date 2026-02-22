@@ -1,5 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.AppFrameController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import javafx.application.Application;
@@ -21,7 +22,27 @@ public class Main extends Application {
                 "D:\\testBakalarky\\Test02", ""
                 );
 
+
         String resourcesPath = "/cz/sitina/bakalarskaprace/zalohovyandel/";
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcesPath +"fxml/AppFrameView.fxml"));
+        Scene scene = new Scene(loader.load(), 1000, 700);
+
+        AppFrameController appFrameController = loader.getController();
+        appFrameController.showCompareOverview();
+
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource(
+                resourcesPath + "css/compareOverviewStyl.css")).toExternalForm());
+
+        stage.getIcons().add(new Image(Objects.requireNonNull(
+                getClass().getResourceAsStream(
+                        resourcesPath + "images/ZalohovyAndelLogo70x70.png"))));
+
+        stage.setTitle("Zálohový Anděl");
+        stage.setScene(scene);
+        stage.show();
+
+/*
         FXMLLoader fxmlLoader = new FXMLLoader(getClass()
                 .getResource( resourcesPath+"fxml/compareOverviewView.fxml"));
 
@@ -39,6 +60,7 @@ public class Main extends Application {
         stage.setTitle("Zálohový Anděl");
         stage.setScene(scene);
         stage.show();
+        */
     }
 
     public static void main(String[] args) {

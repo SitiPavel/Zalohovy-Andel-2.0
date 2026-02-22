@@ -80,7 +80,8 @@
     -fx-border-color: -fx-color-mark1;
 }
 .modificator-offButton {
-    -fx-border-color: -fx-color-darkBackground;
+    -fx-border-color: -fx-color-primary2;
+    -fx-background-color: -fx-color-darkBackground;
 }
 
 
@@ -108,3 +109,47 @@
     -fx-alignment: center-left;
     -fx-padding: 0 0 0 5px; /* horní, pravý, dolní, levý */
 }
+
+
+/* Tabbulky - TableView  */
+
+
+.TaskTable {}
+
+.TaskTable.table-view { /*celá tabulka*/
+    -fx-background-color: -fx-color-Transparent;
+    -fx-padding: 0;
+    -fx-table-cell-border-color: -fx-color-primary2;
+
+}
+.table-view .placeholder .label { /*Pokud tabulka neobsahuje data*/
+    -fx-text-fill: -fx-color-textDark;
+
+}
+.TaskTable .column-header-background { /*Hlavička = panel za tlačítkama*/
+    -fx-background-color: -fx-color-primary2;
+    -fx-max-height: 30;
+    -fx-min-height: 30;
+    -fx-pref-height: 30;
+}
+.TaskTable .column-header {  /*Hlavička = conteinery buněk vzáhlaví */
+    -fx-background-color: -fx-color-primary2;
+}
+.TaskTable .column-header .label{  /*Hlavička = text v záhlaví buněk*/
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-color-textLight;
+}
+
+.TaskTable .filler { /*prázdné místo pokud buňky nevyplní celý řádek */
+    -fx-background-color: -fx-color-primary2;
+}
+
+.TaskTable .table-row-cell { /*Celý řádek položky*/
+    -fx-background-color: -fx-color-Transparent;
+    -fx-text-fill: -fx-color-textDark;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: solid;
+    -fx-border-color: -fx-color-primary2;
+}
+
+

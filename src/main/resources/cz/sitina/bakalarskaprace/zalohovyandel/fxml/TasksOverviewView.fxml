@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.TaskOverviewController">
+   <children>
+      <GridPane layoutX="300.0" layoutY="30.0" prefHeight="125.0" prefWidth="1081.0" styleClass="toolBox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="260.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.0" minWidth="125.0" prefWidth="125.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.0" minWidth="125.0" prefWidth="125.0" />
+          <ColumnConstraints hgrow="ALWAYS" minWidth="260.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="125.0" minHeight="125.0" prefHeight="125.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <VBox alignment="CENTER" minWidth="-Infinity" prefHeight="115.0" prefWidth="70.0" styleClass="CenterPanel" GridPane.columnIndex="2" GridPane.vgrow="NEVER">
+               <children>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/icons/Overview.png" />
+                     </image>
+                  </ImageView>
+                  <Label styleClass="lightMidText" text="Přehled" />
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/icons/pieChar-yellowt.png" />
+                     </image>
+                  </ImageView>
+                  <HBox alignment="CENTER" prefHeight="16.0" prefWidth="87.0">
+                     <children>
+                        <Label fx:id="lbDataTransportTotalSize" alignment="CENTER" maxHeight="18.0" maxWidth="56.0" minHeight="18.0" minWidth="56.0" prefHeight="18.0" prefWidth="56.0" styleClass="lightMidText" text="0" textAlignment="JUSTIFY" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox prefHeight="125.0" prefWidth="108.0" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="120.0" styleClass="layout_justifyContent">
+                     <children>
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/icons/startSynch.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <styleClass>
+                              <String fx:value="toolBarButton" />
+                              <String fx:value="modificator_snychronizationButton" />
+                           </styleClass>
+                           <HBox.margin>
+                              <Insets left="10.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/icons/StartSync.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <styleClass>
+                              <String fx:value="toolBarButton" />
+                              <String fx:value="modificator-offButton" />
+                           </styleClass>
+                           <HBox.margin>
+                              <Insets left="5.0" right="10.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="102.0" styleClass="layout_justifyContent">
+                     <children>
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/icons/jurnal.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <styleClass>
+                              <String fx:value="toolBarButton" />
+                              <String fx:value="modificator_jurnalButton" />
+                           </styleClass>
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/icons/autoBacUp.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <styleClass>
+                              <String fx:value="toolBarButton" />
+                              <String fx:value="modificator_autobackupButton" />
+                           </styleClass>
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="10.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox prefHeight="115.0" prefWidth="47.0" GridPane.columnIndex="1" GridPane.vgrow="NEVER">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="73.0" styleClass="layout_justifyContent">
+                     <children>
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/icons/SetCompare.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <styleClass>
+                              <String fx:value="toolBarButton" />
+                              <String fx:value="modificator-offButton" />
+                           </styleClass>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <HBox.margin>
+                              <Insets left="10.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/icons/compareData.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <styleClass>
+                              <String fx:value="toolBarButton" />
+                              <String fx:value="modificator-offButton" />
+                           </styleClass>
+                           <opaqueInsets>
+                              <Insets left="20.0" right="20.0" />
+                           </opaqueInsets>
+                           <HBox.margin>
+                              <Insets left="5.0" right="10.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="66.0" prefWidth="80.0" VBox.vgrow="NEVER">
+                     <children>
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/icons/blockList.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <styleClass>
+                              <String fx:value="toolBarButton" />
+                              <String fx:value="toolBarButtonLite" />
+                           </styleClass>
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="10.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </GridPane>
+      <GridPane layoutY="155.0" styleClass="mainConteinerStyle" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="385.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="70.0" minWidth="63.0" prefWidth="70.0" />
+          <ColumnConstraints hgrow="ALWAYS" minWidth="385.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="295.0" vgrow="ALWAYS" />
+          <RowConstraints maxHeight="-Infinity" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TableView styleClass="TaskTable" GridPane.columnSpan="3" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">
+              <columns>
+                  <TableColumn maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Detaily" />
+                <TableColumn minWidth="150.0" prefWidth="-1.0" text="Název úlohy" />
+                  <TableColumn maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Typ" />
+                <TableColumn maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Stav" />
+                  <TableColumn maxWidth="130.0" minWidth="130.0" prefWidth="130.0" text="Interval opakování" />
+                  <TableColumn maxWidth="80.0" minWidth="80.0" text="Komprese" />
+                  <TableColumn maxWidth="80.0" minWidth="80.0" text="Šifrování" />
+                  <TableColumn maxWidth="80.0" minWidth="80.0" text="Vytvoření" />
+              </columns>
+            </TableView>
+            <HBox alignment="CENTER" prefHeight="240.0" prefWidth="70.0" styleClass="bottomBar" GridPane.columnSpan="3" GridPane.rowIndex="2">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                     <children>
+                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/icons/addItem_left.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Label fx:id="lbLeftAddCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                     </children>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="3.0" right="5.0" top="5.0" />
+               </padding>
+            </HBox>
+         </children>
+      </GridPane>
+   </children>
+   <stylesheets>
+      <URL value="@../css/compareOverviewStyl.css" />
+      <URL value="@../css/globlCss.css" />
+   </stylesheets>
+</AnchorPane>

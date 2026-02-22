@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+
+<AnchorPane minHeight="500.0" minWidth="700.0" prefHeight="700.0" prefWidth="1184.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.AppFrameController">
+   <children>
+      <HBox maxHeight="30.0" minHeight="30.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" styleClass="menuConteiner" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <MenuBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="507.0" styleClass="menuConteiner">
+              <menus>
+                <Menu mnemonicParsing="false" text="Soubor">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="gfdhgj" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" styleClass="menuItems" text="Nápověda">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <Region minHeight="30.0" minWidth="0.0" prefHeight="200.0" HBox.hgrow="ALWAYS" />
+            <Label fx:id="lblTaskName" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="30.0" maxWidth="500.0" minHeight="30.0" minWidth="100.0" prefHeight="30.0" prefWidth="498.0" styleClass="colloredBoltText" text="nazevUlohy">
+               <padding>
+                  <Insets right="10.0" />
+               </padding></Label>
+         </children>
+      </HBox>
+      <AnchorPane fx:id="contentArea" styleClass="mainConteinerStyle" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
+   </children>
+   <stylesheets>
+      <URL value="@../css/compareOverviewStyl.css" />
+      <URL value="@../css/globlCss.css" />
+   </stylesheets>
+</AnchorPane>
