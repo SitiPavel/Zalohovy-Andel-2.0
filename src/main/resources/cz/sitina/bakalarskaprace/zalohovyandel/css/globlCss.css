@@ -12,6 +12,8 @@
 
 .colloredBoltText {
     -fx-text-fill: -fx-color-primary1;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
 }
 
 
@@ -33,8 +35,6 @@
 
 .context-menu .label {
     -fx-text-fill: -fx-color-textDark;
-    -fx-font-size: 15px;
-
 }
 
 
@@ -49,17 +49,14 @@
     -fx-background-color: -fx-color-primary2;
     -fx-background-radius: 17px;
 
-    /* Tady je to kouzlo: */
-    /* 1. Rámeček necháme na okraji (0) */
     -fx-border-insets: 0;
-
-    /* 2. Pozadí posuneme dovnitř o tloušťku rámečku (3px) */
     -fx-background-insets: 1;
 
     -fx-border-color: -fx-color-mark5;
     -fx-border-style: solid;
     -fx-border-width: 4;
     -fx-border-radius: 17px;
+    -fx-cursor: hand;
 }
 .toolBarButtonLite {
     -fx-background-color: -fx-color-darkBackground;
@@ -79,10 +76,19 @@
 .modificator_autobackupButton {
     -fx-border-color: -fx-color-mark1;
 }
+.modificator_save{
+    -fx-border-color: -fx-color-primary1;
+}
 .modificator-offButton {
     -fx-border-color: -fx-color-darkBackground;
     -fx-background-color: -fx-color-primary2;
 }
+.modificator-hiden{
+    -fx-border-color: -fx-color-Transparent;
+    -fx-background-color: -fx-color-Transparent;
+    -fx-cursor: hand;
+}
+
 
 
 
@@ -139,14 +145,12 @@
     -fx-font-size: 13px;
     -fx-text-fill: -fx-color-textLight;
 }
-
 .TaskTable .filler { /*prázdné místo pokud buňky nevyplní celý řádek */
     -fx-background-color: -fx-color-primary2;
 }
-
 .TaskTable .table-row-cell { /*Celý řádek položky*/
     -fx-background-color: -fx-color-Transparent;
-    -fx-text-fill: -fx-color-textDark;
+
     -fx-border-width: 0 0 1 0;
     -fx-border-style: solid;
     -fx-border-color: -fx-color-primary2;
@@ -155,18 +159,17 @@
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-alignment: CENTER;
+    -fx-text-fill: -fx-color-textDark;
 }
 .TaskTable .table-row-cell:even { //
     -fx-background-color: -fx-colorFilter-Dark-25;
 }
-
 .TaskTable .table-row-cell:selected {  /*mění řádek vybraného*/
     -fx-background-color: -fx-color-primary2;
     -fx-border-width: 1 0 1 0;
     -fx-border-style: solid;
     -fx-border-color: -fx-color-primary1;
 }
-
 .TaskTable .table-row-cell:selected .table-cell { /*mění text vybraného*/
     -fx-text-fill: -fx-color-primary1;
 }

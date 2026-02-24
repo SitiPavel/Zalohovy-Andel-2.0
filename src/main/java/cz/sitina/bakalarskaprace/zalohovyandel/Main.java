@@ -23,8 +23,13 @@ public class Main extends Application {
 
         taskRepository.add(new ManualSyncTask("zaloha manual 1",
                 "D:\\testBakalarky\\Test01",
-                "D:\\testBakalarky\\Test02", ""
-                )
+                "D:\\testBakalarky\\Test02",
+                "")
+        );
+        taskRepository.add(new ManualSyncTask("Důležité soubory",
+                "C:\\Users\\pavel\\Pictures",
+                "D:\\testBakalarky\\Test02",
+                "popis úlohy ")
         );
 
 

@@ -4,6 +4,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowMod
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
@@ -37,7 +38,7 @@ public class CompareOverviewController {
     private final FileScannerService fileScannerService = new FileScannerService();
     private List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
     private TreeTableBuilderService treeTableBuilder = new TreeTableBuilderService();
-    private TaskModel taskModel;
+    private ManualSyncTask manualTask;
 
     private final ComparisonService comparisonService = new ComparisonService();
     private final BiDirectionalStrategy biDirectionalStrategy = new BiDirectionalStrategy();
@@ -119,13 +120,6 @@ public class CompareOverviewController {
         //nastavení kořene celé struktury
         root.setExpanded(true);
 
-        /* ✪======V======V======V=======V========*/
-        tfLeftFolderPath.setText("D:\\testBakalarky\\Test01");
-        tfRightFolderPath.setText("D:\\testBakalarky\\Test02");
-        /* =======^=======^=======^=======^=======*/
-
-
-
         filesTreeTable.setRoot(root);
         filesTreeTable.setShowRoot(false);
 
@@ -158,6 +152,9 @@ public class CompareOverviewController {
 
     }
 
+    public void showTaskOverviewGUI(ActionEvent event) {
+        appFrameController.showTasksOverview();
+    }
 
     @FXML
     public void choseRightFolder(ActionEvent event) {
@@ -172,6 +169,7 @@ public class CompareOverviewController {
     // obecné nápomocné metody
 
 
+    // stará se o poslání objektů k porovnání shod a načítá veškerá data
     private void compareAndLoadFiles(TreeItem<ComparedItemOperItemRowModel> root,
                                      String leftFolder,
                                      String rightFolder,
@@ -221,8 +219,13 @@ public class CompareOverviewController {
                 operationCol);
     }
 
-    public void setTaskModel(TaskModel taskModel) {
-        this.taskModel = taskModel;
+    public void loadView() {
+        tfLeftFolderPath.setText(manualTask.getLeftPath());
+        tfRightFolderPath.setText(manualTask.getRightPath());
+    }
+
+    public void setTaskModel(ManualSyncTask tak) {
+        this.manualTask = tak;
     };
 
     public void setAppFrameController(AppFrameController appFrameController) {

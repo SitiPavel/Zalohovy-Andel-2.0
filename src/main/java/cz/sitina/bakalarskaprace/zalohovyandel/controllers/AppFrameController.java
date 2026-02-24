@@ -1,6 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.TaskRepository;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,18 +22,18 @@ public class AppFrameController {
 
     @FXML
     public void showTasksOverview() {
-        loadView("TasksOverviewView.fxml", "Zálohový Anděl - seznam úloh", null);
+        loadView("TasksOverviewView.fxml", null);
 
     }
 
     @FXML
     public void showCompareOverview(TaskModel taskModel) {
-        loadView("compareOverviewView.fxml", "Zálohový Anděl - manuální záloha", taskModel);
+        loadView("compareOverviewView.fxml", taskModel);
     }
 
 
     // načítání jednotlivích obrazovek
-    private void loadView(String fxml, String title, TaskModel taskModel) {
+    private void loadView(String fxml, TaskModel taskModel) {
         try {
             String path = "/cz/sitina/bakalarskaprace/zalohovyandel/fxml/" + fxml;
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
@@ -46,8 +47,11 @@ public class AppFrameController {
                 toc.setAppFrameController(this);
             } else if (subController instanceof CompareOverviewController coc) {
                 if (taskModel != null) {
-                    coc.setTaskModel(taskModel);
+                    ManualSyncTask mst = (ManualSyncTask) taskModel;
+                    coc.setTaskModel(mst);
                     coc.setAppFrameController(this);
+                    coc.loadView();
+
                 } else  {
                     System.out.println("!!! taskModel nenalezen"); /*ERROR ✪ */
                 }
@@ -60,7 +64,11 @@ public class AppFrameController {
 
             contentArea.getChildren().setAll(node);
 
-            lblTaskName.setText(title);
+            if (taskModel != null) {
+                lblTaskName.setText(taskModel.getName());
+            } else {
+                lblTaskName.setText("");
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

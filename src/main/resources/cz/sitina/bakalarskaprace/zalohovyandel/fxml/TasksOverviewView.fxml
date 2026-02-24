@@ -205,14 +205,21 @@
             <TableView fx:id="taskTable" styleClass="TaskTable" GridPane.columnSpan="3" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">
               <columns>
                   <TableColumn fx:id="taskColEntry" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Detaily" />
-                <TableColumn fx:id="taskColName" minWidth="150.0" prefWidth="-1.0" text="Název úlohy" />
+                <TableColumn fx:id="taskColName" minWidth="200.0" prefWidth="-1.0" text="Název úlohy" />
                   <TableColumn fx:id="taskColType" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Typ" />
                 <TableColumn fx:id="taskColStatus" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Stav" />
                   <TableColumn fx:id="taskColRepeatIntervals" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" text="Interval opakování" />
                   <TableColumn fx:id="taskColCompression" maxWidth="80.0" minWidth="80.0" text="Komprese" />
                   <TableColumn fx:id="taskColEncryption" maxWidth="80.0" minWidth="80.0" text="Šifrování" />
-                  <TableColumn fx:id="taskColCreatedDate" maxWidth="80.0" minWidth="80.0" text="Vytvoření" />
+                  <TableColumn fx:id="taskColCreatedDate" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" text="Vytvoření" />
+                  <TableColumn fx:id="taskColDescription" minWidth="100.0" prefWidth="-1.0" text="Popis" />
               </columns>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
             </TableView>
             <HBox alignment="CENTER" prefHeight="240.0" prefWidth="70.0" styleClass="bottomBar" GridPane.columnSpan="3" GridPane.rowIndex="2">
                <children>
@@ -222,20 +229,94 @@
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../images/icons/addItem_left.png" />
+                                    <Image url="@../images/iconsSmall/manualSync_TabbleIcon.png" />
                                  </image>
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label fx:id="lbLeftAddCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbLeftAddCount1" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
-                     <HBox.margin>
-                        <Insets right="10.0" />
-                     </HBox.margin>
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                     <children>
+                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/autoBackup_TableIcon_n_n.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Label fx:id="lbLeftAddCount2" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                     <children>
+                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/autoBackup_TableIcon_n_K.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Label fx:id="lbLeftAddCount3" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                     <children>
+                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/autoBackup_TableIcon_S_n.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Label fx:id="lbLeftAddCount31" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                     <children>
+                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/autoBackup_TableIcon_S_K.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Label fx:id="lbLeftAddCount311" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
                   </VBox>
                </children>
                <padding>
-                  <Insets bottom="5.0" left="3.0" right="5.0" top="5.0" />
+                  <Insets top="5.0" />
                </padding>
             </HBox>
          </children>

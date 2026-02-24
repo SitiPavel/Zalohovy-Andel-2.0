@@ -48,6 +48,7 @@ public class TaskOverviewController {
     @FXML private TableColumn<TaskModel, String> taskColCompression;
     @FXML private TableColumn<TaskModel, String> taskColEncryption;
     @FXML private TableColumn<TaskModel, String> taskColCreatedDate;
+    @FXML private TableColumn<TaskModel, String> taskColDescription;
 
 
 
@@ -55,6 +56,8 @@ public class TaskOverviewController {
     public void initialize() {
         int entrySize = 20;
         int typeSize = 30;
+
+
         // nastavení vzhledu buňky pro vstup do úlohy = přidání tpačítka s ikonou
         taskColEntry.setCellValueFactory(cellData -> new SimpleObjectProperty<>(entryIcon));
         taskColEntry.setCellFactory(cellData -> new TableCell<TaskModel, Image>() {
@@ -183,6 +186,8 @@ public class TaskOverviewController {
         });
         taskColCreatedDate.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getCreationDate().toString()));
+        taskColDescription.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getDescription()));
     }
 
     public void setTaskRepository(TaskRepository taskRepository) {
