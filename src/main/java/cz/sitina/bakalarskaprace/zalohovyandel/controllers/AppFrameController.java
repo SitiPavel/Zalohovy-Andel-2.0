@@ -1,5 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.models.TaskRepository;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -13,22 +15,43 @@ public class AppFrameController {
     @FXML private AnchorPane contentArea;
     @FXML private Label lblTaskName;
 
+    // definice objektů
+    private TaskRepository taskRepository;
+
+
     @FXML
     public void showTasksOverview() {
-        loadView("TasksOverviewView.fxml", "Zálohový Anděl - seznam úloh");
+        loadView("TasksOverviewView.fxml", "Zálohový Anděl - seznam úloh", null);
+
     }
 
     @FXML
-    public void showCompareOverview() {
-        loadView("compareOverviewView.fxml", "Zálohový Anděl - manuální záloha");
+    public void showCompareOverview(TaskModel taskModel) {
+        loadView("compareOverviewView.fxml", "Zálohový Anděl - manuální záloha", taskModel);
     }
 
-    private void loadView(String fxml, String title) {
+
+    // načítání jednotlivích obrazovek
+    private void loadView(String fxml, String title, TaskModel taskModel) {
         try {
             String path = "/cz/sitina/bakalarskaprace/zalohovyandel/fxml/" + fxml;
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
 
             Node node = loader.load();
+
+            Object subController = loader.getController();
+
+            if (subController instanceof TaskOverviewController toc) {
+                toc.setTaskRepository(taskRepository);
+                toc.setAppFrameController(this);
+            } else if (subController instanceof CompareOverviewController coc) {
+                if (taskModel != null) {
+                    coc.setTaskModel(taskModel);
+                    coc.setAppFrameController(this);
+                } else  {
+                    System.out.println("!!! taskModel nenalezen"); /*ERROR ✪ */
+                }
+            }
 
             AnchorPane.setTopAnchor(node, 0.0);
             AnchorPane.setBottomAnchor(node, 0.0);
@@ -41,7 +64,12 @@ public class AppFrameController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Nepodařilo se načíst pohled: " + fxml);
+            System.err.println("Nepodařilo se načíst pohled: " + fxml);/*ERROR ✪ */
         }
+
+    }
+
+    public void setTaskRepository(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
     }
 }

@@ -4,6 +4,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowMod
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
@@ -36,6 +37,7 @@ public class CompareOverviewController {
     private final FileScannerService fileScannerService = new FileScannerService();
     private List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
     private TreeTableBuilderService treeTableBuilder = new TreeTableBuilderService();
+    private TaskModel taskModel;
 
     private final ComparisonService comparisonService = new ComparisonService();
     private final BiDirectionalStrategy biDirectionalStrategy = new BiDirectionalStrategy();
@@ -44,6 +46,7 @@ public class CompareOverviewController {
     private final CompareOverviewService compareOverviewService = new CompareOverviewService();
     private final TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
     private final Utility utility = new Utility();
+    private AppFrameController appFrameController;
 
     // definované datové sady
     private ComparedDataAndStatisticsForCompereOverview statisticsAndComparedData;
@@ -218,8 +221,13 @@ public class CompareOverviewController {
                 operationCol);
     }
 
+    public void setTaskModel(TaskModel taskModel) {
+        this.taskModel = taskModel;
+    };
 
-
+    public void setAppFrameController(AppFrameController appFrameController) {
+        this.appFrameController = appFrameController;
+    }
 }
 
 

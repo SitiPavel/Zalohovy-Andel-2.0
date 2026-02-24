@@ -13,6 +13,7 @@ public abstract class TaskModel {
     private String leftPath;
     private String rightPath;
     private String description;
+    private String status;
     private final LocalDate creationDate;
     private List<String> blockList = new ArrayList<>();
 
@@ -32,7 +33,7 @@ public abstract class TaskModel {
         this.creationDate = LocalDate.now();
     }
 
-
+    //getry
     public long getId() {
         return id;
     }
@@ -57,7 +58,11 @@ public abstract class TaskModel {
     public List<String> getBlockList() {
         return blockList;
     }
+    public String getStatus() {
+        return status;
+    }
 
+    //setry
     public void setName(String name) {
         this.name = name;
     }
@@ -72,5 +77,8 @@ public abstract class TaskModel {
     }
     public void setBlockList(List<String> blockList) {
         this.blockList = blockList;
+    }
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

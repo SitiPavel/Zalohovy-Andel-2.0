@@ -14,6 +14,10 @@ public class TaskRepository {
         taskList.add(task);
     }
 
+    public ObservableList<TaskModel> getTaskList() {
+        return taskList;
+    }
+
     public TaskModel getListItem(long id) {
         for (TaskModel task : taskList) {
             if (task.getId() == id) {
