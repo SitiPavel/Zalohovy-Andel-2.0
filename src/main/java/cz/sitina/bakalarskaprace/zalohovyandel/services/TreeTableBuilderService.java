@@ -36,7 +36,7 @@ public class TreeTableBuilderService {
 
     private final Image iconUpdateLeft   = new Image(getClass().getResourceAsStream(BASE_PATH + "UPDATE_LEFT.png"));
     private final Image iconUpdateRight  = new Image(getClass().getResourceAsStream(BASE_PATH + "UPDATE_RIGHT.png"));
-
+    private final Image iconFolder  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER.png"));
 
 
     public void setTreeTable(TreeItem<ComparedItemOperItemRowModel> root,
@@ -113,7 +113,7 @@ public class TreeTableBuilderService {
 
                         ComparedItemOperItemRowModel folderRow = new ComparedItemOperItemRowModel(
                                 new FileItemModel(),
-                                CompareOperations.UNKNOWN,  // Operace u složky nedává smysl (nebo dej SAME)
+                                CompareOperations.FOLDER,  // Operace u složky nedává smysl (nebo dej SAME)
                                 new FileItemModel()   // Pravá strana
                         );
 
@@ -237,7 +237,7 @@ public class TreeTableBuilderService {
             } case ADD_LEFT -> {return iconAddLeft;
             } case ADD_RIGHT -> {return iconAddRight;
             } case UNKNOWN -> {return iconUnknown;
-            }
+            } case FOLDER -> {return iconFolder;}
         }
         return null;
     }
