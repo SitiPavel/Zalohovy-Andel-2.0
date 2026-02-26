@@ -23,7 +23,7 @@ public class ManualCompareSettingsController {
     @FXML private ToggleGroup SelectedCompareStrategy;
 
     // radio buttny
-    /*
+
     @FXML private RadioButton rbSizeModifi;
     @FXML private RadioButton rbHash;
 
@@ -32,17 +32,15 @@ public class ManualCompareSettingsController {
     @FXML private RadioButton rbStrategy_oneToLeft;
     @FXML private RadioButton rbStrategy_MirrToRight;
     @FXML private RadioButton rbStrategy_MirrToLeft;
-    */
-
-
 
 
     public ManualCompareSettingsController() {
     }
 
+
+
     @FXML
     public void confirmSettings(ActionEvent event) {
-        System.out.println(task);
         ToggleButton selectedCompare = (ToggleButton) SelectCompareType.getSelectedToggle();
         ToggleButton selectedStrategy = (ToggleButton) SelectedCompareStrategy.getSelectedToggle();
 
@@ -66,9 +64,6 @@ public class ManualCompareSettingsController {
                 case "rbStrategy_MirrToLeft": task.setCompareStrategy(MIRRORING_TO_lEFT);break;
             }
 
-            System.out.println(task.isContentHash());
-            System.out.println(task.getCompareStrategy());
-
             //zavření okna
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
@@ -79,5 +74,20 @@ public class ManualCompareSettingsController {
 
     public void setTask(ManualSyncTask task) {
         this.task = task;
+
+        if (!task.isContentHash()) {
+            rbSizeModifi.setSelected(true);
+        } else {
+            rbHash.setSelected(true);
+        }
+
+        switch (task.getCompareStrategy()) {
+            case BIDIRECTIONAL_SYNC -> rbStrategy_Bi.setSelected(true);
+            case BACKUP_TO_RIGHT -> rbStrategy_oneToRight.setSelected(true);
+            case BACKUP_TO_LEFT -> rbStrategy_oneToLeft.setSelected(true);
+            case MIRRORING_to_RIGHT -> rbStrategy_MirrToRight.setSelected(true);
+            case MIRRORING_TO_lEFT -> rbStrategy_MirrToLeft.setSelected(true);
+        }
+
     }
 }

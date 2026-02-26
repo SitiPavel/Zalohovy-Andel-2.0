@@ -45,9 +45,6 @@ public class CompareOverviewController {
     private ManualSyncTask manualTask;
 
     private final ComparisonService comparisonService = new ComparisonService();
-    private final BiDirectionalStrategy biDirectionalStrategy = new BiDirectionalStrategy();
-    private final MirroringStrategy mirroringStrategy = new MirroringStrategy();
-    private final OneWayStrategy oneWayStrategy = new OneWayStrategy();
     private final CompareOverviewService compareOverviewService = new CompareOverviewService();
     private final TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
     private final Utility utility = new Utility();
@@ -168,7 +165,7 @@ public class CompareOverviewController {
                 root,
                 tfLeftFolderPath.getText(),
                 tfRightFolderPath.getText(),
-                biDirectionalStrategy
+                manualTask
         );
 
     }
@@ -194,14 +191,14 @@ public class CompareOverviewController {
     private void compareAndLoadFiles(TreeItem<ComparedItemOperItemRowModel> root,
                                      String leftFolder,
                                      String rightFolder,
-                                     ComparationStrategy strategy) {
+                                     ManualSyncTask manualTask) {
         root.getChildren().clear(); //čistí TreeTableView
 
         // získáme potřebná data
          statisticsAndComparedData = comparisonService.compareFolders(
                 fileScannerService.scanFolder(leftFolder),
                 fileScannerService.scanFolder(rightFolder),
-                strategy
+                 manualTask
         );
 
         // nastavení statistik o disku v GUI

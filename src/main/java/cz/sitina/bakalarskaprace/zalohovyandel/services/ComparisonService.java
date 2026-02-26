@@ -4,19 +4,30 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowMod
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.ComparationStrategy;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
+
 
 import java.util.*;
 
+import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations.*;
+
 public class ComparisonService {
-    ComparedItemOperItemRowModel rowModel;
-    ComparedDataAndStatisticsForCompereOverview dataModel;
+    private ComparedItemOperItemRowModel rowModel;
+    private ComparedDataAndStatisticsForCompereOverview dataModel;
+
+    private final BiDirectionalStrategy biDirectionalStrategy = new BiDirectionalStrategy();
+    private final OneWayToRightStrategy oneWayToRightStrategy = new OneWayToRightStrategy();
+    private final OneWayToLeftStrategy oneWayToLeftStrategy = new OneWayToLeftStrategy();
+    private final MirroringToRightStrategy mirroringToRightStrategy = new MirroringToRightStrategy();
+    private final MirroringToLeftStrategy mirroringToLeftStrategy = new MirroringToLeftStrategy();
 
 
     public ComparedDataAndStatisticsForCompereOverview compareFolders(
             Map<String, FileItemModel> leftFilesMap,
             Map<String, FileItemModel> rightFilesMap,
-            ComparationStrategy strategy)
+            TaskModel taskModel)
     {
         List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
         dataModel = new ComparedDataAndStatisticsForCompereOverview();
@@ -32,7 +43,7 @@ public class ComparisonService {
         List<String> sortedKeys =  new ArrayList<>(allKeys);
         Collections.sort(sortedKeys);
 
-
+        CompareOperations operations;
         // Průchod listu
         for (String relativePath : sortedKeys) {
 
@@ -45,8 +56,27 @@ public class ComparisonService {
             }
              * */
 
-            /// Vratí nám operaci pro tento soubor
-            /* ✪ */ CompareOperations operations = strategy.compare(leftItem,rightItem);
+            /// porovná jaká strategie se použije a vratí nám operaci pro tento řídek souboru
+            if (taskModel instanceof ManualSyncTask MSC) {
+                switch (MSC.getCompareStrategy()) {
+                    case BIDIRECTIONAL_SYNC ->
+                        operations = biDirectionalStrategy.compare(leftItem,rightItem);
+                    case BACKUP_TO_RIGHT ->
+                        operations = oneWayToRightStrategy.compare(leftItem,rightItem);
+                    case BACKUP_TO_LEFT ->
+                        operations = oneWayToLeftStrategy.compare(leftItem, rightItem);
+                    case MIRRORING_to_RIGHT ->
+                        operations = mirroringToRightStrategy.compare(leftItem,rightItem);
+                    case MIRRORING_TO_lEFT ->
+                        operations = mirroringToLeftStrategy.compare(leftItem, rightItem);
+                    case null, default ->
+                            operations = UNKNOWN;
+                }
+
+            } else {
+                operations = UNKNOWN;
+            }
+            /* ✪ */
 
             // zaznamenává počet jednotlivích operací pro statistiky do GUI
             switch (operations) {
@@ -59,8 +89,8 @@ public class ComparisonService {
                     dataModel.attributeRightDeleteCount(1);
                 }
                 case UPDATE_LEFT -> {
-                        dataModel.attributeLeftUpdateCount(1);
-                        dataModel.attributeDataTransportSize(rightItem.getFileSize());
+                    dataModel.attributeLeftUpdateCount(1);
+                    dataModel.attributeDataTransportSize(rightItem.getFileSize());
                 }
                 case UPDATE_RIGHT -> {
                     dataModel.attributeRightUpdateCount(1);
