@@ -1,20 +1,24 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.ManualCompareSettingsController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TreeTableBuilderService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.Utility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
 
@@ -48,6 +52,7 @@ public class CompareOverviewController {
     private final TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
     private final Utility utility = new Utility();
     private AppFrameController appFrameController;
+    private final ManualCompareSettingsController compareSetting = new ManualCompareSettingsController();
 
     // definované datové sady
     private ComparedDataAndStatisticsForCompereOverview statisticsAndComparedData;
@@ -139,8 +144,24 @@ public class CompareOverviewController {
     }
 
     @FXML
-    public void startSetingsOfComparing(ActionEvent event){
+    public void startSettingsOfComparing(ActionEvent event){
+        try {
+            FXMLLoader loader = WindowManager.loadFXML("manualCompareSetings.fxml");
+            ManualCompareSettingsController controller = loader.getController();
+            controller.setTask(manualTask);
+
+            WindowManager.openNewWindow( loader,
+                    "Nastavení porovnání souborů",
+                    710,
+                    500);
+
+        } catch (IOException e) {
+            ErrorUtility.getInstance("Kritická chyba při načítání okna",
+                    "Nepodařilo se načíst obsah okna.",
+                    e.getMessage());
+        }
     }
+
     @FXML
     public void startComparingFiles(ActionEvent event) {
         compareAndLoadFiles(

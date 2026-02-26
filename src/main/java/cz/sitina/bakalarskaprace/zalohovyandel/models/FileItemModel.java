@@ -1,6 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.models;
 
-import cz.sitina.bakalarskaprace.zalohovyandel.services.Utility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.beans.property.*;
 
 import java.nio.file.Path;

@@ -10,12 +10,29 @@
     -fx-text-fill: -fx-color-textLight;
 }
 
-.colloredBoltText {
+.coloredBoltText {
     -fx-text-fill: -fx-color-primary1;
+    -fx-font-size: 17 px;
+    -fx-font-weight: bold;
+}
+
+.normalBoltText {
+    -fx-text-fill: -fx-color-textLight;
     -fx-font-size: 15px;
     -fx-font-weight: bold;
 }
 
+.WindowTitle_L1 {
+    -fx-font-size: 13 px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-textLight;
+}
+
+.WindowTitle_L1_Dark {
+    -fx-font-size: 13 px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-textDark;
+}
 
 /*  ===========================================
             MenuBar
@@ -23,6 +40,10 @@
 .menuConteiner {
     -fx-background-color: -fx-color-primary2;
 }
+.liteDarkConteiner {
+    -fx-background-color: -fx-color-darkBackground;
+}
+
 .menu-bar .label { /*Prvky v menu */
     -fx-text-fill: -fx-color-textLight;
     -fx-font-size: 15px;
@@ -88,6 +109,11 @@
     -fx-background-color: -fx-color-Transparent;
     -fx-cursor: hand;
 }
+
+
+
+
+
 
 
 

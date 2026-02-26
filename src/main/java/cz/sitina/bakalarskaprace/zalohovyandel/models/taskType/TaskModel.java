@@ -1,5 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.models.taskType;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes;
 
 import java.time.LocalDate;
@@ -16,6 +17,11 @@ public abstract class TaskModel {
     private String status;
     private final LocalDate creationDate;
     private List<String> blockList = new ArrayList<>();
+
+    /// uležená data pro porovnání
+    private CompareStrategy compareStrategy = CompareStrategy.BIDIRECTIONAL_SYNC;
+    private boolean isContentHash = false;
+
 
     public TaskModel( TaskTypes taskType,
                      String name,
@@ -61,6 +67,12 @@ public abstract class TaskModel {
     public String getStatus() {
         return status;
     }
+    public CompareStrategy getCompareStrategy() {
+        return compareStrategy;
+    }
+    public boolean isContentHash() {
+        return isContentHash;
+    }
 
     //setry
     public void setName(String name) {
@@ -81,4 +93,13 @@ public abstract class TaskModel {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    /// setry z předka (pouze tady jsou potřeba)
+    public void setCompareStrategy(CompareStrategy compareStrategy) {
+        this.compareStrategy = compareStrategy;
+    }
+    public void setContentHash(boolean contentHash) {
+        isContentHash = contentHash;
+    }
 }
+

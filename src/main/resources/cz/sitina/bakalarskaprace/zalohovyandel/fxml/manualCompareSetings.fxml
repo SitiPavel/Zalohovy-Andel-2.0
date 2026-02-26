@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane minHeight="460.0" minWidth="710.0" prefHeight="500.0" prefWidth="710.0" styleClass="mainConteinerStyle" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.ManualCompareSettingsController">
+   <children>
+      <HBox layoutX="18.0" layoutY="22.0" prefHeight="423.0" prefWidth="669.0" styleClass="liteDarkConteiner">
+         <children>
+            <VBox prefHeight="433.0" prefWidth="211.0" styleClass="rightBorder_2">
+               <children>
+                  <VBox maxHeight="800.0" maxWidth="800.0" prefWidth="100.0">
+                     <children>
+                        <Label alignment="CENTER" maxHeight="500.0" maxWidth="500.0" styleClass="coloredBoltText" text="Ostatní nastavení" textAlignment="CENTER">
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
+                        </Label>
+                        <Label alignment="CENTER" maxHeight="500.0" maxWidth="500.0" styleClass="normalBoltText" text="Porovnat soubory podle:" textAlignment="CENTER" wrapText="true">
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
+                        </Label>
+                        <RadioButton fx:id="rbSizeModifi" mnemonicParsing="false" prefHeight="52.0" prefWidth="166.0" selected="true" text="Velikost a poslední modifikace" wrapText="true">
+                           <styleClass>
+                              <String fx:value="WindowTitle_L1" />
+                              <String fx:value="radioButtonStyl1" />
+                           </styleClass>
+                           <toggleGroup>
+                              <ToggleGroup fx:id="SelectCompareType" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="rbHash" mnemonicParsing="false" prefHeight="51.0" prefWidth="166.0" text="Obsahu" toggleGroup="$SelectCompareType" wrapText="true">
+                           <styleClass>
+                              <String fx:value="WindowTitle_L1" />
+                              <String fx:value="radioButtonStyl1" />
+                           </styleClass>
+                        </RadioButton>
+                     </children>
+                  </VBox>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <HBox.margin>
+                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox maxHeight="1000.0" maxWidth="1000.0" minWidth="240.0" prefHeight="411.0" prefWidth="240.0" styleClass="TaskTable">
+               <children>
+                  <Label alignment="CENTER" maxHeight="500.0" maxWidth="500.0" styleClass="coloredBoltText" text="Výběr porovnání souborů" textAlignment="CENTER" VBox.vgrow="NEVER">
+                     <padding>
+                        <Insets bottom="10.0" />
+                     </padding>
+                  </Label>
+                  <VBox maxHeight="67.0" minHeight="67.0" minWidth="155.0" prefHeight="67.0" prefWidth="200.0">
+                     <children>
+                        <RadioButton fx:id="rbStrategy_Bi" contentDisplay="TOP" maxHeight="500.0" maxWidth="500.0" mnemonicParsing="false" selected="true" text="Obousměrná synchronizace">
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="218.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/visualObjects/biDirectionalSync.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <styleClass>
+                              <String fx:value="WindowTitle_L1" />
+                              <String fx:value="radioButtonStyl1" />
+                           </styleClass>
+                           <toggleGroup>
+                              <ToggleGroup fx:id="SelectedCompareStrategy" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <Region prefHeight="200.0" prefWidth="500.0">
+                           <VBox.margin>
+                              <Insets left="30.0" />
+                           </VBox.margin>
+                           <styleClass>
+                              <String fx:value="downBorder_2" />
+                              <String fx:value="borderModifi_primary1" />
+                           </styleClass>
+                        </Region>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </VBox>
+                  <VBox maxHeight="155.0" minHeight="75.0" minWidth="155.0" prefHeight="155.0" prefWidth="200.0">
+                     <children>
+                        <Label alignment="CENTER" maxHeight="500.0" maxWidth="500.0" styleClass="normalBoltText" text="Jednosměrná synchronizace">
+                           <padding>
+                              <Insets bottom="5.0" />
+                           </padding>
+                        </Label>
+                        <RadioButton fx:id="rbStrategy_oneToRight" contentDisplay="TOP" maxHeight="500.0" maxWidth="732.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="732.0" text="Směrem z leva do prava" toggleGroup="$SelectedCompareStrategy">
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="218.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/visualObjects/oneWayLeftToRight.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                           <styleClass>
+                              <String fx:value="WindowTitle_L1" />
+                              <String fx:value="topBorder_1" />
+                              <String fx:value="borderModifi_FilterDark-50" />
+                              <String fx:value="radioButtonStyl1" />
+                           </styleClass>
+                        </RadioButton>
+                        <RadioButton fx:id="rbStrategy_oneToLeft" contentDisplay="TOP" maxHeight="500.0" maxWidth="500.0" mnemonicParsing="false" text="Směrem z prava do leva" toggleGroup="$SelectedCompareStrategy">
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="146.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/visualObjects/oneWayRightToLeft.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <styleClass>
+                              <String fx:value="WindowTitle_L1" />
+                              <String fx:value="topBorder_1" />
+                              <String fx:value="borderModifi_FilterDark-50" />
+                              <String fx:value="radioButtonStyl1" />
+                           </styleClass>
+                        </RadioButton>
+                        <Region prefHeight="200.0" prefWidth="500.0">
+                           <VBox.margin>
+                              <Insets left="30.0" />
+                           </VBox.margin>
+                           <styleClass>
+                              <String fx:value="downBorder_2" />
+                              <String fx:value="borderModifi_primary1" />
+                           </styleClass>
+                        </Region>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox maxHeight="155.0" minHeight="75.0" minWidth="155.0" prefHeight="155.0" prefWidth="200.0">
+                     <children>
+                        <Label alignment="CENTER" maxHeight="500.0" maxWidth="500.0" styleClass="normalBoltText" text="Zrcadlení">
+                           <padding>
+                              <Insets bottom="5.0" />
+                           </padding>
+                        </Label>
+                        <RadioButton fx:id="rbStrategy_MirrToRight" contentDisplay="TOP" maxHeight="500.0" maxWidth="882.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="882.0" text="Směrem z leva do prava" toggleGroup="$SelectedCompareStrategy">
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="218.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/visualObjects/mirroringLeftToRight.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                           <styleClass>
+                              <String fx:value="WindowTitle_L1" />
+                              <String fx:value="topBorder_1" />
+                              <String fx:value="borderModifi_FilterDark-50" />
+                              <String fx:value="radioButtonStyl1" />
+                           </styleClass>
+                        </RadioButton>
+                        <RadioButton fx:id="rbStrategy_MirrToLeft" contentDisplay="TOP" maxHeight="500.0" maxWidth="500.0" mnemonicParsing="false" text="Směrem z prava do leva" toggleGroup="$SelectedCompareStrategy">
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="218.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/visualObjects/mirroringRightToLeft.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <styleClass>
+                              <String fx:value="WindowTitle_L1" />
+                              <String fx:value="topBorder_1" />
+                              <String fx:value="borderModifi_FilterDark-50" />
+                              <String fx:value="radioButtonStyl1" />
+                           </styleClass>
+                        </RadioButton>
+                     </children>
+                     <opaqueInsets>
+                        <Insets top="5.0" />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" top="5.0" />
+               </padding>
+            </VBox>
+            <VBox maxHeight="1000.0" maxWidth="1000.0" minWidth="240.0" prefHeight="439.0" prefWidth="245.0">
+               <children>
+                  <Label alignment="CENTER" maxHeight="500.0" maxWidth="500.0" prefHeight="17.0" prefWidth="240.0" styleClass="coloredBoltText" text="Operace v tipu porovnání" textAlignment="CENTER">
+                     <padding>
+                        <Insets bottom="10.0" />
+                     </padding>
+                  </Label>
+                  <VBox maxHeight="65.0" minHeight="65.0" prefHeight="65.0" prefWidth="240.0">
+                     <children>
+                        <HBox alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="218.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/visualObjects/biDirectionalSync.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="230.0">
+                           <children>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/ADD_BOTH.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/UPDATE_BOTH.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/DELETE_BOTH.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/EQUALS.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <ImageView fitHeight="24.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/IGNORE.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <Region prefHeight="200.0" prefWidth="200.0">
+                           <styleClass>
+                              <String fx:value="downBorder_2" />
+                              <String fx:value="borderModifi_primary1" />
+                           </styleClass>
+                           <VBox.margin>
+                              <Insets right="30.0" />
+                           </VBox.margin>
+                        </Region>
+                     </children>
+                  </VBox>
+                  <VBox maxHeight="150.0" minHeight="152.0" prefHeight="150.0" prefWidth="100.0">
+                     <children>
+                        <Region prefHeight="200.0" prefWidth="200.0" />
+                        <HBox alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="218.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/visualObjects/oneWayLeftToRight.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="230.0">
+                           <children>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/ADD_RIGHT.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/UPDATE_RIGHT.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/EQUALS.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <ImageView fitHeight="24.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/IGNORE.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <Region prefHeight="200.0" prefWidth="200.0">
+                           <styleClass>
+                              <String fx:value="downBorder_2" />
+                              <String fx:value="borderModifi_primary1" />
+                           </styleClass>
+                           <VBox.margin>
+                              <Insets right="30.0" />
+                           </VBox.margin>
+                        </Region>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </VBox>
+                  <VBox alignment="CENTER" maxHeight="75.0" minHeight="150.0" prefHeight="75.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="243.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/visualObjects/mirroringLeftToRight.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="230.0">
+                           <children>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/ADD_RIGHT.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/UPDATE_RIGHT.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/DELETE_RIGHT.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/EQUALS.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <ImageView fitHeight="24.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/iconsSmall/IGNORE.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+         </children>
+      </HBox>
+      <Button layoutX="544.0" layoutY="454.0" mnemonicParsing="false" onAction="#confirmSettings" prefHeight="30.0" prefWidth="143.0" text="Potvrdit Nastavení">
+         <styleClass>
+            <String fx:value="button_Primary1" />
+            <String fx:value="WindowTitle_L1_Dark" />
+         </styleClass>
+      </Button>
+   </children>
+   <stylesheets>
+      <URL value="@../css/globlCss.css" />
+      <URL value="@../css/windowsStyle.css" />
+   </stylesheets>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</AnchorPane>

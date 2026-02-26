@@ -10,6 +10,7 @@ module cz.sitina.bakalarskaprace.zalohovyandel {
 
     opens cz.sitina.bakalarskaprace.zalohovyandel to javafx.fxml;
     opens cz.sitina.bakalarskaprace.zalohovyandel.controllers to javafx.fxml;
+    opens cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers to javafx.fxml;
 
     exports cz.sitina.bakalarskaprace.zalohovyandel;
 }

@@ -29,7 +29,7 @@
               </menus>
             </MenuBar>
             <Region minHeight="30.0" minWidth="0.0" prefHeight="200.0" HBox.hgrow="ALWAYS" />
-            <Label fx:id="lblTaskName" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="30.0" maxWidth="500.0" minHeight="30.0" minWidth="100.0" prefHeight="30.0" prefWidth="498.0" styleClass="colloredBoltText" text="nazevUlohy">
+            <Label fx:id="lblTaskName" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="30.0" maxWidth="500.0" minHeight="30.0" minWidth="100.0" prefHeight="30.0" prefWidth="498.0" styleClass="coloredBoltText" text="nazevUlohy">
                <padding>
                   <Insets right="10.0" />
                </padding></Label>

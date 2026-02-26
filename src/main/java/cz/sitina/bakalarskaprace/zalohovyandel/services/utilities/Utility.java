@@ -1,9 +1,8 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.services;
+package cz.sitina.bakalarskaprace.zalohovyandel.services.utilities;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 
 import java.io.File;
-import java.util.Locale;
 
 public class Utility {
 

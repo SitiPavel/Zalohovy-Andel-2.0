@@ -1,0 +1,65 @@
+@import "variables.css";
+
+.rightBorder_1 {
+    -fx-border-style: solid;
+    -fx-border-width: 0 1 0 0;
+}
+.topBorder_1 {
+    -fx-border-style: solid;
+    -fx-border-width: 1 0 0 0;
+}
+
+.downBorder_2 {
+    -fx-border-style: solid;
+    -fx-border-width: 0 0 2 0;
+}
+.rightBorder_2 {
+    -fx-border-style: solid;
+    -fx-border-width: 0 2 0  0;
+}
+
+
+
+.borderModifi_FilterDark-50 {
+    -fx-border-color: -fx-colorFilter-Dark-50;
+}
+.borderModifi_primary1 {
+    -fx-border-color: -fx-color-primary1;
+
+}
+
+
+/* ======================
+        button styles
+ ====================== */
+
+.button_Primary1 {
+    -fx-background-color: -fx-color-primary1;
+    -fx-border-color: -fx-color-primary2;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+}
+.button_Primary1:pressed {
+    -fx-background-color: -fx-color-lightBackground;
+}
+
+
+/*  ===========================================
+            Styly pro nastavení
+    =========================================== */
+
+.radioButtonStyl1 .radio{
+    -fx-background-color: -fx-color-lightBackground;
+}
+
+.radioButtonStyl1 .dot {
+    -fx-background-color: -fx-color-darkBackground;
+}
+
+.radioButtonStyl1:selected .radio {
+    -fx-background-color: -fx-color-primary1;
+}
+
+.radioButtonStyl1:selected .dot {
+    -fx-background-color: -fx-color-textDark;
+}
