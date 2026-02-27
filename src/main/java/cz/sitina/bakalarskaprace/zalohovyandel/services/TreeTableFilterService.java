@@ -53,7 +53,7 @@ public class TreeTableFilterService {
         }
     }
 
-    private boolean evaluateFilters(CompareOperations operation, GuiOperationFilters_TaskData taskFilters ) {
+    private static boolean evaluateFilters(CompareOperations operation, GuiOperationFilters_TaskData taskFilters ) {
         if (operation == null) {
             return true;
         }

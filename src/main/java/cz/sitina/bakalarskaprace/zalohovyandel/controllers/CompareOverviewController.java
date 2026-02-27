@@ -120,10 +120,6 @@ public class CompareOverviewController {
         rightColLastModifi.getStyleClass().add("center-column");
 
 
-        //nastavení kořene celé struktury
-        root.setExpanded(true);
-
-        filesTreeTable.setRoot(root);
         filesTreeTable.setShowRoot(false);
 
         // nastavení generování Obarvených řádků podle operace
@@ -198,7 +194,6 @@ public class CompareOverviewController {
                                      String leftFolder,
                                      String rightFolder,
                                      ManualSyncTask manualTask) {
-        root.getChildren().clear(); //čistí TreeTableView
 
         // získáme potřebná data
          statisticsAndComparedData = comparisonService.compareFolders(
@@ -236,11 +231,23 @@ public class CompareOverviewController {
 
         resultComparedList = statisticsAndComparedData.getComparedFilesList();
 
-        TreeItem<ComparedItemOperItemRowModel> filtredRoot= new TreeItem<>(null);
+        masterRoot = new TreeItem<>(null);
+        masterRoot.setExpanded(true);
+
 
         //  vložíme esitující objekty a metoda nám z nich do root nastaví řádky
-        treeTableBuilder.setTreeTable(root,
-                resultComparedList);
+        treeTableBuilder.setTreeTable(masterRoot, resultComparedList);
+
+        applyCurrentFiltersToTable();
+    }
+
+    private void applyCurrentFiltersToTable() {
+        // kdyby nebylo co filtrovate
+        if (masterRoot == null || manualTask == null) return;
+
+        TreeItem<ComparedItemOperItemRowModel> filtredRoot =
+                TreeTableFilterService.createFiltredTree(masterRoot, manualTask.getGuiOperationFilters());
+        filesTreeTable.setRoot(filtredRoot);
     }
 
     public void loadView() {
