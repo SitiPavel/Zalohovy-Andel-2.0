@@ -6,11 +6,8 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndSt
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.TreeTableBuilderService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.fxml.FXML;
@@ -46,10 +43,12 @@ public class CompareOverviewController {
 
     private final ComparisonService comparisonService = new ComparisonService();
     private final CompareOverviewService compareOverviewService = new CompareOverviewService();
-    private final TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
     private final Utility utility = new Utility();
     private AppFrameController appFrameController;
     private final ManualCompareSettingsController compareSetting = new ManualCompareSettingsController();
+
+    private final TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
+    private TreeItem<ComparedItemOperItemRowModel> masterRoot;
 
     // definované datové sady
     private ComparedDataAndStatisticsForCompereOverview statisticsAndComparedData;
@@ -83,6 +82,8 @@ public class CompareOverviewController {
     @FXML private Label lbRightTotalSpace;
     @FXML private Label lbRightFreeSpace;
     @FXML private ProgressBar pbRightUsedSpace;
+
+
 
 
 
@@ -124,6 +125,11 @@ public class CompareOverviewController {
 
         filesTreeTable.setRoot(root);
         filesTreeTable.setShowRoot(false);
+
+        // nastavení generování Obarvených řádků podle operace
+        treeTableBuilder.rowFormatingByOperation(filesTreeTable);
+        //  nastaví generování ikon do sloupce operace
+        treeTableBuilder.setOperationColumnIcon(operationCol);
 
     }
 
@@ -230,11 +236,11 @@ public class CompareOverviewController {
 
         resultComparedList = statisticsAndComparedData.getComparedFilesList();
 
+        TreeItem<ComparedItemOperItemRowModel> filtredRoot= new TreeItem<>(null);
+
         //  vložíme esitující objekty a metoda nám z nich do root nastaví řádky
         treeTableBuilder.setTreeTable(root,
-                resultComparedList,
-                filesTreeTable,
-                operationCol);
+                resultComparedList);
     }
 
     public void loadView() {

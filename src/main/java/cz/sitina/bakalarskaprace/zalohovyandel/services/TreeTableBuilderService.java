@@ -40,15 +40,12 @@ public class TreeTableBuilderService {
 
 
     public void setTreeTable(TreeItem<ComparedItemOperItemRowModel> root,
-                                                             List<ComparedItemOperItemRowModel> comparedList,
-                                                             TreeTableView<ComparedItemOperItemRowModel> treeTable,
-                                                             TreeTableColumn<ComparedItemOperItemRowModel, CompareOperations> operationCol ) {
+                             List<ComparedItemOperItemRowModel> comparedList
+                            ){
+
         // načtení do TreeTableView
         loadComparedFilesToGUI(root, comparedList);
-        // Obarvení řádků podle operace
-        rowFormatingByOperation(treeTable);
-        //  vloží ikony do sloupce operace
-        setOperationColumnIcon(operationCol);
+
     }
 
     public void loadComparedFilesToGUI(TreeItem<ComparedItemOperItemRowModel> root, List<ComparedItemOperItemRowModel> comparedFilesList) {
@@ -137,6 +134,8 @@ public class TreeTableBuilderService {
                         TreeItem<ComparedItemOperItemRowModel> parentNode = treeFilesList.get(parentKey);
                         parentNode.getChildren().add(newFolderNode);
 
+
+
                         // 4. Uložíme do cache, abychom ji příště našli
                         treeFilesList.put(currentDir, newFolderNode);
                     }
@@ -170,7 +169,7 @@ public class TreeTableBuilderService {
 
                 // 3. Přidání správné třídy podle operace
                 switch (item.getOperation()) {
-                    case EQUALS, NO_EQUALS -> getStyleClass().add("row-equals");
+                    case EQUALS -> getStyleClass().add("row-equals");
                     case IGNORE -> getStyleClass().add("row-ignore");
                     case DELETE_LEFT, DELETE_RIGHT, DELETE_BOTH -> getStyleClass().add("row-delete");
                     case UPDATE_LEFT, UPDATE_RIGHT -> getStyleClass().add("row-update");
@@ -227,7 +226,6 @@ public class TreeTableBuilderService {
     private Image getIconForOperation(CompareOperations operation) {
         switch (operation) {
             case EQUALS -> {return iconEquals;
-            } case NO_EQUALS ->{return null;
             } case IGNORE -> {return iconIgnore;
             }case DELETE_LEFT ->{return iconDeleteLeft;
             } case DELETE_RIGHT ->{return iconDeleteRight;

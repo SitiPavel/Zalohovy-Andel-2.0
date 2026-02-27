@@ -1,5 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.models.taskType;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilters_TaskData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes;
 
@@ -17,6 +18,7 @@ public abstract class TaskModel {
     private String status;
     private final LocalDate creationDate;
     private List<String> blockList = new ArrayList<>();
+    private GuiOperationFilters_TaskData GuiOperationFilters;
 
     /// uležená data pro porovnání
     private CompareStrategy compareStrategy = CompareStrategy.BIDIRECTIONAL_SYNC;
@@ -37,6 +39,7 @@ public abstract class TaskModel {
         this.rightPath = rightPath;
         this.description = description;
         this.creationDate = LocalDate.now();
+        this.GuiOperationFilters = new GuiOperationFilters_TaskData();
     }
 
     //getry
@@ -72,6 +75,9 @@ public abstract class TaskModel {
     }
     public boolean isContentHash() {
         return isContentHash;
+    }
+    public GuiOperationFilters_TaskData getGuiOperationFilters() {
+        return GuiOperationFilters;
     }
 
     //setry

@@ -5,7 +5,6 @@ import javafx.scene.control.Label;
 
 public enum CompareOperations {
     EQUALS,
-    NO_EQUALS,
     IGNORE,
     DELETE_LEFT,
     DELETE_RIGHT,
