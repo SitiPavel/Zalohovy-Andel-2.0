@@ -221,8 +221,8 @@ public class CompareOverviewController {
 
             WindowManager.openNewWindow( loader,
                     "Nastavení porovnání souborů",
-                    710,
-                    500);
+                    720,
+                    470);
 
         } catch (IOException e) {
             ErrorUtility.getInstance("Kritická chyba při načítání okna",

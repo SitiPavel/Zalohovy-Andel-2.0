@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class WindowManager {
-    static String path = "/cz/sitina/bakalarskaprace/zalohovyandel/fxml/";
+    static String path = "/cz/sitina/bakalarskaprace/zalohovyandel/fxml/windows/";
 
 
     /// Rozděleno na dva kroky, loader vytvoří instanci controleru,
