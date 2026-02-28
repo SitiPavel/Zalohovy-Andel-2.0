@@ -8,8 +8,8 @@ public class GuiOperationFilters_TaskData {
     private boolean isActive_DELETE_RIGHT = true;
     private boolean isActive_UPDATE_LEFT = true;
     private boolean isActive_UPDATE_RIGHT = true;
-    private boolean isActive_ADD_LEFT = false;
-    private boolean isActive_ADD_RIGHT = false;
+    private boolean isActive_ADD_LEFT = true;
+    private boolean isActive_ADD_RIGHT = true;
     private boolean isActive_UNKNOWN = true;
 
 

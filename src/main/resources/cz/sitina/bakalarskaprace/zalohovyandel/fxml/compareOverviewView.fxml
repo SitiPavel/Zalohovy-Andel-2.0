@@ -391,14 +391,17 @@
                <children>
                   <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
                      <children>
-                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                        <Button fx:id="btnAddItem_Left" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imgAddItem_Left" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../images/icons/addItem_left.png" />
                                  </image>
                               </ImageView>
                            </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </Button>
                         <Label fx:id="lbLeftAddCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
@@ -408,14 +411,17 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
                      <children>
-                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                        <Button fx:id="btnModified_left" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imgModified_left" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../images/icons/modified_left.png" />
                                  </image>
                               </ImageView>
                            </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </Button>
                         <Label fx:id="lbLeftUpdateCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
@@ -425,14 +431,17 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
                      <children>
-                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                        <Button fx:id="btnDelete_left" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imgDelete_left" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../images/icons/delete_left.png" />
                                  </image>
                               </ImageView>
                            </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </Button>
                         <Label fx:id="lbLeftDeleteCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
@@ -442,14 +451,17 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
                      <children>
-                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                        <Button fx:id="btnBlock" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imgBlock" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../images/icons/block.png" />
                                  </image>
                               </ImageView>
                            </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </Button>
                         <Label fx:id="lbIgnoreCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
@@ -459,14 +471,17 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
                      <children>
-                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                        <Button fx:id="btnEqual" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imgEqual" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../images/icons/equal.png" />
                                  </image>
                               </ImageView>
                            </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </Button>
                         <Label fx:id="lbEqualsCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
@@ -476,14 +491,17 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
                      <children>
-                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                        <Button fx:id="btnUnknown" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imgUnknown" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../images/icons/unknown.png" />
                                  </image>
                               </ImageView>
                            </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </Button>
                         <Label fx:id="lbUnknownCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
@@ -493,14 +511,17 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
                      <children>
-                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                        <Button fx:id="btnDelete_right" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imgDelete_right" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../images/icons/delete_right.png" />
                                  </image>
                               </ImageView>
                            </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </Button>
                         <Label fx:id="lbRightDeleteCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
@@ -510,14 +531,17 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
                      <children>
-                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                        <Button fx:id="btnModified_right" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imgModified_right" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../images/icons/modified_right..png" />
+                                    <Image url="@../images/icons/modified_right.png" />
                                  </image>
                               </ImageView>
                            </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </Button>
                         <Label fx:id="lbRightUpdateCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
@@ -527,14 +551,17 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
                      <children>
-                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                        <Button fx:id="btnAddItem_right" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imgAddItem_right" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../images/icons/addItem_right.png" />
                                  </image>
                               </ImageView>
                            </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </Button>
                         <Label fx:id="lbRightAddCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>

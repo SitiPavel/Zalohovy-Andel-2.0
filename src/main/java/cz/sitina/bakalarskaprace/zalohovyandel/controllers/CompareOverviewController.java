@@ -4,6 +4,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.Man
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilters_TaskData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.*;
@@ -12,15 +13,19 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 
 import java.util.List;
+import java.util.Objects;
 
 public class CompareOverviewController {
 
@@ -71,6 +76,71 @@ public class CompareOverviewController {
     @FXML private Label lbRightUpdateCount;
     @FXML private Label lbRightAddCount;
     @FXML private Label lbDataTransportTotalSize;
+
+    // nutné deklarování pro ovládání rychlích filtrů
+
+    /*  =======^=======^=======^=======^=======*/
+    @FXML private Button btnAddItem_Left;
+    @FXML private Button btnModified_left;
+    @FXML private Button btnDelete_left;
+    @FXML private Button btnBlock;
+    @FXML private Button btnEqual;
+    @FXML private Button btnUnknown;
+    @FXML private Button btnDelete_right;
+    @FXML private Button btnModified_right;
+    @FXML private Button btnAddItem_right;
+    /**/
+
+    @FXML private ImageView imgAddItem_Left;
+    @FXML private ImageView imgModified_left;
+    @FXML private ImageView imgDelete_left;
+    @FXML private ImageView imgBlock;
+    @FXML private ImageView imgEqual;
+    @FXML private ImageView imgUnknown;
+    @FXML private ImageView imgDelete_right;
+    @FXML private ImageView imgModified_right;
+    @FXML private ImageView imgAddItem_right;
+
+
+    private final String pathToImages = "/cz/sitina/bakalarskaprace/zalohovyandel/images/icons/";
+    private final Image icon_addItem_Left =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "addItem_left.png")));
+    private final Image icon_modified_left  =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "modified_left.png")));
+    private final Image icon_delete_left    =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "delete_left.png")));
+    private final Image icon_block          =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "block.png")));
+    private final Image icon_equal          =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "equal.png")));
+    private final Image icon_unknown   =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "unknown.png")));
+    private final Image icon_delete_right   =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "delete_right.png")));
+    private final Image icon_modified_right =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "modified_right.png")));
+    private final Image icon_addItem_right =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "addItem_right.png")));
+
+    private final Image icon_addItem_Left_OFF =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "addItem_left_OFF.png")));
+    private final Image icon_modified_left_OFF  =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "modified_left_OFF.png")));
+    private final Image icon_delete_left_OFF    =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "delete_left_OFF.png")));
+    private final Image icon_block_OFF          =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "block_OFF.png")));
+    private final Image icon_equal_OFF          =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "equal_OFF.png")));
+    private final Image icon_unknown_OFF   =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "unknown_OFF.png")));
+    private final Image icon_delete_right_OFF   =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "delete_right_OFF.png")));
+    private final Image icon_modified_right_OFF =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "modified_right_OFF.png")));
+    private final Image icon_addItem_right_OFF =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "addItem_right_OFF.png")));
+
 
     // ukazatelé statistik disků
     @FXML private Label lbLeftUsedSpace;
@@ -184,6 +254,15 @@ public class CompareOverviewController {
         }
     }
 
+    @FXML // když klikneme na tlačítko tak se změní filtr z TRUE > FALSE a naopak
+    public void setFastFilter(ActionEvent event) {
+        Node source = (Node) event.getSource();
+
+        setImageByBtnID(source.getId(), manualTask.getGuiOperationFilters());
+
+        applyCurrentFiltersToTable();
+    }
+
 
     //==================
     // obecné nápomocné metody
@@ -213,6 +292,8 @@ public class CompareOverviewController {
         lbRightTotalSpace.setText(utility.getFormatedSize(rightFolderStatistic.getTotalSpace()));
         lbRightFreeSpace.setText(utility.getFormatedSize(rightFolderStatistic.getFreeSpace()));
         pbRightUsedSpace.setProgress((double) rightFolderStatistic.getUsedSpace() /rightFolderStatistic.getTotalSpace());
+
+        //
 
 
         // nastavení textu do labels
@@ -253,6 +334,103 @@ public class CompareOverviewController {
     public void loadView() {
         tfLeftFolderPath.setText(manualTask.getLeftPath());
         tfRightFolderPath.setText(manualTask.getRightPath());
+    }
+
+    private void setImageByBtnID(String id, GuiOperationFilters_TaskData filters) {
+        switch (id) {
+            // --- LEVÁ STRANA ---
+            case "btnAddItem_Left":
+                if (filters.isActive_ADD_LEFT()) {
+                    filters.setActive_ADD_LEFT(false);
+                    imgAddItem_Left.setImage(icon_addItem_Left_OFF);
+                } else {
+                    filters.setActive_ADD_LEFT(true);
+                    imgAddItem_Left.setImage(icon_addItem_Left);
+                }
+                break;
+
+            case "btnModified_left":
+                if (filters.isActive_UPDATE_LEFT()) {
+                    filters.setActive_UPDATE_LEFT(false);
+                    imgModified_left.setImage(icon_modified_left_OFF); // Opraveno: správný ImageView
+                } else {
+                    filters.setActive_UPDATE_LEFT(true);
+                    imgModified_left.setImage(icon_modified_left);     // Opraveno: správný ImageView
+                }
+                break;
+
+            case "btnDelete_left":
+                if (filters.isActive_DELETE_LEFT()) {
+                    filters.setActive_DELETE_LEFT(false);
+                    imgDelete_left.setImage(icon_delete_left_OFF);
+                } else {
+                    filters.setActive_DELETE_LEFT(true);
+                    imgDelete_left.setImage(icon_delete_left);
+                }
+                break;
+
+            // --- STŘED ---
+            case "btnBlock":
+                if (filters.isActive_IGNORE()) {
+                    filters.setActive_IGNORE(false);
+                    imgBlock.setImage(icon_block_OFF);
+                } else {
+                    filters.setActive_IGNORE(true);
+                    imgBlock.setImage(icon_block);
+                }
+                break;
+
+            case "btnEqual":
+                if (filters.isActive_EQUALS()) {
+                    filters.setActive_EQUALS(false);
+                    imgEqual.setImage(icon_equal_OFF);
+                } else {
+                    filters.setActive_EQUALS(true);
+                    imgEqual.setImage(icon_equal);
+                }
+                break;
+
+            case "btnUnknown":
+                if (filters.isActive_UNKNOWN()) {
+                    filters.setActive_UNKNOWN(false);
+                    imgUnknown.setImage(icon_unknown_OFF);
+                } else {
+                    filters.setActive_UNKNOWN(true);
+                    imgUnknown.setImage(icon_unknown);
+                }
+                break;
+
+            // --- PRAVÁ STRANA ---
+            case "btnDelete_right":
+                if (filters.isActive_DELETE_RIGHT()) {
+                    filters.setActive_DELETE_RIGHT(false);
+                    imgDelete_right.setImage(icon_delete_right_OFF);
+                } else {
+                    filters.setActive_DELETE_RIGHT(true);
+                    imgDelete_right.setImage(icon_delete_right);
+                }
+                break;
+
+            case "btnModified_right":
+                if (filters.isActive_UPDATE_RIGHT()) {
+                    filters.setActive_UPDATE_RIGHT(false);
+                    imgModified_right.setImage(icon_modified_right_OFF);
+                } else {
+                    filters.setActive_UPDATE_RIGHT(true);
+                    imgModified_right.setImage(icon_modified_right);
+                }
+                break;
+
+            case "btnAddItem_right":
+                if (filters.isActive_ADD_RIGHT()) {
+                    filters.setActive_ADD_RIGHT(false);
+                    imgAddItem_right.setImage(icon_addItem_right_OFF);
+                } else {
+                    filters.setActive_ADD_RIGHT(true);
+                    imgAddItem_right.setImage(icon_addItem_right);
+                }
+                break;
+        }
     }
 
     public void setTaskModel(ManualSyncTask tak) {
