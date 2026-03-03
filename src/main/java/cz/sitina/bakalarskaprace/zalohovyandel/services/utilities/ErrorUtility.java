@@ -2,6 +2,8 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services.utilities;
 
 import javafx.scene.control.Alert;
 
+import java.io.IOException;
+
 public class ErrorUtility {
 
     /// základní chybové okno
@@ -10,6 +12,15 @@ public class ErrorUtility {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
+    public static void getInstance_WindowLoading(IOException e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Kritická chyba při načítání okna");
+        alert.setHeaderText("Nepodařilo se načíst obsah okna.");
+        alert.setContentText(e.getMessage());
         alert.showAndWait();
     }
 

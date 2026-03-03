@@ -1,5 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.CompareProgresController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.ManualCompareSettingsController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
@@ -258,13 +259,25 @@ public class CompareOverviewController {
 
     @FXML
     public void startComparingFiles(ActionEvent event) {
+        try {
+            FXMLLoader loader = WindowManager.loadFXML("compareProgresWindow.fxml");
+            CompareProgresController controller = (CompareProgresController) loader.getController();
 
-        compareAndLoadFiles(
-                root,
-                tfLeftFolderPath.getText(),
-                tfRightFolderPath.getText(),
-                manualTask
-        );
+            WindowManager.openNewWindow(loader, "Porovnání souborů", 430, 220);
+
+            compareAndLoadFiles(
+                    root,
+                    tfLeftFolderPath.getText(),
+                    tfRightFolderPath.getText(),
+                    manualTask
+            );
+
+        } catch (IOException e) {
+            ErrorUtility.getInstance_WindowLoading(e);
+        }
+
+
+
 
     }
 

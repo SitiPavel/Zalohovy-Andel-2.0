@@ -22,6 +22,13 @@
     -fx-font-weight: bold;
 }
 
+.DarkBoltHeader1 {
+    -fx-text-fill: -fx-color-textDark;
+    -fx-font-size: 17 px;
+    -fx-font-weight: bold;
+}
+
+
 .WindowTitle_L1 {
     -fx-font-size: 13 px;
     -fx-font-weight: bold;
@@ -33,6 +40,22 @@
     -fx-font-weight: bold;
     -fx-text-fill: -fx-color-textDark;
 }
+
+/*  ===========================================
+            Hlavní obsah
+    =========================================== */
+.mainConteinerStyle {
+    -fx-background-color: -fx-color-lightBackground;
+}
+
+
+.bottomBar {
+    -fx-background-color: -fx-color-primary2;
+}
+
+
+
+
 
 /*  ===========================================
             MenuBar
@@ -115,20 +138,6 @@
 
 
 
-
-
-
-/*  ===========================================
-            Hlavní obsah
-    =========================================== */
-.mainConteinerStyle {
-    -fx-background-color: -fx-color-lightBackground;
-}
-
-
-.bottomBar {
-    -fx-background-color: -fx-color-primary2;
-}
 
 /* --------
    styly sloupce

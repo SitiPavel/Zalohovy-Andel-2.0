@@ -63,3 +63,20 @@
 .radioButtonStyl1:selected .dot {
     -fx-background-color: -fx-color-textDark;
 }
+
+/* progres bar */
+
+.progressBarStylDark1 {
+    -fx-background-color: -fx-color-primary2;
+    -fx-background-radius: 15;
+}
+.progressBarStylDark1 .track {
+    -fx-background-color: -fx-color-primary2;
+    -fx-background-radius: 15;
+    -fx-background-insets: 0;
+}
+.progressBarStylDark1 .bar {
+    -fx-background-color: -fx-color-primary1;
+    -fx-background-radius: 15;
+    -fx-background-insets: 5;
+}

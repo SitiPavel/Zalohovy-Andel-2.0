@@ -26,8 +26,8 @@ public class Main extends Application {
                 "D:\\testBakalarky\\Test02",
                 "")
         );
-        taskRepository.add(new ManualSyncTask("Důležité soubory",
-                "C:\\Users\\pavel\\Pictures",
+        taskRepository.add(new ManualSyncTask("Obrovské množství souborů",
+                "D:\\media (filmi, fortky, písničky)",
                 "D:\\testBakalarky\\Test02",
                 "popis úlohy ")
         );
