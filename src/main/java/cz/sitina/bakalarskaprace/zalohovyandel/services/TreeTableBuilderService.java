@@ -3,6 +3,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -44,11 +45,12 @@ public class TreeTableBuilderService {
                             ){
 
         // načtení do TreeTableView
-        loadComparedFilesToGUI(root, comparedList);
+        loadComparedFilesToRoot(root, comparedList);
 
     }
 
-    public void loadComparedFilesToGUI(TreeItem<ComparedItemOperItemRowModel> root, List<ComparedItemOperItemRowModel> comparedFilesList) {
+    public void loadComparedFilesToRoot(TreeItem<ComparedItemOperItemRowModel> root,
+                                        List<ComparedItemOperItemRowModel> comparedFilesList) {
         // pro uložení všech větví v TreeTable
         HashMap<String ,TreeItem<ComparedItemOperItemRowModel>> treeFilesList = new HashMap<>();
         treeFilesList.put("", root);
@@ -110,21 +112,12 @@ public class TreeTableBuilderService {
 
                         ComparedItemOperItemRowModel folderRow = new ComparedItemOperItemRowModel(
                                 new FileItemModel(),
-                                CompareOperations.FOLDER,  // Operace u složky nedává smysl (nebo dej SAME)
+                                CompareOperations.FOLDER,
                                 new FileItemModel()   // Pravá strana
                         );
 
-                        // 2. Zabalíme to do tvého RowModelu
-                        if (whereIsntNullPath == 01) {
-                            folderRow.getLeftItem().setFileName(iFolderInPath);
-
-                        } else if (whereIsntNullPath == 10) {
-                            folderRow.getRightItem().setFileName(iFolderInPath);
-                        }
-                        else if (whereIsntNullPath == 11) {
-                            folderRow.getLeftItem().setFileName(iFolderInPath);
-                            folderRow.getRightItem().setFileName(iFolderInPath);
-                        }
+                        folderRow.getLeftItem().setFileName(iFolderInPath);
+                        folderRow.getRightItem().setFileName(iFolderInPath);
 
 
                         // 3. Vytvoříme TreeItem a propojíme s rodičem
@@ -143,6 +136,10 @@ public class TreeTableBuilderService {
                 }
             }
         }
+
+        // zde daný strom rekurzivně seřadíme aby složky a soubory byly u sebe
+        sortChildrenRecursively(root);
+
     }
 
 
@@ -187,12 +184,9 @@ public class TreeTableBuilderService {
             new TreeTableCell<ComparedItemOperItemRowModel, CompareOperations>() {
 
             private final ImageView imageView = new ImageView();
-
                 { //Inicializační blok, spustí se pouze jednou
 
                     getStyleClass().add("operationCell");
-
-
                 }
 
                 @Override
@@ -216,9 +210,7 @@ public class TreeTableBuilderService {
                         setGraphic(null);
                         setText(item.toString());
                     }
-
                 }
-
         });
     }
 
@@ -238,6 +230,113 @@ public class TreeTableBuilderService {
             } case FOLDER -> {return iconFolder;}
         }
         return null;
+    }
+
+
+    //*
+    // důležité protože po sestavení stromu | řazení během sestavování stromu by seřazoval algoritmus celí strom při
+    // každém novém prvku
+    private void sortChildrenRecursively(TreeItem<ComparedItemOperItemRowModel> item) {
+
+        if (item == null || item.getChildren().isEmpty()) return;
+
+        item.getChildren().sort((node1, node2) -> {
+            boolean isFolder1 = node1.getValue().isFolder();
+            boolean isFolder2 = node2.getValue().isFolder();
+
+            if (isFolder1 && !isFolder2) return -1;
+            if (!isFolder1 && isFolder2) return 1;
+
+            String name1 = getNotNullName(node1);
+            String name2 = getNotNullName(node2);
+
+            return name1.compareToIgnoreCase(name2); // porovnat name1 a name2 abecedně
+        });
+
+        //Rekurrzí zavoláme na ostatní děti
+        for (TreeItem<ComparedItemOperItemRowModel> child : item.getChildren()) {
+            sortChildrenRecursively(child);
+        }
+    }
+
+
+
+    // získáme z ComparedItemOperItemRowModel název toho soubooru, zaručuje že název nebude null
+    private String getNotNullName(TreeItem<ComparedItemOperItemRowModel> item) {
+        if (item == null ) return "";
+
+        if (item.getValue().getLeftItem() != null &&
+                item.getValue().getRightItem() != null ) {
+            return item.getValue().getLeftItem().getFileName();
+
+        } else if (item.getValue().getLeftItem() == null &&
+                   item.getValue().getRightItem() != null ) {
+            return item.getValue().getRightItem().getFileName();
+
+        } else if (item.getValue().getLeftItem() != null &&
+                   item.getValue().getRightItem() == null ) {
+            return item.getValue().getLeftItem().getFileName();
+        } else {
+            return "";
+        }
+
+    }
+
+
+    public void setColumnIindentLevelAndToolTips(TreeTableColumn col) {
+        col.setCellFactory(column -> {
+            return new TreeTableCell<ComparedItemOperItemRowModel, String>() {
+
+                // 1. Vytvoříme Tooltip pouze JEDNOU pro životní cyklus buňky
+                private final Tooltip myTooltip = new Tooltip();
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    // Reset pro prázdné buňky
+                    if (empty || item == null) {
+                        setText(null);
+                        setGraphic(null);
+                        setPadding(Insets.EMPTY);
+                        setTooltip(null); // Důležité: odebereme Tooltip, aby nestrašil na prázdném řádku
+                        return;
+                    }
+
+                    // 2. Nastavíme text textu buňky
+                    setText(item);
+
+                    // 3. Aktualizujeme text existujícího Tooltipu a přiřadíme ho
+                    myTooltip.setText(item);
+                    setTooltip(myTooltip);
+
+                    // --- Výpočet odsazení (Indentation) ---
+                    // Získáme index buňky
+                    int currentIndex = getIndex();
+
+                    // Ochrana indexu
+                    if (currentIndex >= 0 && currentIndex < getTreeTableView().getExpandedItemCount()) {
+                        TreeItem<ComparedItemOperItemRowModel> curentTreeItem =
+                                getTreeTableView().getTreeItem(currentIndex);
+
+                        if (curentTreeItem != null) {
+                            int level = getTreeTableView().getTreeItemLevel(curentTreeItem);
+
+                            // Pokud máš root skrytý, první viditelné položky jsou level 1.
+                            // Pokud chceš level 1 bez odsazení, použij (level - 1).
+                            // Pokud chceš odsazení už od začátku, nechej jen (level).
+                            double indentPerLevel = 20;
+
+                            // Math.max zajistí, že nepůjdeme do mínusu
+                            double indent = Math.max(0, (level - 1) * indentPerLevel);
+
+                            // Nastavíme padding
+                            setPadding(new Insets(2, 2, 2, indent));
+                        }
+                    }
+                }
+            };
+        });
     }
 
 }

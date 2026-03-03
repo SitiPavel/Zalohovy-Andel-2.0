@@ -16,6 +16,10 @@ public class ComparedItemOperItemRowModel {
         this.rightItem = new SimpleObjectProperty<>(rightItem);
     }
 
+    public boolean isFolder() {
+        return this.operation.getValue() == CompareOperations.FOLDER;
+    }
+
     ///GETRY
     public ObjectProperty<FileItemModel> getLeftItemProperty() {
         return leftItem;

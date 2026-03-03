@@ -1,6 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.services;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.io.IOException;
@@ -15,11 +16,15 @@ public class FileScannerService {
 
     public Map<String, FileItemModel> scanFolder(String rootDirectory) {
 
+
         HashMap<String, FileItemModel> filesMap = new HashMap<>();
         Path rootPath = Path.of(rootDirectory);
 
+
         if (!isRightFolderPath(rootPath)) {
-            return filesMap;
+            ErrorUtility.getInstance("Chyba",
+                    "Zadaná cesta neexistuje!",
+                    "Cesta: " + rootDirectory);
         }
 
         try (Stream<Path> stream = Files.walk(rootPath)) {

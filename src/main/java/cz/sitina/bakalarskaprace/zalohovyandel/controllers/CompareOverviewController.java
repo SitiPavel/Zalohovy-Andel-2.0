@@ -13,6 +13,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 
@@ -164,7 +165,7 @@ public class CompareOverviewController {
     public void initialize() {
         //Definování obsahu sloupců ve filesTreeTable
         leftColName.setCellValueFactory(cellData ->
-                cellData.getValue().getValue().getLeftItem().fileNameProperty());
+                cellData.getValue().getValue().getLeftItem().getFormatedName());
         leftColSize.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getLeftItem().getFormatedSize());
         leftColLastModifi.setCellValueFactory(cellData ->
@@ -174,20 +175,44 @@ public class CompareOverviewController {
                 cellData.getValue().getValue().operationProperty());
 
         rightColName.setCellValueFactory(cellData ->
-                cellData.getValue().getValue().getRightItem().fileNameProperty());
+                cellData.getValue().getValue().getRightItem().getFormatedName());
         rightColSize.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getRightItem().getFormatedSize());
         rightColLastModifi.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getRightItem().getFormatedLastModified());
 
+        /// NASTAVENÍ SLOUPCŮ
         // Stylování sloupců
         leftColName.getStyleClass().add("left-column");
-        rightColName.getStyleClass().add("left-column");
         leftColSize.getStyleClass().add("center-column");
         leftColLastModifi.getStyleClass().add("center-column");
         operationCol.getStyleClass().add("center-column");
         rightColSize.getStyleClass().add("center-column");
         rightColLastModifi.getStyleClass().add("center-column");
+
+        // jiní nastavení
+        filesTreeTable.setTreeColumn(leftColName);
+        leftColName.setCellFactory(cellData ->
+                new TreeTableCell<ComparedItemOperItemRowModel, String>() {
+            Tooltip tooltip = new Tooltip();
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setTooltip(null);
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    setText(item);
+                    tooltip.setText(item);
+                    setTooltip(tooltip);
+                }
+            }
+        });
+
+        treeTableBuilder.setColumnIindentLevelAndToolTips(rightColName);
+
 
 
         filesTreeTable.setShowRoot(false);
@@ -233,6 +258,7 @@ public class CompareOverviewController {
 
     @FXML
     public void startComparingFiles(ActionEvent event) {
+
         compareAndLoadFiles(
                 root,
                 tfLeftFolderPath.getText(),
