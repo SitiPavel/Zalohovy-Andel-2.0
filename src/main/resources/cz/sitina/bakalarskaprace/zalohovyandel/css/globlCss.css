@@ -48,6 +48,11 @@
     -fx-background-color: -fx-color-lightBackground;
 }
 
+.conteinerModify_Radius15{
+    -fx-background-radius: 15;
+
+}
+
 
 .bottomBar {
     -fx-background-color: -fx-color-primary2;

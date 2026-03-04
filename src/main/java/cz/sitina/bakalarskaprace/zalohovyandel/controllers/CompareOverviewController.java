@@ -3,6 +3,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.CompareProgresController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.ManualCompareSettingsController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilters_TaskData;
@@ -12,6 +13,8 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -24,10 +27,14 @@ import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class CompareOverviewController {
 
@@ -228,7 +235,6 @@ public class CompareOverviewController {
     //===================
     // Metody reagující na uživatele
 
-
     @FXML
     public void choseLeftFolder(ActionEvent event) {
         File directory = compareOverviewService.findDirectory(event);
@@ -251,9 +257,7 @@ public class CompareOverviewController {
                     470);
 
         } catch (IOException e) {
-            ErrorUtility.getInstance("Kritická chyba při načítání okna",
-                    "Nepodařilo se načíst obsah okna.",
-                    e.getMessage());
+            ErrorUtility.showError_WindowLoading(e);
         }
     }
 
@@ -261,24 +265,65 @@ public class CompareOverviewController {
     public void startComparingFiles(ActionEvent event) {
         try {
             FXMLLoader loader = WindowManager.loadFXML("compareProgresWindow.fxml");
-            CompareProgresController controller = (CompareProgresController) loader.getController();
+            CompareProgresController progressWindowController = loader.getController();
+            Stage progresStage = WindowManager.openRunningWindow(loader, "Průběh porovnání", 420, 240);
 
-            WindowManager.openNewWindow(loader, "Porovnání souborů", 430, 220);
+            // do comparisonTask nám vrátí data v objektu ComparedDataAndStatisticsForCompereOverview
+            Task<ComparedDataAndStatisticsForCompereOverview> comparisonTask = new Task<>() {
+                @Override
+                protected ComparedDataAndStatisticsForCompereOverview call() throws Exception {
 
-            compareAndLoadFiles(
-                    root,
-                    tfLeftFolderPath.getText(),
-                    tfRightFolderPath.getText(),
-                    manualTask
-            );
+                    Map<String, FileItemModel> mapLeft = fileScannerService.scanFolder(tfLeftFolderPath.getText());
+                    Map<String, FileItemModel> mapRight = fileScannerService.scanFolder(tfRightFolderPath.getText());
+
+                    Platform.runLater(()->{
+                        progressWindowController.setLbHeader("Probíhá porovnání souborů.");
+                    });
+
+                    return comparisonService.compareFolders(
+                            mapLeft,
+                            mapRight,
+                            manualTask,
+                            (current, total) -> {
+                                updateProgress(current, total);
+                                updateMessage(String.valueOf(current));
+                                updateTitle(String.valueOf(total));
+                            },
+                            this::isCancelled
+                    );
+                }
+            };
+
+            progressWindowController.startComparisonWithProgressWindow(comparisonTask);
+
+            // nastaví co se stane po dokončení
+            comparisonTask.setOnSucceeded(e -> {
+                progresStage.close();
+
+                ComparedDataAndStatisticsForCompereOverview resultData = comparisonTask.getValue();
+
+                if (resultData != null) {
+                    loadFinishedDataToGui(resultData, tfLeftFolderPath.getText(), tfRightFolderPath.getText());
+                }
+            });
+
+            // co se stane při chybě
+            comparisonTask.setOnFailed(e -> {
+                progresStage.close();
+                ErrorUtility.getInstance("Kritická chyba", "Chyba během procesu porovnání." ,e.toString());
+                System.out.println(e.toString());
+            });
+
+            // co se stane při zrušení
+            comparisonTask.setOnCancelled(e -> progresStage.close());
+
+            Thread thread = new Thread(comparisonTask);
+            thread.setDaemon(true);
+            thread.start();
 
         } catch (IOException e) {
-            ErrorUtility.getInstance_WindowLoading(e);
+            ErrorUtility.showError_WindowLoading(e);
         }
-
-
-
-
     }
 
     public void showTaskOverviewGUI(ActionEvent event) {
@@ -307,18 +352,11 @@ public class CompareOverviewController {
     // obecné nápomocné metody
 
 
-    // stará se o poslání objektů k porovnání shod a načítá veškerá data
-    private void compareAndLoadFiles(TreeItem<ComparedItemOperItemRowModel> root,
-                                     String leftFolder,
-                                     String rightFolder,
-                                     ManualSyncTask manualTask) {
-
-        // získáme potřebná data
-         statisticsAndComparedData = comparisonService.compareFolders(
-                fileScannerService.scanFolder(leftFolder),
-                fileScannerService.scanFolder(rightFolder),
-                 manualTask
-        );
+    // stará se o poslání objektů a načítá veškerá data
+    private void loadFinishedDataToGui(ComparedDataAndStatisticsForCompereOverview data,
+                                       String leftFolder, String rightFolder)
+    {
+        this.statisticsAndComparedData = data;
 
         // nastavení statistik o disku v GUI
         DiskSpaceStatisticData leftFolderStatistic = utility.getDiskSpaceStatistics(leftFolder);
@@ -345,12 +383,13 @@ public class CompareOverviewController {
         lbRightDeleteCount.setText(String.valueOf(statisticsAndComparedData.getRightDeleteCount()));
         lbRightUpdateCount.setText(String.valueOf(statisticsAndComparedData.getRightUpdateCount()));
         lbRightAddCount.setText(String.valueOf(statisticsAndComparedData.getRightAddCount()));
+
         lbDataTransportTotalSize.setText(
                 utility.getFormatedSize(statisticsAndComparedData.getDataTransportSize())
         );
 
+        // strom
         resultComparedList = statisticsAndComparedData.getComparedFilesList();
-
         masterRoot = new TreeItem<>(null);
         masterRoot.setExpanded(true);
 

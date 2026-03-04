@@ -5,8 +5,8 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -27,31 +27,58 @@ public class FileScannerService {
                     "Cesta: " + rootDirectory);
         }
 
-        try (Stream<Path> stream = Files.walk(rootPath)) {
-            stream.filter(path -> Files.isRegularFile(path))
-            .forEach(file -> {
-                String relativePath = rootPath.relativize(file).toString();
-                relativePath = relativePath.replace("\\", "/");
+        try {
+            Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
 
+                // Zavolá se pro každý soubor
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 
-                FileItemModel newItem = new FileItemModel();
-                newItem.setFileName(file.getFileName().toString());
-                newItem.setFileAbsolutePath(file);
-                newItem.setRelativePath(rootPath.relativize(file));
-                try {
-                    newItem.setFileSize(Files.size(file));
-                    newItem.setLastModified(Files.getLastModifiedTime(file).toMillis());
-                } catch (IOException e) {
-                    System.out.println("Chyba při čtení atributu" + file);
+                    if (attrs.isDirectory()) {
+                        return FileVisitResult.CONTINUE;
+                    }
+                    try {
+                        String relativePath = rootPath.relativize(file).toString();
+                        relativePath = relativePath.replace("\\", "/");
+
+                        FileItemModel newItem = new FileItemModel();
+                        newItem.setFileName(file.getFileName().toString());
+                        newItem.setFileAbsolutePath(file);
+                        newItem.setRelativePath(rootPath.relativize(file));
+
+                        newItem.setFileSize(attrs.size());
+                        newItem.setLastModified(attrs.lastModifiedTime().toMillis());
+
+                        filesMap.put(relativePath, newItem);
+
+                    } catch (Exception e) {
+                        System.out.println("Chyba při čtení souboru" + file);
+                    }
+                    return FileVisitResult.CONTINUE;
                 }
-                filesMap.put(relativePath, newItem);
 
+                // zavolá se když se nepodaří vstoupit do složky/souboru
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+
+                    // pokud byl odmítnut přístup k souboru/složce (Koš, System Volume Info, zamčené soubory...)
+                    if (exc instanceof AccessDeniedException) {
+                        System.out.println("přístup odmítnut: " + file.toString());
+                        return FileVisitResult.SKIP_SUBTREE;
+                    }
+                    return super.visitFileFailed(file, exc);
+                }
             });
+
 
             return filesMap;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            ErrorUtility.getInstance("Kritická chyba skenování",
+                    "Chyba během procesu skenovaní" + rootPath.toString(),
+                    "Zkontrolujte zda má počítač přístup k zadané složce. \n" + e.toString());
         }
+        return filesMap;
+
     }
 
     /// kontroluje zda cesta existuje a jestli je to složka

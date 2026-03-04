@@ -1,31 +1,48 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 
-import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.stage.Stage;
 
-import java.awt.*;
-import java.io.IOException;
+
 
 public class CompareProgresController {
 
-    @FXML private Label comparedFiles;
-    @FXML private Label allFiles;
+    @FXML private Label lbHeader;
+    @FXML private Label lbComparedFiles;
+    @FXML private Label lbAllFiles;
     @FXML private ProgressBar progressBar;
+    @FXML private javafx.scene.control.Button btnCancelComparing;
+
+    private Task<?> runningTask; // pro zrušení celého porovnání
+
+
+    public void startComparisonWithProgressWindow(Task<?> task)  {
+        this.runningTask = task;
+
+        progressBar.progressProperty().bind(task.progressProperty());
+        lbComparedFiles.textProperty().bind(task.messageProperty());
+        lbAllFiles.textProperty().bind(task.titleProperty());
+    }
+
+    public void setLbHeader(String header) {
+        lbHeader.setText(header);
+    }
+
+    @FXML
+    public void cancelComparing() {
+        if (runningTask != null && runningTask.isRunning()) {
+            runningTask.cancel();
+        }
+        closeWindow();
+    }
 
 
 
-    public void startCompareProgresWindow()  {
-
-
-
-
-
-
-
-
-
+    public void closeWindow() {
+        Stage stage = (Stage) btnCancelComparing.getScene().getWindow();
+        stage.close();
     }
 }

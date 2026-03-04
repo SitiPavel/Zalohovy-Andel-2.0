@@ -16,7 +16,7 @@ public class ErrorUtility {
     }
 
 
-    public static void getInstance_WindowLoading(IOException e) {
+    public static void showError_WindowLoading(IOException e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Kritická chyba při načítání okna");
         alert.setHeaderText("Nepodařilo se načíst obsah okna.");

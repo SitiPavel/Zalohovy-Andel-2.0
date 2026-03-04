@@ -42,7 +42,29 @@ public class WindowManager {
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.showAndWait(); // aplikace v kódu čeká na reakci uživatele
 
+    }
 
+    //2 KROK: načte připravený loader jako modulární okno ve kterém mohou běžet různé načítání atd...
+    public static Stage openRunningWindow(FXMLLoader loader, String title, int width, int height) {
 
+        Parent root = loader.getRoot();
+
+        Stage newStage = new Stage();
+        newStage.setTitle(title);
+        Scene scene = new Scene(root, width, height);
+        newStage.setScene(scene);
+        newStage.setResizable(false);
+
+        var iconStream = WindowManager.class.getResourceAsStream(
+                "/cz/sitina/bakalarskaprace/zalohovyandel/images/ZalohovyAndelLogo70x70.png");
+        if (iconStream != null) {
+            newStage.getIcons().add(new Image(iconStream));
+        }
+
+        // nastavuje toto okno jako dialogové, zamezuje zobrazení jiných oken a klikání mimo
+        newStage.initModality(Modality.APPLICATION_MODAL);
+        newStage.show();
+
+        return newStage;
     }
 }
