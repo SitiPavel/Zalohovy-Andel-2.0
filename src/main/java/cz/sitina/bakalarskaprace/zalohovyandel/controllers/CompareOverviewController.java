@@ -189,6 +189,7 @@ public class CompareOverviewController {
         rightColLastModifi.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getRightItem().getFormatedLastModified());
 
+
         /// NASTAVENÍ SLOUPCŮ
         // Stylování sloupců
         leftColName.getStyleClass().add("left-column");
@@ -197,6 +198,8 @@ public class CompareOverviewController {
         operationCol.getStyleClass().add("center-column");
         rightColSize.getStyleClass().add("center-column");
         rightColLastModifi.getStyleClass().add("center-column");
+
+
 
         // jiní nastavení
         filesTreeTable.setTreeColumn(leftColName);
@@ -222,13 +225,14 @@ public class CompareOverviewController {
         treeTableBuilder.setColumnIindentLevelAndToolTips(rightColName);
 
 
-
         filesTreeTable.setShowRoot(false);
 
         // nastavení generování Obarvených řádků podle operace
         treeTableBuilder.rowFormatingByOperation(filesTreeTable);
         //  nastaví generování ikon do sloupce operace
         treeTableBuilder.setOperationColumnIcon(operationCol);
+
+
 
     }
 
@@ -400,6 +404,40 @@ public class CompareOverviewController {
         applyCurrentFiltersToTable();
     }
 
+    // nastaví podle true/false obrázek odpovídajcí vypnutému nebo zapnutému filtru
+    private void setFastFiltersImg() {
+        GuiOperationFilters_TaskData taskFilters = manualTask.getGuiOperationFilters();
+        imgAddItem_Left.setImage(
+                taskFilters.isActive_ADD_LEFT() ? icon_addItem_Left : icon_addItem_Left_OFF
+        );
+        imgModified_left.setImage(
+                taskFilters.isActive_UPDATE_LEFT() ? icon_modified_left  : icon_modified_left_OFF
+        );
+        imgDelete_left.setImage(
+                taskFilters.isActive_DELETE_LEFT() ? icon_delete_left : icon_delete_left_OFF
+        );
+        imgBlock.setImage(
+                taskFilters.isActive_IGNORE() ? icon_block : icon_block_OFF
+        );
+        imgEqual.setImage(
+                taskFilters.isActive_EQUALS() ? icon_equal : icon_equal_OFF
+        );
+        imgUnknown.setImage(
+                taskFilters.isActive_UNKNOWN() ? icon_unknown : icon_unknown_OFF
+        );
+        imgDelete_right.setImage(
+                taskFilters.isActive_DELETE_RIGHT() ? icon_delete_right : icon_delete_right_OFF
+        );
+        imgModified_right.setImage(
+                taskFilters.isActive_UPDATE_RIGHT() ? icon_modified_right :icon_modified_right_OFF
+        );
+        imgAddItem_right.setImage(
+                taskFilters.isActive_ADD_RIGHT() ? icon_addItem_right : icon_addItem_right_OFF
+        );
+    }
+
+
+
     private void applyCurrentFiltersToTable() {
         // kdyby nebylo co filtrovate
         if (masterRoot == null || manualTask == null) return;
@@ -513,6 +551,8 @@ public class CompareOverviewController {
 
     public void setTaskModel(ManualSyncTask tak) {
         this.manualTask = tak;
+        // nastaví správný obrázek k rychlím filtrům
+        setFastFiltersImg();
     };
 
     public void setAppFrameController(AppFrameController appFrameController) {
