@@ -41,6 +41,12 @@
     -fx-text-fill: -fx-color-textDark;
 }
 
+.WindowTitle_L1_Colored {
+    -fx-font-size: 13 px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-primary1;
+}
+
 /*  ===========================================
             Hlavní obsah
     =========================================== */
@@ -50,21 +56,12 @@
 
 .conteinerModify_Radius15{
     -fx-background-radius: 15;
-
 }
-
 
 .bottomBar {
     -fx-background-color: -fx-color-primary2;
 }
 
-
-
-
-
-/*  ===========================================
-            MenuBar
-    =========================================== */
 .menuConteiner {
     -fx-background-color: -fx-color-primary2;
 }

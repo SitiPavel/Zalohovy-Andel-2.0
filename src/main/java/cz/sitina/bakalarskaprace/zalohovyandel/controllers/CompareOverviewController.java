@@ -2,12 +2,14 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.CompareProgresController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.ManualCompareSettingsController;
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.RecapitulationBeforeCopyFilesController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilters_TaskData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
@@ -36,6 +38,8 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
+import static cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager.loadFXML;
+
 public class CompareOverviewController {
 
     // Nastavení sloupců v TreeTableView  a samotná tabulka
@@ -48,21 +52,27 @@ public class CompareOverviewController {
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColSize;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColLastModifi;
 
-    // daůší definované objekty
+    // daůší definované třídy atd..
 
     private final FileScannerService fileScannerService = new FileScannerService();
-    private List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
     private TreeTableBuilderService treeTableBuilder = new TreeTableBuilderService();
-    private ManualSyncTask manualTask;
 
     private final ComparisonService comparisonService = new ComparisonService();
     private final CompareOverviewService compareOverviewService = new CompareOverviewService();
     private final Utility utility = new Utility();
     private AppFrameController appFrameController;
-    private final ManualCompareSettingsController compareSetting = new ManualCompareSettingsController();
 
+
+
+    // definované důležité proměnné
+    private List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
     private final TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
     private TreeItem<ComparedItemOperItemRowModel> masterRoot;
+    private ManualSyncTask manualTask;
+
+    private final ManualCompareSettingsController compareSetting = new ManualCompareSettingsController();
+    private CompareStrategy strategyForRecapitulate;
+
 
     // definované datové sady
     private ComparedDataAndStatisticsForCompereOverview statisticsAndComparedData;
@@ -251,7 +261,7 @@ public class CompareOverviewController {
     @FXML
     public void startSettingsOfComparing(ActionEvent event){
         try {
-            FXMLLoader loader = WindowManager.loadFXML("manualCompareSetings.fxml");
+            FXMLLoader loader = loadFXML("manualCompareSetings.fxml");
             ManualCompareSettingsController controller = loader.getController();
             controller.setTask(manualTask);
 
@@ -267,8 +277,9 @@ public class CompareOverviewController {
 
     @FXML
     public void startComparingFiles(ActionEvent event) {
+        strategyForRecapitulate = manualTask.getCompareStrategy();
         try {
-            FXMLLoader loader = WindowManager.loadFXML("compareProgresWindow.fxml");
+            FXMLLoader loader = loadFXML("compareProgresWindow.fxml");
             CompareProgresController progressWindowController = loader.getController();
             Stage progresStage = WindowManager.openRunningWindow(loader, "Průběh porovnání", 420, 240);
 
@@ -332,6 +343,28 @@ public class CompareOverviewController {
 
     public void showTaskOverviewGUI(ActionEvent event) {
         appFrameController.showTasksOverview();
+    }
+
+    @FXML
+    public void startCopyFiles(ActionEvent event) {
+        try {
+            FXMLLoader loader = loadFXML("recapitulationBeforeCopyFiles.fxml");
+            RecapitulationBeforeCopyFilesController controller = loader.getController();
+            controller.setTask(manualTask);
+            controller.setComparedAndStatisticsData(statisticsAndComparedData);
+            controller.setStrategyModified(false);
+            controller.setStrategy(strategyForRecapitulate);
+            controller.setGui();
+
+            WindowManager.openNewWindow(loader, "Rekapitulace", 372, 296);
+
+
+        } catch (IOException e) {
+
+            System.out.println(e.toString());
+            ErrorUtility.showError_WindowLoading(e);
+
+        }
     }
 
     @FXML

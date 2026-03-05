@@ -1,0 +1,93 @@
+package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
+
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.util.Objects;
+
+
+public class RecapitulationBeforeCopyFilesController {
+    private TaskModel task;
+    private ComparedDataAndStatisticsForCompereOverview comparedAndStatisticsData;
+    private boolean isStrategyModified;
+    private CompareStrategy strategy;
+
+
+    @FXML private Label lbLeftAddCount;
+    @FXML private Label lbLeftUpdateCount;
+    @FXML private Label lbLeftDeleteCount;
+    @FXML private Label lbRightDeleteCount;
+    @FXML private Label lbRightUpdateCount;
+    @FXML private Label lbRightAddCount;
+
+    @FXML private ImageView imgCompareStrategy;
+    @FXML private Label modifiedIndicator;
+
+    private final String pathToImages = "/cz/sitina/bakalarskaprace/zalohovyandel/images/visualObjects/";
+    private final Image biDirectionalSync =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "biDirectionalSync.png")));
+    private final Image oneWayLeftToRight =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "oneWayLeftToRight.png")));
+    private final Image oneWayRightToLeft =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "oneWayRightToLeft.png")));
+    private final Image mirroringLeftToRight =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "mirroringLeftToRight.png")));
+    private final Image mirroringRightToLeft =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "mirroringRightToLeft.png")));
+
+
+    public RecapitulationBeforeCopyFilesController() {
+    }
+
+    public void setGui() {
+        lbLeftAddCount.setText(String.valueOf(comparedAndStatisticsData.getLeftAddCount()));
+        lbLeftUpdateCount.setText(String.valueOf(comparedAndStatisticsData.getLeftUpdateCount()));
+        lbLeftDeleteCount.setText(String.valueOf(comparedAndStatisticsData.getLeftDeleteCount()));
+        lbRightDeleteCount.setText(String.valueOf(comparedAndStatisticsData.getRightDeleteCount()));
+        lbRightUpdateCount.setText(String.valueOf(comparedAndStatisticsData.getRightUpdateCount()));
+        lbRightAddCount.setText(String.valueOf(comparedAndStatisticsData.getRightAddCount()));
+
+        switch (strategy) {
+            case BIDIRECTIONAL_SYNC ->
+                imgCompareStrategy.setImage(biDirectionalSync);
+            case BACKUP_TO_RIGHT ->
+                    imgCompareStrategy.setImage(oneWayLeftToRight);
+            case BACKUP_TO_LEFT ->
+                    imgCompareStrategy.setImage(oneWayRightToLeft);
+            case MIRRORING_to_RIGHT ->
+                    imgCompareStrategy.setImage(mirroringLeftToRight);
+            case MIRRORING_TO_lEFT ->
+                    imgCompareStrategy.setImage(mirroringRightToLeft);
+        }
+
+        // indikátor upravy se naastaví podle
+        modifiedIndicator.setDisable(isStrategyModified);
+
+    }
+
+    @FXML
+    public void startCopyFiles(ActionEvent event) {
+
+    }
+
+    public  void  setStrategy(CompareStrategy strategy) {
+        this.strategy = strategy;
+    }
+    public void setComparedAndStatisticsData(ComparedDataAndStatisticsForCompereOverview comparedAndStatisticsData) {
+        this.comparedAndStatisticsData = comparedAndStatisticsData;
+    }
+
+    public void setTask(TaskModel task) {
+        this.task = task;
+    }
+
+    public void setStrategyModified(boolean strategyModified) {
+        isStrategyModified = strategyModified;
+    }
+}

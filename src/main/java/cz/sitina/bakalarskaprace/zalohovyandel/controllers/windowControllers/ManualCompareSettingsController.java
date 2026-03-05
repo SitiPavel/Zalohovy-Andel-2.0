@@ -1,5 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
@@ -17,6 +18,7 @@ import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrate
 public class ManualCompareSettingsController {
     // ostaní definice
     private ManualSyncTask task;
+    private CompareStrategy strategy;
 
     // rádio skupiny
     @FXML private ToggleGroup SelectCompareType;
@@ -70,6 +72,10 @@ public class ManualCompareSettingsController {
             stage.close();
         }
 
+    }
+
+    public void setStrategy(CompareStrategy strategy) {
+        this.strategy = strategy;
     }
 
     public void setTask(ManualSyncTask task) {

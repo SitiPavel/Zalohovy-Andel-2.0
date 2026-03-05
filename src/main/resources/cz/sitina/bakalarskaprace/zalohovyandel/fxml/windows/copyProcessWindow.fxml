@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane styleClass="liteDarkConteiner" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.fxml.windows.CopyProcessWindow">
+   <stylesheets>
+      <URL value="@../../css/globlCss.css" />
+      <URL value="@../../css/windowsStyle.css" />
+   </stylesheets>
+   <padding>
+      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+   </padding>
+   <children>
+      <AnchorPane layoutX="36.0" layoutY="37.0" prefHeight="250.0" prefWidth="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <styleClass>
+            <String fx:value="mainConteinerStyle" />
+            <String fx:value="conteinerModify_Radius15" />
+         </styleClass>
+         <children>
+            <VBox alignment="TOP_CENTER" layoutX="159.0" layoutY="31.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label fx:id="lbHeader" styleClass="DarkBoltHeader1" text="Probíhá synchronizace" />
+                  <VBox prefWidth="100.0">
+                     <children>
+                        <Label fx:id="lbFileInProcess" text="C:\Users\pavel\Pictures\Screenshots\Grafy_Duplicaty" />
+                        <LineChart prefHeight="155.0" prefWidth="470.0">
+                          <xAxis>
+                            <CategoryAxis side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis side="LEFT" />
+                          </yAxis>
+                        </LineChart>
+                        <HBox alignment="CENTER" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/visualObjects/estimatedTime.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label fx:id="lbExpectedTime" styleClass="WindowTitle_L1_Dark" text="31:14" />
+                              <Region prefWidth="30.0" />
+                              <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/visualObjects/Timer.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label fx:id="lbTime" styleClass="WindowTitle_L1_Dark" text="15:24" />
+                              <Region prefWidth="50.0" />
+                              <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/visualObjects/successfullyFinish.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label fx:id="lbSuccessCount" styleClass="WindowTitle_L1_Dark" text="15024" />
+                              <Region prefWidth="30.0" />
+                              <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/visualObjects/error.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label fx:id="lbErrorCount" styleClass="WindowTitle_L1_Dark" text="5" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+      </AnchorPane>
+   </children>
+</AnchorPane>

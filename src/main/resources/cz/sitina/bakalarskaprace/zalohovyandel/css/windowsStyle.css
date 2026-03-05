@@ -67,7 +67,9 @@
     -fx-background-color: -fx-color-textDark;
 }
 
-/* progres bar */
+/* ----------------------------
+        progres bar
+------------------------------*/
 
 .progressBarStylDark1 {
     -fx-background-color: -fx-color-primary2;
@@ -82,4 +84,39 @@
     -fx-background-color: -fx-color-primary1;
     -fx-background-radius: 15;
     -fx-background-insets: 5;
+}
+
+/* ----------------------------
+        Check box styly
+------------------------------*/
+
+.checkBox_styl1 {
+    -fx-text-fill: -fx-color-textLight;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.checkBox_styl1 .box {
+    -fx-background-color: -fx-color-primary2;
+    -fx-border-color: -fx-color-lightBackground;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+
+}
+
+/* 3. Fajfka (Mark) - Tvar */
+.checkBox_styl1 .mark {
+    /* JavaFX defaultní tvar je trochu tlustý, toto je hezčí tenká fajfka (SVG path) */
+    -fx-shape: "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z";
+    -fx-background-color: transparent; /* Ve výchozím stavu není vidět */
+    -fx-scale-shape: true;
+    -fx-padding: 2px;
+}
+
+.checkBox_styl1:selected .box {
+    -fx-background-color: -fx-color-primary1; /* Modrá výplň (nebo tvá barva) */
+    -fx-border-color: -fx-color-primary2;
 }

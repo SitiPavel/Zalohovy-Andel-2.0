@@ -8,14 +8,6 @@ import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes.MAN
 
 public class ManualSyncTask extends TaskModel{
 
-    // filtry
-    boolean isVisibleEQUALS = true;
-    boolean isVisibleNO_EQUALS = true;
-    boolean isVisibleIGNORE = true;
-    boolean isVisibleUNKONWN = true;
-    boolean isVisibleDELETE_LEFT = true, isVisibleDELETE_RIGHT = true,   isVisibleDELETE_BOTH = true;
-    boolean isVisibleUPDATE_LEFT = true, isVisibleUPDATE_RIGHT = true;
-    boolean isVisibleADD_LEFT = true, isVisibleADD_RIGHT = true;
 
 
 

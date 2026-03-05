@@ -133,8 +133,8 @@ public class ComparisonService {
             }
 
             resultComparedList.add(rowModel);
-            dataModel.setComparedFilesList(resultComparedList);
         }
+        dataModel.setComparedFilesList(resultComparedList);
         return dataModel;
     }
 }
