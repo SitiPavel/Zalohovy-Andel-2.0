@@ -22,6 +22,12 @@
     -fx-font-weight: bold;
 }
 
+.DarkBoltHeader0 {
+    -fx-text-fill: -fx-color-textDark;
+    -fx-font-size: 21 px;
+    -fx-font-weight: bold;
+}
+
 .DarkBoltHeader1 {
     -fx-text-fill: -fx-color-textDark;
     -fx-font-size: 17 px;
@@ -84,7 +90,15 @@
 }
 
 
-
+.backgroundModify_mark1-50 {
+    -fx-background-color: -fx-color-mark1-50;
+}
+.backgroundModify_mark2-50 {
+    -fx-background-color: -fx-color-mark2-50;
+}
+.backgroundModify_mark5-50 {
+    -fx-background-color: -fx-color-mark5-50;
+}
 
 
 /*  ===========================================

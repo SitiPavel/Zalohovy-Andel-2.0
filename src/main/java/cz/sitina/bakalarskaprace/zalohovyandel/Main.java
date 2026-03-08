@@ -2,6 +2,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.AppFrameController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.TaskRepository;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import javafx.application.Application;
@@ -31,6 +32,14 @@ public class Main extends Application {
                 "D:\\testBakalarky\\Test02",
                 "popis úlohy ")
         );
+
+        ManualSyncTask task11 = new ManualSyncTask("testování",
+                "C:\\Users\\pavel\\Desktop\\VBOX_DATA\\DataProZalohu\\testovani",
+                "D:\\testBakalarky\\Test04",
+                "Slouží k testování přenosu ");
+        task11.setCompareStrategy(CompareStrategy.BACKUP_TO_RIGHT);
+
+        taskRepository.add(task11);
 
 
         String resourcesPath = "/cz/sitina/bakalarskaprace/zalohovyandel/";

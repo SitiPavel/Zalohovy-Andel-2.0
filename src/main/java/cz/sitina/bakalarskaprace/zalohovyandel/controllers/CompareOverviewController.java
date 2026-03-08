@@ -346,24 +346,30 @@ public class CompareOverviewController {
     }
 
     @FXML
-    public void startCopyFiles(ActionEvent event) {
-        try {
-            FXMLLoader loader = loadFXML("recapitulationBeforeCopyFiles.fxml");
-            RecapitulationBeforeCopyFilesController controller = loader.getController();
-            controller.setTask(manualTask);
-            controller.setComparedAndStatisticsData(statisticsAndComparedData);
-            controller.setStrategyModified(false);
-            controller.setStrategy(strategyForRecapitulate);
-            controller.setGui();
+    public void startRecapitulationForCopy(ActionEvent event) {
+        if (statisticsAndComparedData.isDataMoveOperations()) {
+            try {
+                FXMLLoader loader = loadFXML("recapitulationBeforeCopyFiles.fxml");
+                RecapitulationBeforeCopyFilesController controller = loader.getController();
+                controller.setTask(manualTask);
+                controller.setComparedAndStatisticsData(statisticsAndComparedData);
+                controller.setStrategyModified(false);
+                controller.setList(resultComparedList);
+                controller.setStrategy(strategyForRecapitulate);
+                controller.setGui();
 
-            WindowManager.openNewWindow(loader, "Rekapitulace", 372, 296);
+                WindowManager.openNewWindow(loader, "Rekapitulace", 372, 296);
 
 
-        } catch (IOException e) {
-
-            System.out.println(e.toString());
-            ErrorUtility.showError_WindowLoading(e);
-
+            } catch (IOException e) {
+                System.out.println(e.toString());
+                ErrorUtility.showError_WindowLoading(e);
+            }
+        } else {
+            ErrorUtility.getInstance("Chyba",
+                    "V porovnání nejsou položky, vyžadují manipulaci",
+                    "Aby mohla být synchronizace/záloha spuštěna musí obsahovat alespoň jednu z těchto operací: " +
+                            "PŘIDAT, UPRAVIT, SMAZAT na libovolnou stranu");
         }
     }
 

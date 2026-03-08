@@ -22,6 +22,16 @@ public class ComparedDataAndStatisticsForCompereOverview {
     public ComparedDataAndStatisticsForCompereOverview() {
     }
 
+    public boolean isDataMoveOperations() {
+        return (leftAddCount > 0 ||
+                leftUpdateCount > 0 ||
+                leftDeleteCount > 0 ||
+                rightDeleteCount > 0 ||
+                rightUpdateCount > 0 ||
+                rightAddCount > 0
+        );
+    }
+
     public int getLeftAddCount() {
         return leftAddCount;
     }

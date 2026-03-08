@@ -120,3 +120,23 @@
     -fx-background-color: -fx-color-primary1; /* Modrá výplň (nebo tvá barva) */
     -fx-border-color: -fx-color-primary2;
 }
+
+/* ----------------------------
+        LineChard
+------------------------------*/
+
+
+.progressChartLine .chart {
+    -fx-background-color: transparent;
+}
+.progressChartLine .chart-plot-background{
+    -fx-background-color: transparent;
+}
+.progressChartLine .chart-series-line{
+    -fx-stroke: -fx-color-textDark;
+    -fx-stroke-width: 2px ;
+}
+.progressChartLine .chart-vertical-grid-lines {
+    -fx-stroke: -fx-color-darkBackground;
+}
+
