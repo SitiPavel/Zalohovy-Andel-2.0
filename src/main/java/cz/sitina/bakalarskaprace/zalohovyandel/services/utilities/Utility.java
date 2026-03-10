@@ -1,6 +1,8 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.services.utilities;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
+import javafx.scene.control.Tooltip;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -59,6 +61,18 @@ public class Utility {
         } else {
             return false;
         }
+    }
+
+    public Tooltip createToolTip_300ms(String text) {
+        Tooltip tooltip = new Tooltip(text);
+
+        // Zde nastavíte vše, co mají mít tooltipy společné:
+        tooltip.setShowDelay(Duration.millis(300)); // Rychlejší zobrazení
+        tooltip.setHideDelay(Duration.millis(100)); // Rychlejší zmizení
+        tooltip.setShowDuration(Duration.seconds(5)); // Jak dlouho zůstane viset
+        // tooltip.setStyle("-fx-font-size: 14px;"); // Můžete přidat i společný styl
+
+        return tooltip;
     }
 
 

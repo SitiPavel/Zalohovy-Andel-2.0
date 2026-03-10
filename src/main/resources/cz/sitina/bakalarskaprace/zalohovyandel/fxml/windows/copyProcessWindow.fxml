@@ -53,45 +53,75 @@
                         </StackPane>
                         <HBox alignment="CENTER" prefWidth="200.0">
                            <children>
-                              <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../images/visualObjects/estimatedTime.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets right="5.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <Label fx:id="lbExpectedTime" styleClass="WindowTitle_L1_Dark" text="0:0" />
+                              <HBox fx:id="containerExpectedTime" alignment="CENTER">
+                                 <children>
+                                    <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/visualObjects/estimatedTime.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="5.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label fx:id="lbExpectedTime" styleClass="WindowTitle_L1_Dark" text="0:0" />
+                                 </children>
+                              </HBox>
                               <Region prefWidth="30.0" />
-                              <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../images/visualObjects/Timer.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets right="5.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <Label fx:id="lbTime" styleClass="WindowTitle_L1_Dark" text="0:0" />
-                              <Region prefWidth="50.0" />
-                              <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../images/visualObjects/successfullyFinish.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets right="5.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <Label fx:id="lbSuccessCount" styleClass="WindowTitle_L1_Dark" text="0" />
+                              <HBox fx:id="containerTime">
+                                 <children>
+                                    <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/visualObjects/Timer.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="5.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label fx:id="lbTime" styleClass="WindowTitle_L1_Dark" text="0:0" />
+                                 </children>
+                              </HBox>
                               <Region prefWidth="30.0" />
-                              <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../images/visualObjects/error.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets right="5.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <Label fx:id="lbErrorCount" styleClass="WindowTitle_L1_Dark" text="0" />
+                              <HBox fx:id="containerFiles">
+                                 <children>
+                                    <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/visualObjects/file.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="5.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label fx:id="lbFileCount" styleClass="WindowTitle_L1_Dark" text="0" />
+                                 </children>
+                              </HBox>
+                              <Region prefWidth="30.0" />
+                              <HBox fx:id="containerProcessed">
+                                 <children>
+                                    <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/visualObjects/successfullyFinish.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="5.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label fx:id="lbProcessedCount" styleClass="WindowTitle_L1_Dark" text="0" />
+                                 </children>
+                              </HBox>
+                              <Region prefWidth="30.0" />
+                              <HBox fx:id="containerError">
+                                 <children>
+                                    <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/visualObjects/error.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="5.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label fx:id="lbErrorCount" styleClass="WindowTitle_L1_Dark" text="0" />
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
                      </children>

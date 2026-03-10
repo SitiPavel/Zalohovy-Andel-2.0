@@ -4,6 +4,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowMod
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.SyncBackupProcessService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -15,6 +16,8 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -30,7 +33,8 @@ public class CopyProcessController {
 
     @FXML private Label lbExpectedTime;
     @FXML private Label lbTime;
-    @FXML private Label lbSuccessCount;
+    @FXML private Label lbProcessedCount;
+    @FXML private Label lbFileCount;
     @FXML private Label lbErrorCount;
     @FXML private LineChart<Number, Number> lineChartSpeedGraph;
     @FXML private NumberAxis xAxis;
@@ -38,15 +42,22 @@ public class CopyProcessController {
     @FXML private Region chartProgressBackground;
     @FXML private StackPane chartContainer;
 
+    @FXML private HBox containerExpectedTime;
+    @FXML private HBox containerTime;
+    @FXML private HBox containerFiles;
+    @FXML private HBox containerProcessed;
+    @FXML private HBox containerError;
+
     private TaskModel taskModel;
     private SyncBackupProcessService syncBackupProcessService = new SyncBackupProcessService();
     private XYChart.Series<Number, Number> speedSeries;
     private Task<Void> syncBackupProcessTask;
     private long startTime;
     private Timeline uiTimeline;
+    private Utility utility;
 
 
-    private int successCount = 0;
+    private int fileCount = 0;
     private int errorCount = 0;
 
     public void initialize() {
@@ -62,6 +73,12 @@ public class CopyProcessController {
         xAxis.setUpperBound(100);
         // nastavení kroku po 10 %
         xAxis.setTickUnit(10);
+
+        Tooltip.install(containerExpectedTime, utility.createToolTip_300ms("Odhadovaný čas"));
+        Tooltip.install(containerTime, utility.createToolTip_300ms("Uplynulý čas "));
+        Tooltip.install(containerFiles, utility.createToolTip_300ms("Hotové soubory"));
+        Tooltip.install(containerProcessed, utility.createToolTip_300ms("Hotové soubory vyžadující operaci"));
+        Tooltip.install(containerError, utility.createToolTip_300ms("Soubory s chybou"));
     }
 
     public void startProcess(
@@ -94,7 +111,7 @@ public class CopyProcessController {
                             private long lastBytes = 0;
 
                             @Override
-                            public void onProgress(long bytesProcessed, long totalBytes, String currentFile) {
+                            public void onProgress(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount) {
 
                                 //update progressbaru
                                 updateProgress(bytesProcessed, totalBytes);
@@ -125,7 +142,10 @@ public class CopyProcessController {
                                                 (remainingBytes / 1024.0 / 1024.0) / mbSpeedPerSecond : 0;
 
                                         //update do grafu
-                                        Platform.runLater(() -> updateSpeedChart(mbSpeedPerSecond, percentDone, expectedTime));
+                                        Platform.runLater(() -> {
+                                            lbProcessedCount.setText(String.valueOf(processedFileCount));
+                                            updateSpeedChart(mbSpeedPerSecond, percentDone, expectedTime);
+                                        });
 
                                         lastTime = now;
                                         lastBytes = bytesProcessed;
@@ -137,8 +157,8 @@ public class CopyProcessController {
                             public void onItemCompleted(boolean success) {
                                 Platform.runLater(() ->{
                                     if (success) {
-                                        successCount++;
-                                        lbSuccessCount.setText(String.valueOf(successCount));
+                                        fileCount++;
+                                        lbFileCount.setText(String.valueOf(fileCount));
                                     } else {
                                         errorCount++;
                                         lbErrorCount.setText(String.valueOf(errorCount));
@@ -219,7 +239,7 @@ public class CopyProcessController {
             ((Stage) btnCancel.getScene().getWindow()).close();
         }
         errorCount =0;
-        successCount =0;
+        fileCount =0;
     }
 
 }

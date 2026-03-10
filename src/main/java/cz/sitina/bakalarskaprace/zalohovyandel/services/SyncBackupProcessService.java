@@ -16,9 +16,10 @@ import java.nio.file.attribute.DosFileAttributes;
 import java.util.List;
 
 public class SyncBackupProcessService {
+    int processedFileCount = 0;
 
     public interface ProgressCallback {
-        void onProgress(long bytesProcessed, long totalBytes, String currentFile);
+        void onProgress(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount);
         void onItemCompleted(boolean success);
     }
 
@@ -38,7 +39,7 @@ public class SyncBackupProcessService {
         Path leftRoot = Paths.get(task.getLeftPath());
         Path rightRoot= Paths.get(task.getRightPath());
 
-        callback.onProgress(globalProcessedBytes, totalBytes, "Start...");
+        callback.onProgress(globalProcessedBytes, totalBytes, "Start...", processedFileCount);
         boolean success = true;
 
         for (ComparedItemOperItemRowModel row : itemsToProcess) {
@@ -63,7 +64,7 @@ public class SyncBackupProcessService {
                                 globalProcessedBytes, totalBytes,
                                 currentFileName, callback,
                                 isCancelled);
-
+                        processedFileCount++;
                     }
                     case ADD_RIGHT, UPDATE_RIGHT -> {
                         Path source = leftItem.getFileAbsolutePath();
@@ -74,12 +75,20 @@ public class SyncBackupProcessService {
                                 globalProcessedBytes, totalBytes,
                                 currentFileName, callback,
                                 isCancelled);
+                        processedFileCount++;
                     }
-                    case DELETE_LEFT -> {Files.deleteIfExists(leftItem.getFileAbsolutePath());}
-                    case DELETE_RIGHT -> {Files.deleteIfExists(rightItem.getFileAbsolutePath());}
+                    case DELETE_LEFT -> {
+                        Files.deleteIfExists(leftItem.getFileAbsolutePath());
+                        processedFileCount++;
+                    }
+                    case DELETE_RIGHT -> {
+                        Files.deleteIfExists(rightItem.getFileAbsolutePath());
+                        processedFileCount++;
+                    }
                     case DELETE_BOTH -> {
                         Files.deleteIfExists(leftItem.getFileAbsolutePath());
                         Files.deleteIfExists(rightItem.getFileAbsolutePath());
+                        processedFileCount++;
                     }
                 }
                 if (operations.name().contains("ADD") || operations.name().contains("UPDATE")) {
@@ -142,11 +151,11 @@ public class SyncBackupProcessService {
                 //nechceme jlásit každých blok proto budeme kopírovat 1 MB od posledního glášení
                 // pokud bychom hlásili každý blok mohlo byt to zahltit aplikaci
                 if ( (bytesCopiedForThisFile - lastReportedBites)  >= 1024*1024) {
-                    callback.onProgress(alreadyProcessedGlobal + bytesCopiedForThisFile, totalBytes, fileName);
+                    callback.onProgress(alreadyProcessedGlobal + bytesCopiedForThisFile, totalBytes, fileName, processedFileCount);
                     lastReportedBites = bytesCopiedForThisFile;
                 }
             }
-            callback.onProgress(alreadyProcessedGlobal + bytesCopiedForThisFile, totalBytes, fileName);
+            callback.onProgress(alreadyProcessedGlobal + bytesCopiedForThisFile, totalBytes, fileName, processedFileCount);
         }//Soubor je přenesen a uzavřen
 
         /*

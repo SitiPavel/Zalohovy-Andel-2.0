@@ -30,23 +30,18 @@ public class RecapitulationBeforeCopyFilesController {
     private List<ComparedItemOperItemRowModel> list;
 
 
-    @FXML
-    private Label lbLeftAddCount;
-    @FXML
-    private Label lbLeftUpdateCount;
-    @FXML
-    private Label lbLeftDeleteCount;
-    @FXML
-    private Label lbRightDeleteCount;
-    @FXML
-    private Label lbRightUpdateCount;
-    @FXML
-    private Label lbRightAddCount;
+    @FXML private Label lbLeftAddCount;
+    @FXML private Label lbLeftUpdateCount;
+    @FXML private Label lbLeftDeleteCount;
+    @FXML private Label lbRightDeleteCount;
+    @FXML private Label lbRightUpdateCount;
+    @FXML private Label lbRightAddCount;
 
-    @FXML
-    private ImageView imgCompareStrategy;
-    @FXML
-    private Label modifiedIndicator;
+    @FXML private ImageView imgCompareStrategy;
+    @FXML private Label modifiedIndicator;
+
+    @FXML private Label sizeToLeft;
+    @FXML private Label sizeToRight;
 
     private final String pathToImages = "/cz/sitina/bakalarskaprace/zalohovyandel/images/visualObjects/";
     private final Image biDirectionalSync =
@@ -106,7 +101,15 @@ public class RecapitulationBeforeCopyFilesController {
 
         } catch (IOException e) {
             ErrorUtility.showError_WindowLoading(e);
+
         }
+    }
+
+    public void setText_SizeToLeft(String text) {
+        sizeToLeft.setText(text);
+    }
+    public void setText_SizeToRight(String text) {
+        sizeToRight.setText(text);
     }
 
     public void setStrategy(CompareStrategy strategy) {

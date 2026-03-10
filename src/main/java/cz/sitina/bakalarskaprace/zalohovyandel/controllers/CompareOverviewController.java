@@ -378,9 +378,11 @@ public class CompareOverviewController {
                 controller.setStrategyModified(false);
                 controller.setList(resultComparedList);
                 controller.setStrategy(strategyForRecapitulate);
+                controller.setText_SizeToLeft(lbPieChar_Left.getText());
+                controller.setText_SizeToRight(lbPieChar_Right.getText());
                 controller.setGui();
 
-                WindowManager.openNewWindow(loader, "Rekapitulace", 372, 296);
+                WindowManager.openNewWindow(loader, "Rekapitulace", 372, 350);
 
 
             } catch (IOException e) {
