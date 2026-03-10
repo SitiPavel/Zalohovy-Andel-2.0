@@ -54,16 +54,16 @@ public class CopyProcessController {
     private Task<Void> syncBackupProcessTask;
     private long startTime;
     private Timeline uiTimeline;
-    private Utility utility;
+    private Utility utility = new Utility();
 
 
     private int fileCount = 0;
     private int errorCount = 0;
+    private boolean isChartConfigured;
 
     public void initialize() {
-        // nastavení celého grafu
+        // nastavení default celého grafu
         speedSeries = new XYChart.Series<>();
-        speedSeries.setName("Rychlost zápisu (MB/s)");
         lineChartSpeedGraph.getData().add(speedSeries);
         lineChartSpeedGraph.setAnimated(false);
 
@@ -86,10 +86,16 @@ public class CopyProcessController {
             List<ComparedItemOperItemRowModel> list
     ) {
         this.taskModel = taskModel;
+        isChartConfigured =false;
+
+        // Získáme celkový počet souborů
+        int totalFilesToProcess = list.size();
 
         speedSeries.getData().clear();
         speedSeries.getData().add(new XYChart.Data<>(0, 0));
         startTime = System.currentTimeMillis();
+
+
 
         // nastavení nadpisu
         if (taskModel instanceof ManualSyncTask) {
@@ -109,9 +115,26 @@ public class CopyProcessController {
                         new SyncBackupProcessService.ProgressCallback() {
                             private long lastTime = startTime;
                             private long lastBytes = 0;
+                            private int lastProcessedFileCount = 0;
+                            private double lastSpeedForGraph = 0.0;
+
 
                             @Override
                             public void onProgress(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount) {
+
+
+                                // 1. Změna nadpisů a os (Jen jednou na začátku)
+                                if (!isChartConfigured) {
+                                    Platform.runLater(() -> {
+                                        if (totalBytes == 0) {
+                                            lbHeader.setText("Probíhá odstraňování");
+                                            speedSeries.setName("Zpracované soubory");
+                                            // NUTNÉ: Přepíše text "MB/s" na "Položek/s" na ose Y
+                                            ((NumberAxis) lineChartSpeedGraph.getYAxis()).setLabel("Rychlost (Položek/s)");
+                                        }
+                                    });
+                                    isChartConfigured = true;
+                                }
 
                                 //update progressbaru
                                 updateProgress(bytesProcessed, totalBytes);
@@ -119,9 +142,15 @@ public class CopyProcessController {
                                 // nastaví cestu k aktuálnímu zpracovávanému souboru
 
                                 long now = System.currentTimeMillis();
+                                boolean isFinished;
+                                if (totalBytes > 0) {
+                                    isFinished = (bytesProcessed == totalBytes);
+                                } else {
+                                    isFinished = (processedFileCount == totalFilesToProcess);
+                                }
 
                                 //projíždí každých 250 milisekund
-                                if (now -lastTime > 250 || bytesProcessed == totalBytes) {
+                                if (now -lastTime > 250 || isFinished) {
                                     Platform.runLater(()->{
                                             lbFileInProcess.setText(currentFile);
                                     });
@@ -130,25 +159,46 @@ public class CopyProcessController {
 
                                     double timeDelta =(now - lastTime) / 1000.0;
 
-                                    if (timeDelta >0.001 && totalBytes > 0) {
-                                        long deltaData = bytesProcessed - lastBytes;
+                                    if (timeDelta >0.001) { // pokud máme UPDATE nebo ADD
+                                        double speedPerSecond;
+                                        double percentDone;
+                                        double expectedTime;
 
-                                        double mbSpeedPerSecond = (deltaData / 1024.0 /1024.0) / timeDelta;
-                                        double percentDone = ( (double) bytesProcessed / totalBytes) * 100;
+                                        if (totalBytes > 0) {
+                                            long deltaData = bytesProcessed - lastBytes;
 
-                                        // Zbývající čas (pro Label) - počítáme z celkového průměru nebo aktuální rychlosti
-                                        long remainingBytes = totalBytes - bytesProcessed;
-                                        double expectedTime = (mbSpeedPerSecond > 0) ?
-                                                (remainingBytes / 1024.0 / 1024.0) / mbSpeedPerSecond : 0;
+                                            speedPerSecond = (deltaData / 1024.0 / 1024.0) / timeDelta;
+                                            percentDone = ((double) bytesProcessed / totalBytes) * 100;
 
-                                        //update do grafu
+                                            // Zbývající čas (pro Label) - počítáme z celkového průměru nebo aktuální rychlosti
+                                            long remainingBytes = totalBytes - bytesProcessed;
+                                            expectedTime = (speedPerSecond > 0) ?
+                                                    (remainingBytes / 1024.0 / 1024.0) / speedPerSecond : 0;
+                                        }else {// pokud jsou jen DELETE tak ukazujeme jen v souborech
+                                            long deltaData = processedFileCount - lastProcessedFileCount;
+                                            speedPerSecond = deltaData / timeDelta;
+
+                                            if (speedPerSecond > 0) {
+                                                percentDone =((double) processedFileCount / totalFilesToProcess) * 100;
+                                                long remainingFiles = totalFilesToProcess - processedFileCount;
+                                                expectedTime =  remainingFiles / speedPerSecond;
+                                            } else {
+                                                percentDone = 100; expectedTime = 0;
+                                            }
+
+
+                                            updateProgress(processedFileCount, totalFilesToProcess);
+                                        }
+
                                         Platform.runLater(() -> {
                                             lbProcessedCount.setText(String.valueOf(processedFileCount));
-                                            updateSpeedChart(mbSpeedPerSecond, percentDone, expectedTime);
+                                            updateSpeedChart(speedPerSecond, percentDone, expectedTime);
                                         });
 
+                                        // Uložení stavů pro další cyklus
                                         lastTime = now;
                                         lastBytes = bytesProcessed;
+                                        lastProcessedFileCount = processedFileCount;
                                     }
                                 }
                             }
@@ -185,19 +235,22 @@ public class CopyProcessController {
 
         // závěrečná informace o dokončení procesu
         syncBackupProcessTask.setOnSucceeded(event -> processFinished(
-                "Uspěšně dokončeno.", "✔", false, "backgroundModify_mark1-50-50"));
+                "Uspěšně dokončeno.", "✔", false));
         syncBackupProcessTask.setOnCancelled(event -> processFinished(
-                "Proces byl přerušen.", "✘", false, "backgroundModify_mark2-50"));
+                "Proces byl přerušen.", "✘", false));
 
         syncBackupProcessTask.setOnFailed(event ->  {
                 String msg = "Vyskytla se neznámá chyba";
                 if (syncBackupProcessTask.getException() != null){
                     msg = syncBackupProcessTask.getException().getMessage();
                 }
-                processFinished("Vyskytla se chyba.", "Chyba: " + msg, true,
-                        "backgroundModify_mark5-50");
+                processFinished("Vyskytla se chyba.", "Chyba: " + msg, true);
         });
 
+        chartProgressBackground.setPrefWidth(0);
+        chartProgressBackground.prefWidthProperty().bind(
+                chartContainer.widthProperty().multiply(syncBackupProcessTask.progressProperty())
+        );
 
         new Thread(syncBackupProcessTask).start();
     }
@@ -214,12 +267,11 @@ public class CopyProcessController {
         return String.format("%02d:%02d:%02d", s/3600, (s % 3600) / 60,  s % 60);
     }
 
-    private void processFinished(String title, String message, boolean isError, String styleClass) {
+    private void processFinished(String title, String message, boolean isError) {
         uiTimeline.stop();
         btnCancel.setText("Zavřít");
         lbHeader.setText(title);
         lbFileInProcess.setText(message);
-        chartProgressBackground.getStyleClass().add(styleClass);
         btnCancel.setOnAction(e -> ((Stage) btnCancel.getScene().getWindow()).close());
         if (isError) {
             System.out.println(message);

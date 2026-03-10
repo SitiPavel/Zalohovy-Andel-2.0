@@ -100,6 +100,7 @@ public class RecapitulationBeforeCopyFilesController {
 
 
         } catch (IOException e) {
+            System.out.println(e);
             ErrorUtility.showError_WindowLoading(e);
 
         }

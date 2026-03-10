@@ -34,10 +34,10 @@ public class Main extends Application {
         );
 
         ManualSyncTask task11 = new ManualSyncTask("testování",
-                "C:\\Users\\pavel\\Desktop\\VBOX_DATA\\DataProZalohu\\testovani",
+                "D:\\testBakalarky\\Test05",
                 "D:\\testBakalarky\\Test04",
                 "Slouží k testování přenosu ");
-        task11.setCompareStrategy(CompareStrategy.BACKUP_TO_RIGHT);
+        task11.setCompareStrategy(CompareStrategy.MIRRORING_to_RIGHT);
 
         taskRepository.add(task11);
 

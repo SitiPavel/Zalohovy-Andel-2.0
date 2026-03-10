@@ -140,3 +140,17 @@
     -fx-stroke: -fx-color-darkBackground;
 }
 
+/* Hlavní popisky os (např. "Rychlost", "Postup (%)") */
+.progressChartLine .chart .axis .axis-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+/* Volitelně: Čísla na osách (aby byla také tučná a lépe čitelná) */
+.progressChartLine .chart .axis .tick-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+

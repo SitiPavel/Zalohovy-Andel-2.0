@@ -32,24 +32,27 @@
                            <VBox.margin>
                               <Insets left="40.0" />
                            </VBox.margin></Label>
-                        <StackPane fx:id="chartContainer" prefHeight="200.0" prefWidth="200.0">
+                        <StackPane fx:id="chartContainer" prefHeight="200.0" prefWidth="200.0" styleClass="progressChartLine">
                            <children>
                               <Region fx:id="chartProgressBackground" prefHeight="200.0" prefWidth="200.0" StackPane.alignment="CENTER_LEFT">
                                  <StackPane.margin>
                                     <Insets bottom="10.0" left="10.0" />
                                  </StackPane.margin></Region>
-                              <LineChart fx:id="lineChartSpeedGraph" createSymbols="false" legendVisible="false" styleClass="progressChartLine">
+                              <LineChart fx:id="lineChartSpeedGraph" createSymbols="false" legendVisible="false" prefHeight="163.0" prefWidth="670.0" styleClass="progressChartLine">
                                  <xAxis>
                                     <NumberAxis autoRanging="false" label="Postup (%)" lowerBound="0" side="BOTTOM" upperBound="100" fx:id="xAxis" />
                                  </xAxis>
                                  <yAxis>
-                                    <NumberAxis label="Rychlost (MB/s)" side="LEFT" />
+                                    <NumberAxis label="Rychlost  (MB/s)" side="LEFT" />
                                  </yAxis>
                                  <StackPane.margin>
                                     <Insets />
                                  </StackPane.margin>
                               </LineChart>
                            </children>
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
                         </StackPane>
                         <HBox alignment="CENTER" prefWidth="200.0">
                            <children>

@@ -53,6 +53,7 @@ public class SyncBackupProcessService {
                     ? leftItem.getRelativePath().toString() : rightItem.getRelativePath().toString();
 
             long fileSize = 0;
+            success = true;
             try {
                 switch (operations) {
                     case ADD_LEFT, UPDATE_LEFT -> {
@@ -80,15 +81,18 @@ public class SyncBackupProcessService {
                     case DELETE_LEFT -> {
                         Files.deleteIfExists(leftItem.getFileAbsolutePath());
                         processedFileCount++;
+                        callback.onProgress(globalProcessedBytes, totalBytes, currentFileName, processedFileCount);
                     }
                     case DELETE_RIGHT -> {
                         Files.deleteIfExists(rightItem.getFileAbsolutePath());
                         processedFileCount++;
+                        callback.onProgress(globalProcessedBytes, totalBytes, currentFileName, processedFileCount);
                     }
                     case DELETE_BOTH -> {
                         Files.deleteIfExists(leftItem.getFileAbsolutePath());
                         Files.deleteIfExists(rightItem.getFileAbsolutePath());
                         processedFileCount++;
+                        callback.onProgress(globalProcessedBytes, totalBytes, currentFileName, processedFileCount);
                     }
                 }
                 if (operations.name().contains("ADD") || operations.name().contains("UPDATE")) {
