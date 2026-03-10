@@ -8,6 +8,8 @@
 .lightMidText {
     -fx-font-size: 12px;
     -fx-text-fill: -fx-color-textLight;
+    -fx-font-weight: bold;
+
 }
 
 .coloredBoltText {

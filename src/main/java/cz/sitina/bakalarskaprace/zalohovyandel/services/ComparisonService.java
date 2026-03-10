@@ -106,19 +106,19 @@ public class ComparisonService {
                 }
                 case UPDATE_LEFT -> {
                     dataModel.attributeLeftUpdateCount(1);
-                    dataModel.attributeDataTransportSize(rightItem.getFileSize());
+                    dataModel.attributeDataTransportSize_left(rightItem.getFileSize());
                 }
                 case UPDATE_RIGHT -> {
                     dataModel.attributeRightUpdateCount(1);
-                    dataModel.attributeDataTransportSize(leftItem.getFileSize());
+                    dataModel.attributeDataTransportSize_right(leftItem.getFileSize());
                 }
                 case ADD_LEFT -> {
                     dataModel.attributeLeftAddCount(1);
-                    dataModel.attributeDataTransportSize(rightItem.getFileSize());
+                    dataModel.attributeDataTransportSize_left(rightItem.getFileSize());
                 }
                 case ADD_RIGHT -> {
                     dataModel.attributeRightAddCount(1);
-                    dataModel.attributeDataTransportSize(leftItem.getFileSize());
+                    dataModel.attributeDataTransportSize_right(leftItem.getFileSize());
                 }
                 case UNKNOWN -> dataModel.attributeUnknownCount(1);
             }

@@ -15,7 +15,8 @@ public class ComparedDataAndStatisticsForCompereOverview {
     private int rightUpdateCount = 0;
     private int rightAddCount = 0;
 
-    private long dataTransportSize = 0;
+    private long dataTransportSize_left = 0;
+    private long dataTransportSize_right = 0;
 
     private List<ComparedItemOperItemRowModel> comparedFilesList;
 
@@ -59,9 +60,9 @@ public class ComparedDataAndStatisticsForCompereOverview {
     public int getRightAddCount() {
         return rightAddCount;
     }
-    public long getDataTransportSize() {
-        return dataTransportSize;
-    }
+    public long getDataTransportSize_left() {return dataTransportSize_left;}
+    public long getDataTransportSize_right() {return dataTransportSize_right;}
+
     public List<ComparedItemOperItemRowModel> getComparedFilesList() {
         return comparedFilesList;
     }
@@ -99,8 +100,13 @@ public class ComparedDataAndStatisticsForCompereOverview {
     }
 
     // --- DATOVÝ OBJEM ---
-    public void attributeDataTransportSize(long size) {
-        this.dataTransportSize += size;
+
+
+    public void attributeDataTransportSize_left(long dataTransportSize_left) {
+        this.dataTransportSize_left += dataTransportSize_left;
+    }
+    public void attributeDataTransportSize_right(long dataTransportSize_right) {
+        this.dataTransportSize_right += dataTransportSize_right;
     }
 
     public void setComparedFilesList(List<ComparedItemOperItemRowModel> comparedFilesList) {

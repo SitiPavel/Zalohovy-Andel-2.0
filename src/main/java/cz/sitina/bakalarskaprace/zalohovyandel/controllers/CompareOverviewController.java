@@ -72,6 +72,8 @@ public class CompareOverviewController {
 
     private final ManualCompareSettingsController compareSetting = new ManualCompareSettingsController();
     private CompareStrategy strategyForRecapitulate;
+    private boolean isLeftOperationSizeSmalerThenLeftFolder;
+    private boolean isRightOperationSizeSmalerThenRightFolder;
 
 
     // definované datové sady
@@ -94,7 +96,6 @@ public class CompareOverviewController {
     @FXML private Label lbRightDeleteCount;
     @FXML private Label lbRightUpdateCount;
     @FXML private Label lbRightAddCount;
-    @FXML private Label lbDataTransportTotalSize;
 
     // nutné deklarování pro ovládání rychlích filtrů
 
@@ -160,6 +161,16 @@ public class CompareOverviewController {
     private final Image icon_addItem_right_OFF =
             new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "addItem_right_OFF.png")));
 
+    // koláče
+    private final Image pieChartYellow_ToLeft =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "pieChar-Yellow_Left.png")));
+    private final Image pieChartRed_ToLeft =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "pieChar-Red_left.png")));
+    private final Image pieChartYellow_ToRight =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "pieChar-Yellow_Right.png")));
+    private final Image pieChartRed_ToRight =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "pieChar-Red_Right.png")));
+
 
     // ukazatelé statistik disků
     @FXML private Label lbLeftUsedSpace;
@@ -172,7 +183,11 @@ public class CompareOverviewController {
     @FXML private Label lbRightFreeSpace;
     @FXML private ProgressBar pbRightUsedSpace;
 
+    @FXML private ImageView imgPieChar_Left;
+    @FXML private Label lbPieChar_Left;
 
+    @FXML private ImageView imgPieChar_Right;
+    @FXML private Label lbPieChar_Right;
 
 
 
@@ -348,6 +363,13 @@ public class CompareOverviewController {
     @FXML
     public void startRecapitulationForCopy(ActionEvent event) {
         if (statisticsAndComparedData.isDataMoveOperations()) {
+            // kontrola jestli se záloha vejde do disku
+            if (!isRightOperationSizeSmalerThenRightFolder || !isLeftOperationSizeSmalerThenLeftFolder) {
+                ErrorUtility.getInstance("Chyba disku",
+                        "Synchronizace nebo záloha je příliž velká!",
+                        "Velikost operací do levého nebo pravého uložiště je příliž velká!");
+                return;
+            }
             try {
                 FXMLLoader loader = loadFXML("recapitulationBeforeCopyFiles.fxml");
                 RecapitulationBeforeCopyFilesController controller = loader.getController();
@@ -427,9 +449,40 @@ public class CompareOverviewController {
         lbRightUpdateCount.setText(String.valueOf(statisticsAndComparedData.getRightUpdateCount()));
         lbRightAddCount.setText(String.valueOf(statisticsAndComparedData.getRightAddCount()));
 
-        lbDataTransportTotalSize.setText(
-                utility.getFormatedSize(statisticsAndComparedData.getDataTransportSize())
-        );
+        /// zobrazení plánované
+        // nastavení levého koláčového grafu
+        if (utility.isSazeSmalerThenFreeSpace(
+                                                leftFolder,
+                                                statisticsAndComparedData.getDataTransportSize_left())) {
+            imgPieChar_Left.setImage(pieChartYellow_ToLeft);
+            isLeftOperationSizeSmalerThenLeftFolder =true;
+        } else {
+            imgPieChar_Left.setImage(pieChartRed_ToLeft);
+            isLeftOperationSizeSmalerThenLeftFolder = false;
+        }
+
+        if (utility.isSazeSmalerThenFreeSpace(
+                                                rightFolder,
+                                                statisticsAndComparedData.getDataTransportSize_right())) {
+            imgPieChar_Right.setImage(pieChartYellow_ToRight);
+            isRightOperationSizeSmalerThenRightFolder =true;
+        } else {
+            imgPieChar_Right.setImage(pieChartRed_ToRight);
+            isRightOperationSizeSmalerThenRightFolder = false;
+        }
+
+        // nastavení textů
+        lbPieChar_Left.setText(String.valueOf(
+                utility.getFormatedSize(
+                        statisticsAndComparedData.getDataTransportSize_left()
+                )
+        ));
+        lbPieChar_Right.setText(String.valueOf(
+                utility.getFormatedSize(
+                        statisticsAndComparedData.getDataTransportSize_right()
+                )
+        ));
+
 
         // strom
         resultComparedList = statisticsAndComparedData.getComparedFilesList();
