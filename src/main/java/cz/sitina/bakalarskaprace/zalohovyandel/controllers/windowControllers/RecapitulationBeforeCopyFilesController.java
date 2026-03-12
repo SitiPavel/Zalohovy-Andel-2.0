@@ -7,6 +7,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +24,7 @@ import java.util.Objects;
 
 public class RecapitulationBeforeCopyFilesController {
     private ComparedDataAndStatisticsForCompereOverview comparedAndStatisticsData;
+    private final IconManagerUtility  iconManager = new IconManagerUtility();
 
     private TaskModel task;
     private boolean isStrategyModified;
@@ -43,18 +45,6 @@ public class RecapitulationBeforeCopyFilesController {
     @FXML private Label sizeToLeft;
     @FXML private Label sizeToRight;
 
-    private final String pathToImages = "/cz/sitina/bakalarskaprace/zalohovyandel/images/visualObjects/";
-    private final Image biDirectionalSync =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "biDirectionalSync.png")));
-    private final Image oneWayLeftToRight =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "oneWayLeftToRight.png")));
-    private final Image oneWayRightToLeft =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "oneWayRightToLeft.png")));
-    private final Image mirroringLeftToRight =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "mirroringLeftToRight.png")));
-    private final Image mirroringRightToLeft =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "mirroringRightToLeft.png")));
-
 
     public RecapitulationBeforeCopyFilesController() {
     }
@@ -68,11 +58,11 @@ public class RecapitulationBeforeCopyFilesController {
         lbRightAddCount.setText(String.valueOf(comparedAndStatisticsData.getRightAddCount()));
 
         switch (strategy) {
-            case BIDIRECTIONAL_SYNC -> imgCompareStrategy.setImage(biDirectionalSync);
-            case BACKUP_TO_RIGHT -> imgCompareStrategy.setImage(oneWayLeftToRight);
-            case BACKUP_TO_LEFT -> imgCompareStrategy.setImage(oneWayRightToLeft);
-            case MIRRORING_to_RIGHT -> imgCompareStrategy.setImage(mirroringLeftToRight);
-            case MIRRORING_TO_lEFT -> imgCompareStrategy.setImage(mirroringRightToLeft);
+            case BIDIRECTIONAL_SYNC -> imgCompareStrategy.setImage(iconManager.getBiDirectionalSync());
+            case BACKUP_TO_RIGHT -> imgCompareStrategy.setImage(iconManager.getOneWayLeftToRight());
+            case BACKUP_TO_LEFT -> imgCompareStrategy.setImage(iconManager.getOneWayRightToLeft());
+            case MIRRORING_to_RIGHT -> imgCompareStrategy.setImage(iconManager.getMirroringLeftToRight());
+            case MIRRORING_TO_lEFT -> imgCompareStrategy.setImage(iconManager.getMirroringRightToLeft());
         }
 
         // indikátor upravy se naastaví podle

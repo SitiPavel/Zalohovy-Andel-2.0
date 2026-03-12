@@ -3,6 +3,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -16,42 +17,9 @@ public class TreeTableBuilderService {
 
     FileItemModel notNullItem;
     byte whereIsntNullPath; // říká kde byla není nalezena null cesta
+    private final IconManagerUtility iconManager = new IconManagerUtility();
 
-    short iconSize = 20;
 
-    // načítání obrázku operací do paměti
-    private final String BASE_PATH = "/cz/sitina/bakalarskaprace/zalohovyandel/images/iconsSmall/";
-
-    private final Image iconEquals       = new Image(getClass().getResourceAsStream(BASE_PATH + "EQUALS.png"));
-    private final Image iconIgnore       = new Image(getClass().getResourceAsStream(BASE_PATH + "IGNORE.png"));
-
-    private final Image iconAddLeft      = new Image(getClass().getResourceAsStream(BASE_PATH + "ADD_LEFT.png"));
-    private final Image iconAddRight     = new Image(getClass().getResourceAsStream(BASE_PATH + "ADD_RIGHT.png"));
-
-    private final Image iconDeleteBoth   = new Image(getClass().getResourceAsStream(BASE_PATH + "DELETE_BOTH.png"));
-    private final Image iconDeleteLeft   = new Image(getClass().getResourceAsStream(BASE_PATH + "DELETE_LEFT.png"));
-    private final Image iconDeleteRight  = new Image(getClass().getResourceAsStream(BASE_PATH + "DELETE_RIGHT.png"));
-    private final Image iconUnknown      = new Image(getClass().getResourceAsStream(BASE_PATH + "UNKNOWN.png"));
-
-    private final Image iconUpdateLeft   = new Image(getClass().getResourceAsStream(BASE_PATH + "UPDATE_LEFT.png"));
-    private final Image iconUpdateRight  = new Image(getClass().getResourceAsStream(BASE_PATH + "UPDATE_RIGHT.png"));
-    // SLOŽKY
-    private final Image iconFolder  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER.png"));
-    private final Image iconFOLDER_UNEVEN  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_UNEVEN.png"));
-    private final Image iconFOLDER_EQUALS  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_EQUALS.png"));
-
-    private final Image iconFOLDER_DELETE_LEFT  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_DELETE_LEFT.png"));
-    private final Image iconFOLDER_DELETE_RIGHT  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_DELETE_RIGHT.png"));
-    private final Image iconFOLDER_DELETE_BOTH  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_DELETE_BOTH.png"));
-
-    private final Image iconFOLDER_UPDATE_LEFT  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_UPDATE_LEFT.png"));
-    private final Image iconFOLDER_UPDATE_RIGHT  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_UPDATE_RIGHT.png"));
-
-    private final Image iconFOLDER_ADD_LEFT  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_ADD_LEFT.png"));
-    private final Image iconFOLDER_ADD_RIGHT  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_ADD_RIGHT.png"));
-
-    private final Image iconFOLDER_UNKNOWN = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_UNKNOWN.png"));
-    private final Image iconFOLDER_IGNORE  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_IGNORE.png"));
 
 
     public void setTreeTable(TreeItem<ComparedItemOperItemRowModel> root,
@@ -254,28 +222,28 @@ public class TreeTableBuilderService {
     ///  vrátí správnou ikonu operace
     private Image getIconForOperation(CompareOperations operation) {
         switch (operation) {
-            case EQUALS -> {return iconEquals;}
-            case IGNORE -> {return iconIgnore;}
-            case DELETE_LEFT ->{return iconDeleteLeft;}
-            case DELETE_RIGHT ->{return iconDeleteRight;}
-            case DELETE_BOTH ->{return iconDeleteBoth;}
-            case UPDATE_LEFT -> {return iconUpdateLeft;}
-            case UPDATE_RIGHT -> {return iconUpdateRight;}
-            case ADD_LEFT -> {return iconAddLeft;}
-            case ADD_RIGHT -> {return iconAddRight;}
-            case UNKNOWN -> {return iconUnknown;}
-            case FOLDER -> {return iconFolder;}
-            case FOLDER_UNEVEN -> {return iconFOLDER_UNEVEN;}
-            case FOLDER_EQUALS -> {return iconFOLDER_EQUALS;}
-            case FOLDER_DELETE_LEFT -> {return iconFOLDER_DELETE_LEFT;}
-            case FOLDER_DELETE_RIGHT -> {return iconFOLDER_DELETE_RIGHT;}
-            case FOLDER_DELETE_BOTH -> {return iconFOLDER_DELETE_BOTH;}
-            case FOLDER_UPDATE_LEFT -> {return iconFOLDER_UPDATE_LEFT;}
-            case FOLDER_UPDATE_RIGHT -> {return iconFOLDER_UPDATE_RIGHT;}
-            case FOLDER_ADD_LEFT -> {return iconFOLDER_ADD_LEFT;}
-            case FOLDER_ADD_RIGHT -> {return iconFOLDER_ADD_RIGHT;}
-            case FOLDER_UNKNOWN -> {return iconFOLDER_UNKNOWN;}
-            case FOLDER_IGNORE -> {return iconFOLDER_IGNORE;}
+            case EQUALS ->      {return  iconManager.getIconEquals();}
+            case IGNORE ->      {return  iconManager.getIconIgnore();}
+            case DELETE_LEFT -> {return  iconManager.getIconDeleteLeft();}
+            case DELETE_RIGHT ->{return  iconManager.getIconDeleteRight();}
+            case DELETE_BOTH -> {return  iconManager.getIconDeleteBoth();}
+            case UPDATE_LEFT -> {return  iconManager.getIconUpdateLeft();}
+            case UPDATE_RIGHT ->{return  iconManager.getIconUpdateRight();}
+            case ADD_LEFT ->    {return  iconManager.getIconAddLeft();}
+            case ADD_RIGHT ->   {return  iconManager.getIconAddRight();}
+            case UNKNOWN ->     {return  iconManager.getIconUnknown();}
+            case FOLDER ->      {return  iconManager.getIconFolder();}
+            case FOLDER_UNEVEN ->       {return  iconManager.getIconFOLDER_UNEVEN();}
+            case FOLDER_EQUALS ->       {return  iconManager.getIconFOLDER_EQUALS();}
+            case FOLDER_DELETE_LEFT ->  {return  iconManager.getIconFOLDER_DELETE_LEFT();}
+            case FOLDER_DELETE_RIGHT -> {return  iconManager.getIconFOLDER_DELETE_RIGHT();}
+            case FOLDER_DELETE_BOTH ->  {return  iconManager.getIconFOLDER_DELETE_BOTH();}
+            case FOLDER_UPDATE_LEFT ->  {return  iconManager.getIconFOLDER_UPDATE_LEFT();}
+            case FOLDER_UPDATE_RIGHT -> {return  iconManager.getIconFOLDER_UPDATE_RIGHT();}
+            case FOLDER_ADD_LEFT ->     {return  iconManager.getIconFOLDER_ADD_LEFT();}
+            case FOLDER_ADD_RIGHT ->    {return  iconManager.getIconFOLDER_ADD_RIGHT();}
+            case FOLDER_UNKNOWN ->      {return  iconManager.getIconFOLDER_UNKNOWN();}
+            case FOLDER_IGNORE ->       {return  iconManager.getIconFOLDER_IGNORE();}
         }
         return null;
     }
@@ -335,8 +303,17 @@ public class TreeTableBuilderService {
         col.setCellFactory(column -> {
             return new TreeTableCell<ComparedItemOperItemRowModel, String>() {
 
+
                 // 1. Vytvoříme Tooltip pouze JEDNOU pro životní cyklus buňky
                 private final Tooltip myTooltip = new Tooltip();
+
+
+                private ImageView imageView = new ImageView();
+                {
+                    imageView.setFitWidth(16);
+                    imageView.setFitHeight(16);
+                    imageView.setPreserveRatio(true);
+                }
 
                 @Override
                 protected void updateItem(String item, boolean empty) {
@@ -351,10 +328,16 @@ public class TreeTableBuilderService {
                         return;
                     }
 
-                    // 2. Nastavíme text textu buňky
-                    setText(item);
+                    // nastaví ikonu podle typu položky
+                    CompareOperations operation =  getTreeTableRow().getItem().getOperation();
+                    if (operation.toString().contains("FOLDER")) {
+                        imageView.setImage(iconManager.getFolder20x20());
+                    } else {
+                        imageView.setImage(iconManager.getFile20x20());
+                    }
+                    setGraphic(imageView);
 
-                    // 3. Aktualizujeme text existujícího Tooltipu a přiřadíme ho
+                    setText(item);
                     myTooltip.setText(item);
                     setTooltip(myTooltip);
 
@@ -373,7 +356,7 @@ public class TreeTableBuilderService {
                             // Pokud máš root skrytý, první viditelné položky jsou level 1.
                             // Pokud chceš level 1 bez odsazení, použij (level - 1).
                             // Pokud chceš odsazení už od začátku, nechej jen (level).
-                            double indentPerLevel = 20;
+                            double indentPerLevel = 15;
 
                             // Math.max zajistí, že nepůjdeme do mínusu
                             double indent = Math.max(0, (level - 1) * indentPerLevel);

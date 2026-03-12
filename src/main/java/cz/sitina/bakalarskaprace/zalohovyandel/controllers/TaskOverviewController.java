@@ -4,6 +4,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.AutoBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -22,21 +23,8 @@ public class TaskOverviewController {
 
     private TaskRepository taskRepository;
     private AppFrameController appFrameController;
+    private final IconManagerUtility iconManager = new IconManagerUtility();
 
-//  načtení obrázků
-    private String pathName = "/cz/sitina/bakalarskaprace/zalohovyandel/images/iconsSmall/";
-    private final Image entryIcon =
-            new Image(getClass().getResourceAsStream(pathName + "Entry.png"));
-    private final Image autoBackupIcon =
-            new Image(getClass().getResourceAsStream(pathName + "autoBackup_TableIcon_n_n.png"));
-    private final Image autoBackupIcon_Com =
-            new Image(getClass().getResourceAsStream(pathName + "autoBackup_TableIcon_n_K.png"));
-    private final Image autoBackupIcon_Enc =
-            new Image(getClass().getResourceAsStream(pathName + "autoBackup_TableIcon_S_n.png"));
-    private final Image autoBackupIcon_EncCom =
-            new Image(getClass().getResourceAsStream(pathName + "autoBackup_TableIcon_S_K.png"));
-    private final Image manualSync_TabbleIcon =
-            new Image(getClass().getResourceAsStream(pathName + "manualSync_TabbleIcon.png"));
 
     //Definování tabulky a sloupců
     @FXML private TableView<TaskModel> taskTable;
@@ -59,11 +47,11 @@ public class TaskOverviewController {
 
 
         // nastavení vzhledu buňky pro vstup do úlohy = přidání tpačítka s ikonou
-        taskColEntry.setCellValueFactory(cellData -> new SimpleObjectProperty<>(entryIcon));
+        taskColEntry.setCellValueFactory(cellData -> new SimpleObjectProperty<>(iconManager.getEntryIcon()));
         taskColEntry.setCellFactory(cellData -> new TableCell<TaskModel, Image>() {
 
             private final Button btn = new Button();
-            private final ImageView imageView = new ImageView(entryIcon);
+            private final ImageView imageView = new ImageView(iconManager.getEntryIcon());
             { // inicializační blok
                 imageView.setFitWidth(entrySize);
                 imageView.setFitHeight(entrySize);
@@ -110,22 +98,22 @@ public class TaskOverviewController {
             }
             // nastavení typu ikony
             else if (task instanceof ManualSyncTask manualSyncTask) {
-                iconToDisplay = manualSync_TabbleIcon;
+                iconToDisplay = iconManager.getManualSync_TabbleIcon();
 
             } else if (task instanceof AutoBackupTask autoBackupTask) {
 
                 if (autoBackupTask.isCompressed() &&
                         autoBackupTask.isEncripted()) {
-                    iconToDisplay = autoBackupIcon_EncCom;
+                    iconToDisplay =  iconManager.getAutoBackupIcon_EncCom();
 
                 } else if (autoBackupTask.isCompressed() &&
                         !autoBackupTask.isEncripted()) {
-                    iconToDisplay = autoBackupIcon_Com;
+                    iconToDisplay = iconManager.getAutoBackupIcon_Com();
 
                 } else if (autoBackupTask.isEncripted()) {
-                    iconToDisplay = autoBackupIcon_Enc;
+                    iconToDisplay = iconManager.getAutoBackupIcon_Enc();
                 } else {
-                    iconToDisplay = autoBackupIcon;
+                    iconToDisplay = iconManager.getAutoBackupIcon();
                 }
             }
             return new SimpleObjectProperty<>(iconToDisplay);

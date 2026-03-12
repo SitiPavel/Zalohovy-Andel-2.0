@@ -14,6 +14,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -56,6 +57,7 @@ public class CompareOverviewController {
 
     private final FileScannerService fileScannerService = new FileScannerService();
     private TreeTableBuilderService treeTableBuilder = new TreeTableBuilderService();
+    private final IconManagerUtility imageManager = new IconManagerUtility();
 
     private final ComparisonService comparisonService = new ComparisonService();
     private final CompareOverviewService compareOverviewService = new CompareOverviewService();
@@ -123,54 +125,7 @@ public class CompareOverviewController {
     @FXML private ImageView imgAddItem_right;
 
 
-    private final String pathToImages = "/cz/sitina/bakalarskaprace/zalohovyandel/images/icons/";
-    private final Image icon_addItem_Left =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "addItem_left.png")));
-    private final Image icon_modified_left  =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "modified_left.png")));
-    private final Image icon_delete_left    =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "delete_left.png")));
-    private final Image icon_block          =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "block.png")));
-    private final Image icon_equal          =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "equal.png")));
-    private final Image icon_unknown   =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "unknown.png")));
-    private final Image icon_delete_right   =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "delete_right.png")));
-    private final Image icon_modified_right =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "modified_right.png")));
-    private final Image icon_addItem_right =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "addItem_right.png")));
 
-    private final Image icon_addItem_Left_OFF =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "addItem_left_OFF.png")));
-    private final Image icon_modified_left_OFF  =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "modified_left_OFF.png")));
-    private final Image icon_delete_left_OFF    =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "delete_left_OFF.png")));
-    private final Image icon_block_OFF          =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "block_OFF.png")));
-    private final Image icon_equal_OFF          =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "equal_OFF.png")));
-    private final Image icon_unknown_OFF   =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "unknown_OFF.png")));
-    private final Image icon_delete_right_OFF   =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "delete_right_OFF.png")));
-    private final Image icon_modified_right_OFF =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "modified_right_OFF.png")));
-    private final Image icon_addItem_right_OFF =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "addItem_right_OFF.png")));
-
-    // koláče
-    private final Image pieChartYellow_ToLeft =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "pieChar-Yellow_Left.png")));
-    private final Image pieChartRed_ToLeft =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "pieChar-Red_left.png")));
-    private final Image pieChartYellow_ToRight =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "pieChar-Yellow_Right.png")));
-    private final Image pieChartRed_ToRight =
-            new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathToImages + "pieChar-Red_Right.png")));
 
 
     // ukazatelé statistik disků
@@ -227,13 +182,23 @@ public class CompareOverviewController {
 
 
 
-        // jiní nastavení
+        // nastavení levého sloupce názvů
         filesTreeTable.setTreeColumn(leftColName);
         leftColName.setCellFactory(cellData ->
                 new TreeTableCell<ComparedItemOperItemRowModel, String>() {
+
             Tooltip tooltip = utility.createToolTip_600ms();
+            // nastavení obrázku pro oddělení složky a souboru
+            private final ImageView imageView = new ImageView();
+            {
+                imageView.setFitWidth(16);
+                imageView.setFitHeight(16);
+                imageView.setPreserveRatio(true);
+            }
+
             @Override
             protected void updateItem(String item, boolean empty) {
+
                 super.updateItem(item, empty);
 
                 if (empty || item == null) {
@@ -244,10 +209,20 @@ public class CompareOverviewController {
                     setText(item);
                     tooltip.setText(item);
                     setTooltip(tooltip);
+
+                    CompareOperations operation = getTreeTableRow().getItem().getOperation();
+                    if (operation.toString().contains("FOLDER")) {
+                        imageView.setImage(imageManager.getFolder20x20());
+                    } else {
+                        imageView.setImage(imageManager.getFile20x20());
+                    }
+                    setGraphic(imageView);
                 }
+
             }
         });
 
+        // nastavení pravého sloupce názvů
         treeTableBuilder.setColumnIindentLevelAndToolTips(rightColName);
 
 
@@ -457,20 +432,20 @@ public class CompareOverviewController {
         if (utility.isSazeSmalerThenFreeSpace(
                                                 leftFolder,
                                                 statisticsAndComparedData.getDataTransportSize_left())) {
-            imgPieChar_Left.setImage(pieChartYellow_ToLeft);
+            imgPieChar_Left.setImage(imageManager.getPieChartYellow_ToLeft());
             isLeftOperationSizeSmalerThenLeftFolder =true;
         } else {
-            imgPieChar_Left.setImage(pieChartRed_ToLeft);
+            imgPieChar_Left.setImage(imageManager.getPieChartRed_ToLeft());
             isLeftOperationSizeSmalerThenLeftFolder = false;
         }
 
         if (utility.isSazeSmalerThenFreeSpace(
                                                 rightFolder,
                                                 statisticsAndComparedData.getDataTransportSize_right())) {
-            imgPieChar_Right.setImage(pieChartYellow_ToRight);
+            imgPieChar_Right.setImage(imageManager.getPieChartYellow_ToRight()) ;
             isRightOperationSizeSmalerThenRightFolder =true;
         } else {
-            imgPieChar_Right.setImage(pieChartRed_ToRight);
+            imgPieChar_Right.setImage(imageManager.getPieChartRed_ToRight());
             isRightOperationSizeSmalerThenRightFolder = false;
         }
 
@@ -512,31 +487,31 @@ public class CompareOverviewController {
     private void setFastFiltersImg() {
         GuiOperationFilters_TaskData taskFilters = manualTask.getGuiOperationFilters();
         imgAddItem_Left.setImage(
-                taskFilters.isActive_ADD_LEFT() ? icon_addItem_Left : icon_addItem_Left_OFF
+                taskFilters.isActive_ADD_LEFT() ? imageManager.getIcon_addItem_Left() : imageManager.getIcon_addItem_Left_OFF()
         );
         imgModified_left.setImage(
-                taskFilters.isActive_UPDATE_LEFT() ? icon_modified_left  : icon_modified_left_OFF
+                taskFilters.isActive_UPDATE_LEFT() ? imageManager.getIcon_modified_left()  : imageManager.getIcon_modified_left_OFF()
         );
         imgDelete_left.setImage(
-                taskFilters.isActive_DELETE_LEFT() ? icon_delete_left : icon_delete_left_OFF
+                taskFilters.isActive_DELETE_LEFT() ? imageManager.getIcon_delete_left() : imageManager.getIcon_delete_left_OFF()
         );
         imgBlock.setImage(
-                taskFilters.isActive_IGNORE() ? icon_block : icon_block_OFF
+                taskFilters.isActive_IGNORE() ? imageManager.getIcon_block() : imageManager.getIcon_block_OFF()
         );
         imgEqual.setImage(
-                taskFilters.isActive_EQUALS() ? icon_equal : icon_equal_OFF
+                taskFilters.isActive_EQUALS() ? imageManager.getIcon_equal() : imageManager.getIcon_equal_OFF()
         );
         imgUnknown.setImage(
-                taskFilters.isActive_UNKNOWN() ? icon_unknown : icon_unknown_OFF
+                taskFilters.isActive_UNKNOWN() ? imageManager.getIcon_unknown() : imageManager.getIcon_unknown_OFF()
         );
         imgDelete_right.setImage(
-                taskFilters.isActive_DELETE_RIGHT() ? icon_delete_right : icon_delete_right_OFF
+                taskFilters.isActive_DELETE_RIGHT() ? imageManager.getIcon_delete_right() : imageManager.getIcon_delete_right_OFF()
         );
         imgModified_right.setImage(
-                taskFilters.isActive_UPDATE_RIGHT() ? icon_modified_right :icon_modified_right_OFF
+                taskFilters.isActive_UPDATE_RIGHT() ? imageManager.getIcon_modified_right() : imageManager.getIcon_modified_right_OFF()
         );
         imgAddItem_right.setImage(
-                taskFilters.isActive_ADD_RIGHT() ? icon_addItem_right : icon_addItem_right_OFF
+                taskFilters.isActive_ADD_RIGHT() ? imageManager.getIcon_addItem_right() : imageManager.getIcon_addItem_right_OFF()
         );
     }
 
@@ -562,30 +537,30 @@ public class CompareOverviewController {
             case "btnAddItem_Left":
                 if (filters.isActive_ADD_LEFT()) {
                     filters.setActive_ADD_LEFT(false);
-                    imgAddItem_Left.setImage(icon_addItem_Left_OFF);
+                    imgAddItem_Left.setImage( imageManager.getIcon_addItem_Left_OFF());
                 } else {
                     filters.setActive_ADD_LEFT(true);
-                    imgAddItem_Left.setImage(icon_addItem_Left);
+                    imgAddItem_Left.setImage( imageManager.getIcon_addItem_Left());
                 }
                 break;
 
             case "btnModified_left":
                 if (filters.isActive_UPDATE_LEFT()) {
                     filters.setActive_UPDATE_LEFT(false);
-                    imgModified_left.setImage(icon_modified_left_OFF);
+                    imgModified_left.setImage( imageManager.getIcon_modified_left_OFF());
                 } else {
                     filters.setActive_UPDATE_LEFT(true);
-                    imgModified_left.setImage(icon_modified_left);
+                    imgModified_left.setImage( imageManager.getIcon_modified_left());
                 }
                 break;
 
             case "btnDelete_left":
                 if (filters.isActive_DELETE_LEFT()) {
                     filters.setActive_DELETE_LEFT(false);
-                    imgDelete_left.setImage(icon_delete_left_OFF);
+                    imgDelete_left.setImage( imageManager.getIcon_delete_left_OFF());
                 } else {
                     filters.setActive_DELETE_LEFT(true);
-                    imgDelete_left.setImage(icon_delete_left);
+                    imgDelete_left.setImage( imageManager.getIcon_delete_left());
                 }
                 break;
 
@@ -593,30 +568,30 @@ public class CompareOverviewController {
             case "btnBlock":
                 if (filters.isActive_IGNORE()) {
                     filters.setActive_IGNORE(false);
-                    imgBlock.setImage(icon_block_OFF);
+                    imgBlock.setImage( imageManager.getIcon_block_OFF());
                 } else {
                     filters.setActive_IGNORE(true);
-                    imgBlock.setImage(icon_block);
+                    imgBlock.setImage( imageManager.getIcon_block());
                 }
                 break;
 
             case "btnEqual":
                 if (filters.isActive_EQUALS()) {
                     filters.setActive_EQUALS(false);
-                    imgEqual.setImage(icon_equal_OFF);
+                    imgEqual.setImage( imageManager.getIcon_equal_OFF());
                 } else {
                     filters.setActive_EQUALS(true);
-                    imgEqual.setImage(icon_equal);
+                    imgEqual.setImage( imageManager.getIcon_equal());
                 }
                 break;
 
             case "btnUnknown":
                 if (filters.isActive_UNKNOWN()) {
                     filters.setActive_UNKNOWN(false);
-                    imgUnknown.setImage(icon_unknown_OFF);
+                    imgUnknown.setImage( imageManager.getIcon_unknown_OFF());
                 } else {
                     filters.setActive_UNKNOWN(true);
-                    imgUnknown.setImage(icon_unknown);
+                    imgUnknown.setImage( imageManager.getIcon_unknown());
                 }
                 break;
 
@@ -624,30 +599,30 @@ public class CompareOverviewController {
             case "btnDelete_right":
                 if (filters.isActive_DELETE_RIGHT()) {
                     filters.setActive_DELETE_RIGHT(false);
-                    imgDelete_right.setImage(icon_delete_right_OFF);
+                    imgDelete_right.setImage( imageManager.getIcon_delete_right_OFF());
                 } else {
                     filters.setActive_DELETE_RIGHT(true);
-                    imgDelete_right.setImage(icon_delete_right);
+                    imgDelete_right.setImage( imageManager.getIcon_delete_right());
                 }
                 break;
 
             case "btnModified_right":
                 if (filters.isActive_UPDATE_RIGHT()) {
                     filters.setActive_UPDATE_RIGHT(false);
-                    imgModified_right.setImage(icon_modified_right_OFF);
+                    imgModified_right.setImage( imageManager.getIcon_modified_right_OFF());
                 } else {
                     filters.setActive_UPDATE_RIGHT(true);
-                    imgModified_right.setImage(icon_modified_right);
+                    imgModified_right.setImage( imageManager.getIcon_modified_right());
                 }
                 break;
 
             case "btnAddItem_right":
                 if (filters.isActive_ADD_RIGHT()) {
                     filters.setActive_ADD_RIGHT(false);
-                    imgAddItem_right.setImage(icon_addItem_right_OFF);
+                    imgAddItem_right.setImage( imageManager.getIcon_addItem_right_OFF());
                 } else {
                     filters.setActive_ADD_RIGHT(true);
-                    imgAddItem_right.setImage(icon_addItem_right);
+                    imgAddItem_right.setImage( imageManager.getIcon_addItem_right());
                 }
                 break;
         }
