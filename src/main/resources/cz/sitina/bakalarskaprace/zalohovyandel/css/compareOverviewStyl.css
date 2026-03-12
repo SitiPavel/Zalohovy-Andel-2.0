@@ -88,9 +88,7 @@
 .fileItemTable .column-header .label{  /*Hlavička = text v záhlaví buněk*/
     -fx-font-size: 13px;
     -fx-text-fill: -fx-color-textLight;
-    /*-fx-border-width: 0 2 0 0;
-    -fx-border-style: solid;
-    -fx-border-color: -fx-color-primary1;*/
+
 }
 
 .fileItemTable .filler { /*prázdné místo pokud buňky nevyplní celý řádek */
@@ -99,11 +97,15 @@
 
 .fileItemTable .tree-table-row-cell { /*Celý řádek položky*/
     -fx-background-color: -fx-color-Transparent;
-    -fx-text-fill: -fx-color-textDark;
     -fx-border-width: 0 0 1 0;
     -fx-border-style: solid;
     -fx-border-color: -fx-color-primary2;
     -fx-cell-size: 22px;
+}
+
+.fileItemTable .tree-table-cell {
+    -fx-text-fill: -fx-color-textDark; /* Toto konečně zastaví automatické měnění barvy */
+    -fx-font-weight: bold;             /* Tučnost musí být také zde */
 }
 
 #OperationColCompareOverview {
@@ -194,6 +196,7 @@
 .fileItemTable .row-FOLDER_IGNORE {
     -fx-background-color:-fx-color-mark5-50 ;
     -fx-control-inner-background:-fx-color-mark5-50;
+
 }
 
 

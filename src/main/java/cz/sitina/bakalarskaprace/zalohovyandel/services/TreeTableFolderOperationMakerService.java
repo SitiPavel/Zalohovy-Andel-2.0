@@ -4,6 +4,8 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowMod
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import javafx.scene.control.TreeItem;
 
+import java.util.List;
+
 import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations.*;
 
 public class TreeTableFolderOperationMakerService {
@@ -27,18 +29,19 @@ public class TreeTableFolderOperationMakerService {
         for (TreeItem<ComparedItemOperItemRowModel> child : node.getChildren()) {
 
             CompareOperations childRowOperation = getFolderOperation(child);
-            CompareOperations basicChildRowOperation = getBaseOperation(childRowOperation);
 
-            if (basicChildRowOperation == CompareOperations.FOLDER_UNEVEN) {
-                isUneven = true;
-                break;
-            }
 
-            if (folderOperation == null) {
-                folderOperation = basicChildRowOperation ;
-            } else if (basicChildRowOperation !=  folderOperation) {
-                isUneven = true;
-                break;
+            if (!isUneven) {
+                CompareOperations basicChildRowOperation = getBaseOperation(childRowOperation);
+
+                if (basicChildRowOperation == CompareOperations.FOLDER_UNEVEN) {
+                    isUneven = true;
+                }
+                if (folderOperation == null) {
+                    folderOperation = basicChildRowOperation ;
+                } else if (basicChildRowOperation !=  folderOperation) {
+                    isUneven = true;
+                }
             }
         }
 

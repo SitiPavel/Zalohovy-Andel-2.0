@@ -63,6 +63,13 @@ public class FileItemModel {
         return new SimpleStringProperty(this.fileName.get());
     };
 
+    public StringProperty getFormatedNameFileStructure() {
+        if (this.fileName.get() == null || this.fileName.get().isEmpty()) {
+            return new SimpleStringProperty("---");
+        }
+        return new SimpleStringProperty(this.fileName.get());
+    };
+
 
     /// GETRY
     public String getFileName() {

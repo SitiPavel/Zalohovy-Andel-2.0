@@ -501,6 +501,7 @@ public class CompareOverviewController {
         //  vložíme esitující objekty a metoda nám z nich do root nastaví řádky
         treeTableBuilder.setTreeTable(masterRoot, resultComparedList);
 
+        // nastavíme operace pro složky
         TreeTableFolderOperationMakerService.getFolderOperation(masterRoot);
 
         applyCurrentFiltersToTable();
@@ -571,10 +572,10 @@ public class CompareOverviewController {
             case "btnModified_left":
                 if (filters.isActive_UPDATE_LEFT()) {
                     filters.setActive_UPDATE_LEFT(false);
-                    imgModified_left.setImage(icon_modified_left_OFF); // Opraveno: správný ImageView
+                    imgModified_left.setImage(icon_modified_left_OFF);
                 } else {
                     filters.setActive_UPDATE_LEFT(true);
-                    imgModified_left.setImage(icon_modified_left);     // Opraveno: správný ImageView
+                    imgModified_left.setImage(icon_modified_left);
                 }
                 break;
 

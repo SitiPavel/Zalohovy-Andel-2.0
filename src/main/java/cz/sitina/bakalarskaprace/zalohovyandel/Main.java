@@ -34,8 +34,8 @@ public class Main extends Application {
                 "")
         );
         taskRepository.add(new ManualSyncTask("Obrovské množství souborů",
-                "D:\\media (filmi, fortky, písničky)",
-                "D:\\testBakalarky\\Test02",
+                "D:\\",
+                "F:\\",
                 "popis úlohy ")
         );
 

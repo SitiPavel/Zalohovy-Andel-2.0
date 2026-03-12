@@ -157,23 +157,26 @@ public class TreeTableBuilderService {
 
     }
 
+    private static final List<String> listOfRowStyle = List.of(
+            "row-equals", "row-ignore", "row-delete",
+            "row-update", "row-add", "row-uknow", "row-FOLDER_UNEVEN",
+            "row-FOLDER_DELETE","row-FOLDER_UPDATE","row-FOLDER_ADD",
+            "row-FOLDER_UNKNOWN","row-FOLDER_IGNORE"
+    );
 
     /// nastaví barvu řádku podle operace
     public void rowFormatingByOperation(TreeTableView<ComparedItemOperItemRowModel> treeTable) {
 
         treeTable.setRowFactory(tv -> new TreeTableRow<ComparedItemOperItemRowModel>() {
+            private String currentCssClass = null;
+
             @Override
             protected void updateItem(ComparedItemOperItemRowModel item, boolean empty) {
                 super.updateItem(item, empty);
 
                 // 1. ZÁSADNÍ KROK: Než cokoliv uděláme, vymažeme VŠECHNY naše vlastní třídy.
                 // Tím zajistíme, že zrecyklovaný řádek je úplně čistý.
-                getStyleClass().removeAll(
-                        "row-equals", "row-ignore", "row-delete",
-                        "row-update", "row-add", "row-uknow", "row-FOLDER_UNEVEN",
-                        "row-FOLDER_DELETE","row-FOLDER_UPDATE","row-FOLDER_ADD",
-                        "row-FOLDER_UNKNOWN","row-FOLDER_IGNORE"
-                );
+                getStyleClass().removeAll(listOfRowStyle);
 
                 // 2. Ošetření prázdného řádku nebo složky
                 if (item == null || empty || item.getOperation() == null) {

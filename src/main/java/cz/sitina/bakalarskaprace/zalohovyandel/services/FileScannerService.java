@@ -7,11 +7,57 @@ import javafx.beans.property.SimpleStringProperty;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class FileScannerService {
+
+    private final Set<String> skippedFolders = new HashSet<>(Set.of(
+            /// WINDOWS SYSTÉMOVÉ
+            "$recycle.bin",                    // Koš
+            "system volume information",       // Systémové info
+            "recovery",                        // Recovery partition
+            "$windows.~bt",                    // Windows Update temp
+            "$windows.~ws",                    // Windows Update workspace
+            "config.msi",                      // MSI installer cache
+            "windowsapps",                     // Windows Store apps
+            "softwaredistribution",            // Windows Update cache
+            "windows defender",                // Defender cache
+            "perflogs",                        // Performance logs
+            "temp",
+            "tmp",
+
+            /// MACOS SYSTÉMOVÉ
+
+            ".spotlight-v100",                 // Spotlight index
+            ".trashes",                        // Koš
+            ".fseventsd",                      // File system events
+            ".documentrevisions-v100",         // Verzování
+            ".temporaryitems",                 // Temp soubory
+
+            // === LINUX SYSTÉMOVÉ ===
+            "proc",                            // Virtual FS
+            "sys",                             // Sysfs
+            "dev",                             // Devices
+            "run"                              // Runtime
+    ));
+
+    private final Set<String> skippedFiles = new HashSet<>(Set.of(
+            "pagefile.sys",
+            "hiberfil.sys",
+            "swapfile.sys",
+
+            ///  WINDOWS CACHE
+            "thumbs.db",                  // Thumbnail cache (XP)
+            "ehthumbs.db",                // Thumbnail cache (Vista+)
+            "ehthumbs_vista.db",
+            "desktop.ini",                // Folder customization
+
+            ///  MACOS CACHE
+            ".ds_store",                  // Folder settings
+            ".localized",                 // Localization
+            "._*"
+            ));
 
 
     public Map<String, FileItemModel> scanFolder(String rootDirectory) {
@@ -27,8 +73,22 @@ public class FileScannerService {
                     "Cesta: " + rootDirectory);
         }
 
+
         try {
             Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
+
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    if (dir.getFileName() != null) {
+                        String fileName = dir.getFileName().toString().toLowerCase();
+
+                        // pokud název v malích písmenech je na seznamu blokovaných složek
+                        if (skippedFolders.contains(fileName)) {
+                            return FileVisitResult.SKIP_SUBTREE;
+                        }
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
 
                 // Zavolá se pro každý soubor
                 @Override
@@ -37,9 +97,16 @@ public class FileScannerService {
                     if (attrs.isDirectory()) {
                         return FileVisitResult.CONTINUE;
                     }
+
+                    // pokud název v malích písmenech je na seznamu blokovaných souborů
+                    if (skippedFiles.contains(file.getFileName().toString().toLowerCase())) {
+                        return FileVisitResult.CONTINUE;
+                    }
+
                     try {
                         String relativePath = rootPath.relativize(file).toString();
                         relativePath = relativePath.replace("\\", "/");
+
 
                         FileItemModel newItem = new FileItemModel();
                         newItem.setFileName(file.getFileName().toString());
@@ -89,6 +156,7 @@ public class FileScannerService {
             return true;
         }
     }
+
 
 
 
