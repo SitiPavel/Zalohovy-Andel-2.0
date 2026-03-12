@@ -42,14 +42,15 @@ public class ComparedItemOperItemRowModel {
         return rightItem.get();
     }
 
+    public ObjectProperty<CompareOperations> operationProperty() {
+        return operation;
+    }
 
     ///SETRY
     public void setLeftItem(FileItemModel leftItem) {
         this.leftItem.set(leftItem);
     }
-    public ObjectProperty<CompareOperations> operationProperty() {
-        return operation;
-    }
+    public void setOperation(CompareOperations operation) {this.operation.set(operation);}
     public void setRightItem(FileItemModel rightItem) {
         this.rightItem.set(rightItem);
     }

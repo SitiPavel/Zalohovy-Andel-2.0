@@ -64,6 +64,7 @@ public class CompareOverviewController {
 
 
 
+
     // definované důležité proměnné
     private List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
     private final TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
@@ -230,7 +231,7 @@ public class CompareOverviewController {
         filesTreeTable.setTreeColumn(leftColName);
         leftColName.setCellFactory(cellData ->
                 new TreeTableCell<ComparedItemOperItemRowModel, String>() {
-            Tooltip tooltip = new Tooltip();
+            Tooltip tooltip = utility.createToolTip_600ms();
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -488,14 +489,22 @@ public class CompareOverviewController {
 
         // strom
         resultComparedList = statisticsAndComparedData.getComparedFilesList();
-        masterRoot = new TreeItem<>(null);
+        masterRoot = new TreeItem<>(
+                new ComparedItemOperItemRowModel(new FileItemModel("/"),
+                        CompareOperations.FOLDER_UNEVEN,
+                        new FileItemModel("/"))
+        );
+
         masterRoot.setExpanded(true);
 
 
         //  vložíme esitující objekty a metoda nám z nich do root nastaví řádky
         treeTableBuilder.setTreeTable(masterRoot, resultComparedList);
 
+        TreeTableFolderOperationMakerService.getFolderOperation(masterRoot);
+
         applyCurrentFiltersToTable();
+
     }
 
     // nastaví podle true/false obrázek odpovídajcí vypnutému nebo zapnutému filtru

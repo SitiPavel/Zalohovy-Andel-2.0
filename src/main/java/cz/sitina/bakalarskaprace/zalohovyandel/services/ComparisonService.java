@@ -134,6 +134,7 @@ public class ComparisonService {
 
             resultComparedList.add(rowModel);
         }
+
         dataModel.setComparedFilesList(resultComparedList);
         return dataModel;
     }

@@ -103,6 +103,7 @@
     -fx-border-width: 0 0 1 0;
     -fx-border-style: solid;
     -fx-border-color: -fx-color-primary2;
+    -fx-cell-size: 22px;
 }
 
 #OperationColCompareOverview {
@@ -137,6 +138,7 @@
     podle operace
   ------------*/
 
+/*SOUBORY STYL řádků*/
 .fileItemTable .row-equals {
     -fx-text-fill: -fx-color-textDark;
 
@@ -162,6 +164,39 @@
     -fx-background-color: -fx-color-mark6-50;
     -fx-control-inner-background:-fx-color-mark6-50;
 }
+
+/*SLOŽKY STYL řádků*/
+.fileItemTable .row-FOLDER_UNEVEN {
+    -fx-background-color: -fx-color-folder4-50;
+    -fx-control-inner-background:-fx-color-folder4-50;
+}
+
+.fileItemTable .row-FOLDER_DELETE {
+    -fx-background-color: -fx-color-folder2-50;
+    -fx-control-inner-background:-fx-color-folder2-50;
+}
+
+.fileItemTable .row-FOLDER_UPDATE {
+    -fx-background-color: -fx-color-folder3-50;
+    -fx-control-inner-background:-fx-color-folder3-50;
+}
+
+.fileItemTable .row-FOLDER_ADD {
+    -fx-background-color:-fx-color-folder1-50;
+    -fx-control-inner-background:-fx-color-folder1-50;
+}
+
+.fileItemTable .row-FOLDER_UNKNOWN {
+    -fx-background-color: -fx-color-folder5-50;
+    -fx-control-inner-background:-fx-color-folder5-50;
+}
+
+.fileItemTable .row-FOLDER_IGNORE {
+    -fx-background-color:-fx-color-mark5-50 ;
+    -fx-control-inner-background:-fx-color-mark5-50;
+}
+
+
 
 
 

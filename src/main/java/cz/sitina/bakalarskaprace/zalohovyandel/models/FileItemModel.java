@@ -4,6 +4,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.beans.property.*;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -19,6 +20,9 @@ public class FileItemModel {
 
 
     public FileItemModel(){
+    }
+    public FileItemModel(String relativePath){
+        this.relativePath = Paths.get(relativePath);
     }
     public FileItemModel(String fileName, Path fileAbsolutePath,
                          long lastModified, long fileSize, Path relativePath) {

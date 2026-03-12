@@ -20,7 +20,21 @@
     -fx-color-mark5: #000000;                      /* barva značek */
     -fx-color-mark5-50: rgba(0, 0, 0, 0.5);        /* barva pozadí položky */
     -fx-color-mark6: #B5783F;
-    -fx-color-mark6-50: rgba(181, 120, 63, 0.5);                       /* barva značek */
+    -fx-color-mark6-50: rgba(181, 120, 63, 0.5);   /* barva značek */
+
+
+    -fx-color-folder1: #5AA24E;
+    -fx-color-folder1-50: #5AA24E7f;
+    -fx-color-folder2: #A2554E;
+    -fx-color-folder2-50: #A2554E7f;
+    -fx-color-folder3: #4E78A2;
+    -fx-color-folder3-50: #4E78A27f;
+    -fx-color-folder4: #894EA2;
+    -fx-color-folder4-50: #894EA27f;
+    -fx-color-folder5: #896B4E;
+    -fx-color-folder5-50: #896B4E7f;
+
+
     /* barva značek */
 
     -fx-color-detail-1: #7ee72eff;

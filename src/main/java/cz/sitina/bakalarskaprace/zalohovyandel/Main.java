@@ -21,6 +21,12 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
 
         TaskRepository taskRepository = new TaskRepository();
+        taskRepository.add(new ManualSyncTask("Test operací pro složky",
+                "D:\\testBakalarky\\Test03",
+                "D:\\testBakalarky\\Test06",
+                "testuje jestli se dobře přidělují operace složkám")
+        );
+
 
         taskRepository.add(new ManualSyncTask("zaloha manual 1",
                 "D:\\testBakalarky\\Test01",

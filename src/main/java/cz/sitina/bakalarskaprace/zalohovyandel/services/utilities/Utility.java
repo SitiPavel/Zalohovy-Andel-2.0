@@ -63,11 +63,21 @@ public class Utility {
         }
     }
 
-    public Tooltip createToolTip_300ms(String text) {
+    public Tooltip createToolTip_300ms(String text ) {
+        return createToolTip(text, 300);
+    }
+    public Tooltip createToolTip_600ms(String text ) {
+        return createToolTip(text, 600);
+    }
+    public Tooltip createToolTip_600ms() {
+        return createToolTip(null, 600);
+    }
+
+    public Tooltip createToolTip(String text, long miliSeconds) {
         Tooltip tooltip = new Tooltip(text);
 
         // Zde nastavíte vše, co mají mít tooltipy společné:
-        tooltip.setShowDelay(Duration.millis(300)); // Rychlejší zobrazení
+        tooltip.setShowDelay(Duration.millis(miliSeconds)); // Rychlejší zobrazení
         tooltip.setHideDelay(Duration.millis(100)); // Rychlejší zmizení
         tooltip.setShowDuration(Duration.seconds(5)); // Jak dlouho zůstane viset
         // tooltip.setStyle("-fx-font-size: 14px;"); // Můžete přidat i společný styl

@@ -31,13 +31,27 @@ public class TreeTableBuilderService {
     private final Image iconDeleteBoth   = new Image(getClass().getResourceAsStream(BASE_PATH + "DELETE_BOTH.png"));
     private final Image iconDeleteLeft   = new Image(getClass().getResourceAsStream(BASE_PATH + "DELETE_LEFT.png"));
     private final Image iconDeleteRight  = new Image(getClass().getResourceAsStream(BASE_PATH + "DELETE_RIGHT.png"));
-
-    // Zvaž přejmenování souboru z UNKNOW na UNKNOWN.png
     private final Image iconUnknown      = new Image(getClass().getResourceAsStream(BASE_PATH + "UNKNOWN.png"));
 
     private final Image iconUpdateLeft   = new Image(getClass().getResourceAsStream(BASE_PATH + "UPDATE_LEFT.png"));
     private final Image iconUpdateRight  = new Image(getClass().getResourceAsStream(BASE_PATH + "UPDATE_RIGHT.png"));
+    // SLOŽKY
     private final Image iconFolder  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER.png"));
+    private final Image iconFOLDER_UNEVEN  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_UNEVEN.png"));
+    private final Image iconFOLDER_EQUALS  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_EQUALS.png"));
+
+    private final Image iconFOLDER_DELETE_LEFT  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_DELETE_LEFT.png"));
+    private final Image iconFOLDER_DELETE_RIGHT  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_DELETE_RIGHT.png"));
+    private final Image iconFOLDER_DELETE_BOTH  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_DELETE_BOTH.png"));
+
+    private final Image iconFOLDER_UPDATE_LEFT  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_UPDATE_LEFT.png"));
+    private final Image iconFOLDER_UPDATE_RIGHT  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_UPDATE_RIGHT.png"));
+
+    private final Image iconFOLDER_ADD_LEFT  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_ADD_LEFT.png"));
+    private final Image iconFOLDER_ADD_RIGHT  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_ADD_RIGHT.png"));
+
+    private final Image iconFOLDER_UNKNOWN = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_UNKNOWN.png"));
+    private final Image iconFOLDER_IGNORE  = new Image(getClass().getResourceAsStream(BASE_PATH + "FOLDER_IGNORE.png"));
 
 
     public void setTreeTable(TreeItem<ComparedItemOperItemRowModel> root,
@@ -139,6 +153,7 @@ public class TreeTableBuilderService {
 
         // zde daný strom rekurzivně seřadíme aby složky a soubory byly u sebe
         sortChildrenRecursively(root);
+        //Nastavení funkcí
 
     }
 
@@ -155,7 +170,9 @@ public class TreeTableBuilderService {
                 // Tím zajistíme, že zrecyklovaný řádek je úplně čistý.
                 getStyleClass().removeAll(
                         "row-equals", "row-ignore", "row-delete",
-                        "row-update", "row-add", "row-uknow"
+                        "row-update", "row-add", "row-uknow", "row-FOLDER_UNEVEN",
+                        "row-FOLDER_DELETE","row-FOLDER_UPDATE","row-FOLDER_ADD",
+                        "row-FOLDER_UNKNOWN","row-FOLDER_IGNORE"
                 );
 
                 // 2. Ošetření prázdného řádku nebo složky
@@ -172,8 +189,17 @@ public class TreeTableBuilderService {
                     case UPDATE_LEFT, UPDATE_RIGHT -> getStyleClass().add("row-update");
                     case ADD_LEFT, ADD_RIGHT -> getStyleClass().add("row-add");
                     case UNKNOWN -> getStyleClass().add("row-uknow");
+
+                    case FOLDER_UNEVEN -> getStyleClass().add("row-FOLDER_UNEVEN");
+                    case FOLDER_DELETE_LEFT, FOLDER_DELETE_RIGHT, FOLDER_DELETE_BOTH ->
+                        getStyleClass().add("row-FOLDER_DELETE");
+                    case FOLDER_UPDATE_LEFT, FOLDER_UPDATE_RIGHT -> getStyleClass().add("row-FOLDER_UPDATE");
+                    case FOLDER_ADD_LEFT, FOLDER_ADD_RIGHT -> getStyleClass().add("row-FOLDER_ADD");
+                    case FOLDER_UNKNOWN -> getStyleClass().add("row-FOLDER_UNKNOWN");
+                    case FOLDER_IGNORE -> getStyleClass().add("row-FOLDER_IGNORE");
                 }
             }
+
         });
     }
 
@@ -187,6 +213,16 @@ public class TreeTableBuilderService {
                 { //Inicializační blok, spustí se pouze jednou
 
                     getStyleClass().add("operationCell");
+                    // zachování poměrů a vyhlazení při změně velikosti
+                    imageView.setPreserveRatio(true);
+                    imageView.setSmooth(true);
+
+                    // vycentrování
+                    setAlignment(javafx.geometry.Pos.CENTER);
+                    setStyle("-fx-padding: 0px;");
+                    // outomatická velikost podle šířky sloupce ařádků
+                    imageView.fitWidthProperty().bind(widthProperty());
+                    imageView.fitHeightProperty().bind(heightProperty());
                 }
 
                 @Override
@@ -202,8 +238,6 @@ public class TreeTableBuilderService {
 
                     if (icon != null) {
                         imageView.setImage(icon);
-                        imageView.setFitWidth(iconSize/0.6);
-                        imageView.setFitHeight(iconSize);
                         setGraphic(imageView);
                         setText(null);
                     }else {
@@ -217,17 +251,28 @@ public class TreeTableBuilderService {
     ///  vrátí správnou ikonu operace
     private Image getIconForOperation(CompareOperations operation) {
         switch (operation) {
-            case EQUALS -> {return iconEquals;
-            } case IGNORE -> {return iconIgnore;
-            }case DELETE_LEFT ->{return iconDeleteLeft;
-            } case DELETE_RIGHT ->{return iconDeleteRight;
-            } case DELETE_BOTH ->{return iconDeleteBoth;
-            } case UPDATE_LEFT -> {return iconUpdateLeft;
-            } case UPDATE_RIGHT -> {return iconUpdateRight;
-            } case ADD_LEFT -> {return iconAddLeft;
-            } case ADD_RIGHT -> {return iconAddRight;
-            } case UNKNOWN -> {return iconUnknown;
-            } case FOLDER -> {return iconFolder;}
+            case EQUALS -> {return iconEquals;}
+            case IGNORE -> {return iconIgnore;}
+            case DELETE_LEFT ->{return iconDeleteLeft;}
+            case DELETE_RIGHT ->{return iconDeleteRight;}
+            case DELETE_BOTH ->{return iconDeleteBoth;}
+            case UPDATE_LEFT -> {return iconUpdateLeft;}
+            case UPDATE_RIGHT -> {return iconUpdateRight;}
+            case ADD_LEFT -> {return iconAddLeft;}
+            case ADD_RIGHT -> {return iconAddRight;}
+            case UNKNOWN -> {return iconUnknown;}
+            case FOLDER -> {return iconFolder;}
+            case FOLDER_UNEVEN -> {return iconFOLDER_UNEVEN;}
+            case FOLDER_EQUALS -> {return iconFOLDER_EQUALS;}
+            case FOLDER_DELETE_LEFT -> {return iconFOLDER_DELETE_LEFT;}
+            case FOLDER_DELETE_RIGHT -> {return iconFOLDER_DELETE_RIGHT;}
+            case FOLDER_DELETE_BOTH -> {return iconFOLDER_DELETE_BOTH;}
+            case FOLDER_UPDATE_LEFT -> {return iconFOLDER_UPDATE_LEFT;}
+            case FOLDER_UPDATE_RIGHT -> {return iconFOLDER_UPDATE_RIGHT;}
+            case FOLDER_ADD_LEFT -> {return iconFOLDER_ADD_LEFT;}
+            case FOLDER_ADD_RIGHT -> {return iconFOLDER_ADD_RIGHT;}
+            case FOLDER_UNKNOWN -> {return iconFOLDER_UNKNOWN;}
+            case FOLDER_IGNORE -> {return iconFOLDER_IGNORE;}
         }
         return null;
     }
