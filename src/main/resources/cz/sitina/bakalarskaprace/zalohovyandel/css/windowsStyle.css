@@ -18,6 +18,11 @@
     -fx-border-width: 0 2 0  0;
 }
 
+.allBorder_2 {
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+}
+
 
 
 .borderModifi_FilterDark-50 {
@@ -28,6 +33,10 @@
 
 }
 
+.borderModify_primary2 {
+    -fx-border-color: -fx-color-primary2;
+
+}
 
 /* ======================
         button styles

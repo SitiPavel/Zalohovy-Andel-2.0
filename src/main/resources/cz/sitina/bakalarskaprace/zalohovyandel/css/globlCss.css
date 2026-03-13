@@ -55,6 +55,12 @@
     -fx-text-fill: -fx-color-primary1;
 }
 
+
+.WindowTitle_L2_Colored {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-primary1;
+}
 /*  ===========================================
             Hlavní obsah
     =========================================== */
@@ -65,6 +71,12 @@
 .conteinerModify_Radius15{
     -fx-background-radius: 15;
 }
+
+.borderModify_Radius15{
+    -fx-border-radius: 15;
+}
+
+
 
 .bottomBar {
     -fx-background-color: -fx-color-primary2;
@@ -120,9 +132,26 @@
     -fx-border-radius: 17px;
     -fx-cursor: hand;
 }
+
 .toolBarButtonLite {
     -fx-background-color: -fx-color-darkBackground;
 }
+
+.lightBorderButton_small {
+    -fx-background-color: -fx-color-darkBackground;
+    -fx-background-radius: 10px;
+
+    -fx-border-insets: 0;
+    -fx-background-insets: 1;
+
+    -fx-border-color: -fx-color-primary2;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-border-radius: 10px;
+    -fx-cursor: hand;
+}
+
+
 .modificator_compareButton {
     -fx-border-color: -fx-color-mark3;
 }

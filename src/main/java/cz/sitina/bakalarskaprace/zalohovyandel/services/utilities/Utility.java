@@ -63,6 +63,10 @@ public class Utility {
         }
     }
 
+    /**
+     * NASTAVENÍ TOOLTIPS
+     * **/
+
     public Tooltip createToolTip_300ms(String text ) {
         return createToolTip(text, 300);
     }
@@ -85,6 +89,9 @@ public class Utility {
         return tooltip;
     }
 
+    /**  =======^=======^=======^=======^=======*/
 
+
+    //
 
 }
