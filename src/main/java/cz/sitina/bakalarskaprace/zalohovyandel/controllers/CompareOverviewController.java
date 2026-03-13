@@ -13,6 +13,10 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableBuilderService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFilterService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFolderOperationMakerService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableGuiModify;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
@@ -28,16 +32,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 import static cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager.loadFXML;
 
@@ -61,6 +61,7 @@ public class CompareOverviewController {
 
     private final ComparisonService comparisonService = new ComparisonService();
     private final CompareOverviewService compareOverviewService = new CompareOverviewService();
+    private final TreeTableGuiModify treeTableGuiModify = new TreeTableGuiModify();
     private final Utility utility = new Utility();
     private AppFrameController appFrameController;
 
@@ -182,19 +183,14 @@ public class CompareOverviewController {
 
 
 
-        // nastavení levého sloupce názvů
+        // nastaví jako hlavní zavírací strom sloupec leftColName
         filesTreeTable.setTreeColumn(leftColName);
+        // nastavení levého sloupce názvů
         leftColName.setCellFactory(cellData ->
                 new TreeTableCell<ComparedItemOperItemRowModel, String>() {
 
             Tooltip tooltip = utility.createToolTip_600ms();
             // nastavení obrázku pro oddělení složky a souboru
-            private final ImageView imageView = new ImageView();
-            {
-                imageView.setFitWidth(16);
-                imageView.setFitHeight(16);
-                imageView.setPreserveRatio(true);
-            }
 
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -210,28 +206,63 @@ public class CompareOverviewController {
                     tooltip.setText(item);
                     setTooltip(tooltip);
 
-                    CompareOperations operation = getTreeTableRow().getItem().getOperation();
-                    if (operation.toString().contains("FOLDER")) {
-                        imageView.setImage(imageManager.getFolder20x20());
-                    } else {
-                        imageView.setImage(imageManager.getFile20x20());
-                    }
-                    setGraphic(imageView);
+                    ImageView view = treeTableGuiModify.getIconByRowFormat(
+                            getTreeTableRow().getItem().getOperation(),
+                            ""
+                    );
+                    setGraphic(view);
                 }
 
             }
         });
 
         // nastavení pravého sloupce názvů
-        treeTableBuilder.setColumnIindentLevelAndToolTips(rightColName);
+        rightColName.setCellFactory(cellData ->
+            new TreeTableCell<ComparedItemOperItemRowModel, String>() {
+                // 1. Vytvoříme Tooltip pouze JEDNOU pro životní cyklus buňky
+                private final Tooltip myTooltip = new Tooltip();
+
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                        // Reset pro prázdné buňky
+                    if (empty || item == null) {
+                        setText(null);
+                        setGraphic(null);
+                        setPadding(Insets.EMPTY);
+                        setTooltip(null); // Důležité: odebereme Tooltip, aby nestrašil na prázdném řádku
+                        return;
+                    }
+                    setText(item);
+
+                    // Nastavení ikony podle formátu
+                    myTooltip.setText(item);
+                    setTooltip(myTooltip);
+                    ImageView view = treeTableGuiModify.getIconByRowFormat(
+                            getTreeTableRow().getItem().getOperation(),
+                            ""
+                    );
+                    setGraphic(view);
+
+                    //nastavení odsazení podle zanoření v TreeTable
+                    treeTableGuiModify.setIndentByDeepForCell(getIndex(), getTreeTableView(), this);
+
+                }
+            });
+
+
+        // nastavení pravého sloupce názvů
+        ///treeTableGuiModify.setColumnIndentLevelToolTipsIconByFormat(rightColName);
 
 
         filesTreeTable.setShowRoot(false);
 
         // nastavení generování Obarvených řádků podle operace
-        treeTableBuilder.rowFormatingByOperation(filesTreeTable);
+        treeTableGuiModify.rowFormatingByOperation(filesTreeTable);
         //  nastaví generování ikon do sloupce operace
-        treeTableBuilder.setOperationColumnIcon(operationCol);
+        treeTableGuiModify.setOperationColumnIcon(operationCol);
 
 
 

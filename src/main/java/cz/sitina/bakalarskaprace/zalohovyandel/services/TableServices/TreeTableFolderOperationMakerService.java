@@ -1,10 +1,8 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.services;
+package cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import javafx.scene.control.TreeItem;
-
-import java.util.List;
 
 import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations.*;
 
@@ -74,7 +72,6 @@ public class TreeTableFolderOperationMakerService {
             default -> operation;
         };
     }
-
 
     // záskáme základní operaci ze složek abychom pohly správně porovnávat
     private static CompareOperations getBaseOperation(CompareOperations op) {

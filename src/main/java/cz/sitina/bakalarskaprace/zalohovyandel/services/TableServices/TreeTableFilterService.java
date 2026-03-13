@@ -1,14 +1,9 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.services;
+package cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilters_TaskData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableView;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class TreeTableFilterService {
 
