@@ -6,7 +6,12 @@ module cz.sitina.bakalarskaprace.zalohovyandel {
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
-    requires java.desktop;
+    requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.datatype.jsr310;
+
+    opens cz.sitina.bakalarskaprace.zalohovyandel.models.taskType to com.fasterxml.jackson.databind;
+    opens cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks to com.fasterxml.jackson.databind;
+    opens cz.sitina.bakalarskaprace.zalohovyandel.models.enums to com.fasterxml.jackson.databind;
 
     opens cz.sitina.bakalarskaprace.zalohovyandel to javafx.fxml;
     opens cz.sitina.bakalarskaprace.zalohovyandel.controllers to javafx.fxml;
@@ -14,4 +19,5 @@ module cz.sitina.bakalarskaprace.zalohovyandel {
 
     exports cz.sitina.bakalarskaprace.zalohovyandel;
     opens cz.sitina.bakalarskaprace.zalohovyandel.controllers.popupControllers to javafx.fxml;
+
 }

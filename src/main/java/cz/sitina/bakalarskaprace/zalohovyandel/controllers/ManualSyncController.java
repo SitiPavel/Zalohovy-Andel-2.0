@@ -5,12 +5,14 @@ import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.Man
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.RecapitulationBeforeCopyFilesController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilters_TaskData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableBuilderService;
@@ -65,6 +67,7 @@ public class ManualSyncController implements TaskController {
     private final ComparisonService comparisonService = new ComparisonService();
     private final CompareOverviewService compareOverviewService = new CompareOverviewService();
     private final TreeTableGuiModify treeTableGuiModify = new TreeTableGuiModify();
+    private final JsonDataManagerService jsonManager = new JsonDataManagerService();
     private final Utility utility = new Utility();
     private AppFrameController appFrameController;
 
@@ -82,8 +85,10 @@ public class ManualSyncController implements TaskController {
     private boolean isRightOperationSizeSmalerThenRightFolder;
 
     //Tásk objekt a uložení
+    TaskRepository taskRepository;
     private ManualSyncTask originalManualTask;
     private ManualSyncTask editableManualTask ;
+
     //private boolean dirtyFlag = false;
     private BooleanProperty isDirtyFlag = new SimpleBooleanProperty(false);
 
@@ -393,6 +398,7 @@ public class ManualSyncController implements TaskController {
     public void saveEditableTask(ActionEvent event) {
         saveChanges();
         isDirtyFlag.set(false);
+        jsonManager.saveAllTask_SaveOldSave(taskRepository.getTaskObservableList());
     }
 
     @FXML
@@ -726,12 +732,16 @@ public class ManualSyncController implements TaskController {
         }
     }
 
-    public void setTaskModel(ManualSyncTask tak) {
-        this.originalManualTask = tak;
-        this.editableManualTask  = new ManualSyncTask(tak);
+    public void setTaskModel(TaskModel tak) {
+        this.originalManualTask = (ManualSyncTask) tak;
+        this.editableManualTask  = new ManualSyncTask((ManualSyncTask) tak);
         // nastaví správný obrázek k rychlím filtrům
         setFastFiltersImg();
     };
+
+    public void setTaskRepository(TaskRepository taskRepo) {
+        this.taskRepository = taskRepo;
+    }
 
     public void setAppFrameController(AppFrameController appFrameController) {
         this.appFrameController = appFrameController;

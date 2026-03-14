@@ -58,6 +58,7 @@ public class AppFrameController {
             } else if (subController instanceof ManualSyncController coc) {
                 if (taskModel != null) {
                     ManualSyncTask mst = (ManualSyncTask) taskModel;
+                    coc.setTaskRepository(taskRepository);
                     coc.setTaskModel(mst);
                     coc.setAppFrameController(this);
                     coc.loadView();

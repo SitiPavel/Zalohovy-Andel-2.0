@@ -11,6 +11,10 @@ public class ManualSyncTask extends TaskModel{
 
 
 
+    // prázdný konstruktor pro json
+    public ManualSyncTask() {
+        super();
+    }
 
     public ManualSyncTask(String name, String leftPath,
                           String rightPath, String description) {

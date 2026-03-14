@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.format.TextStyle;
+import java.util.List;
 
 public class TaskRepository {
 
@@ -14,17 +15,18 @@ public class TaskRepository {
         taskList.add(task);
     }
 
-    public ObservableList<TaskModel> getTaskList() {
+    public ObservableList<TaskModel> getTaskObservableList() {
         return taskList;
     }
+
 
     public TaskModel getListItem(long id) {
         for (TaskModel task : taskList) {
             if (task.getId() == id) {
                 return task;
             }
-        }
-        return null; /// ERROR doplnit
+            }
+        return null; /* ✪ ERROR*/
     }
 
 }

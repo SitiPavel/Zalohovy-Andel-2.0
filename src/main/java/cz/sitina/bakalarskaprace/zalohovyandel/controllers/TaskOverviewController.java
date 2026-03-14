@@ -184,7 +184,7 @@ public class TaskOverviewController {
     public void setTaskRepository(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
 
-        taskTable.setItems(this.taskRepository.getTaskList());
+        taskTable.setItems(this.taskRepository.getTaskObservableList());
     }
 
     public void setAppFrameController(AppFrameController appFrameController) {

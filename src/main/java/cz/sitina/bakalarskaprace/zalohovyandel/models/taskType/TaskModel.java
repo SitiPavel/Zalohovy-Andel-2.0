@@ -1,5 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.models.taskType;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilters_TaskData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes;
@@ -8,15 +10,24 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "taskClassType"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ManualSyncTask.class, name = "MANUAL_SYNC_TASK")
+})
+
 public abstract class TaskModel {
-    private final long id; // máme jako daatum a čas vytvoření v milisekundách
-    private final TaskTypes taskType;
+    private long id; // máme jako daatum a čas vytvoření v milisekundách
+    private TaskTypes taskType;
     private String name;
     private String leftPath;
     private String rightPath;
     private String description;
     private String status;
-    private final LocalDate creationDate;
+    private LocalDate creationDate;
     private List<String> blockList = new ArrayList<>();
     private GuiOperationFilters_TaskData guiOperationFilters;
 
@@ -24,6 +35,9 @@ public abstract class TaskModel {
     private CompareStrategy compareStrategy = CompareStrategy.BIDIRECTIONAL_SYNC;
     private boolean isContentHash = false;
 
+    // prázdný konstruktor pro json
+    protected TaskModel() {
+    }
 
     public TaskModel( TaskTypes taskType,
                      String name,
