@@ -21,6 +21,9 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,17 +44,17 @@ import java.util.Map;
 
 import static cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager.loadFXML;
 
-public class CompareOverviewController {
+public class ManualSyncController implements TaskController {
 
     // Nastavení sloupců v TreeTableView  a samotná tabulka
     @FXML private TreeTableView<ComparedItemOperItemRowModel> filesTreeTable;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> leftColName;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> leftColSize;
-    @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> leftColLastModifi;
+    @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> leftColLastModify;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, CompareOperations> operationCol;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColName;
     @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColSize;
-    @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColLastModifi;
+    @FXML private TreeTableColumn<ComparedItemOperItemRowModel, String> rightColLastModify;
 
     // daůší definované třídy atd..
 
@@ -72,13 +75,17 @@ public class CompareOverviewController {
     private List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
     private final TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
     private TreeItem<ComparedItemOperItemRowModel> masterRoot;
-    private ManualSyncTask manualTask;
 
     private final ManualCompareSettingsController compareSetting = new ManualCompareSettingsController();
     private CompareStrategy strategyForRecapitulate;
     private boolean isLeftOperationSizeSmalerThenLeftFolder;
     private boolean isRightOperationSizeSmalerThenRightFolder;
 
+    //Tásk objekt a uložení
+    private ManualSyncTask originalManualTask;
+    private ManualSyncTask editableManualTask ;
+    //private boolean dirtyFlag = false;
+    private BooleanProperty isDirtyFlag = new SimpleBooleanProperty(false);
 
     // definované datové sady
     private ComparedDataAndStatisticsForCompereOverview statisticsAndComparedData;
@@ -90,6 +97,9 @@ public class CompareOverviewController {
     @FXML private Button btnRightFileChoiser;
     @FXML private TextField tfRightFolderPath;
     @FXML private Button btnCompareFolders;
+    @FXML private Button btnSaveTask;
+
+
     // definování ukazatelu
     @FXML private Label lbLeftAddCount;
     @FXML private Label lbLeftUpdateCount;
@@ -149,7 +159,7 @@ public class CompareOverviewController {
 
 
 
-    public CompareOverviewController(){}
+    public ManualSyncController(){}
 
     @FXML
     public void initialize() {
@@ -158,7 +168,7 @@ public class CompareOverviewController {
                 cellData.getValue().getValue().getLeftItem().getFormatedName());
         leftColSize.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getLeftItem().getFormatedSize());
-        leftColLastModifi.setCellValueFactory(cellData ->
+        leftColLastModify.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getLeftItem().getFormatedLastModified());
 
         operationCol.setCellValueFactory(cellData ->
@@ -168,7 +178,7 @@ public class CompareOverviewController {
                 cellData.getValue().getValue().getRightItem().getFormatedName());
         rightColSize.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getRightItem().getFormatedSize());
-        rightColLastModifi.setCellValueFactory(cellData ->
+        rightColLastModify.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getRightItem().getFormatedLastModified());
 
 
@@ -176,10 +186,10 @@ public class CompareOverviewController {
         // Stylování sloupců
         leftColName.getStyleClass().add("left-column");
         leftColSize.getStyleClass().add("center-column");
-        leftColLastModifi.getStyleClass().add("center-column");
+        leftColLastModify.getStyleClass().add("center-column");
         operationCol.getStyleClass().add("center-column");
         rightColSize.getStyleClass().add("center-column");
-        rightColLastModifi.getStyleClass().add("center-column");
+        rightColLastModify.getStyleClass().add("center-column");
 
 
 
@@ -256,7 +266,6 @@ public class CompareOverviewController {
         // nastavení pravého sloupce názvů
         ///treeTableGuiModify.setColumnIndentLevelToolTipsIconByFormat(rightColName);
 
-
         filesTreeTable.setShowRoot(false);
 
         // nastavení generování Obarvených řádků podle operace
@@ -264,8 +273,17 @@ public class CompareOverviewController {
         //  nastaví generování ikon do sloupce operace
         treeTableGuiModify.setOperationColumnIcon(operationCol);
 
+        setIsDirtyFlagListener();
+    }
 
 
+    public boolean isUnsavedChanges() {
+        return isDirtyFlag.get();
+    }
+
+    public void saveChanges() {
+        this.originalManualTask.updateTaskModel(editableManualTask);
+        isDirtyFlag.set(false);
     }
 
     //===================
@@ -285,7 +303,10 @@ public class CompareOverviewController {
         try {
             FXMLLoader loader = loadFXML("manualCompareSetings.fxml");
             ManualCompareSettingsController controller = loader.getController();
-            controller.setTask(manualTask);
+            controller.setTask(editableManualTask);
+            controller.setCallbackDirtyFlag(() -> {
+                markAsDirty();
+            });
 
             WindowManager.openNewWindow( loader,
                     "Nastavení porovnání souborů",
@@ -299,7 +320,7 @@ public class CompareOverviewController {
 
     @FXML
     public void startComparingFiles(ActionEvent event) {
-        strategyForRecapitulate = manualTask.getCompareStrategy();
+        strategyForRecapitulate = editableManualTask.getCompareStrategy();
         try {
             FXMLLoader loader = loadFXML("compareProgresWindow.fxml");
             CompareProgresController progressWindowController = loader.getController();
@@ -320,7 +341,7 @@ public class CompareOverviewController {
                     return comparisonService.compareFolders(
                             mapLeft,
                             mapRight,
-                            manualTask,
+                            editableManualTask,
                             (current, total) -> {
                                 updateProgress(current, total);
                                 updateMessage(String.valueOf(current));
@@ -363,8 +384,15 @@ public class CompareOverviewController {
         }
     }
 
+    @FXML
     public void showTaskOverviewGUI(ActionEvent event) {
         appFrameController.showTasksOverview();
+    }
+
+    @FXML
+    public void saveEditableTask(ActionEvent event) {
+        saveChanges();
+        isDirtyFlag.set(false);
     }
 
     @FXML
@@ -380,7 +408,7 @@ public class CompareOverviewController {
             try {
                 FXMLLoader loader = loadFXML("recapitulationBeforeCopyFiles.fxml");
                 RecapitulationBeforeCopyFilesController controller = loader.getController();
-                controller.setTask(manualTask);
+                controller.setTask(editableManualTask);
                 controller.setComparedAndStatisticsData(statisticsAndComparedData);
                 controller.setStrategyModified(false);
                 controller.setList(resultComparedList);
@@ -416,7 +444,8 @@ public class CompareOverviewController {
     public void setFastFilter(ActionEvent event) {
         Node source = (Node) event.getSource();
 
-        setImageByBtnID(source.getId(), manualTask.getGuiOperationFilters());
+        setImageByBtnID(source.getId(), editableManualTask.getGuiOperationFilters());
+        markAsDirty();
 
         applyCurrentFiltersToTable();
     }
@@ -511,12 +540,13 @@ public class CompareOverviewController {
         TreeTableFolderOperationMakerService.getFolderOperation(masterRoot);
 
         applyCurrentFiltersToTable();
+        setupDirtyTrackers();
 
     }
 
     // nastaví podle true/false obrázek odpovídajcí vypnutému nebo zapnutému filtru
     private void setFastFiltersImg() {
-        GuiOperationFilters_TaskData taskFilters = manualTask.getGuiOperationFilters();
+        GuiOperationFilters_TaskData taskFilters = editableManualTask.getGuiOperationFilters();
         imgAddItem_Left.setImage(
                 taskFilters.isActive_ADD_LEFT() ? imageManager.getIcon_addItem_Left() : imageManager.getIcon_addItem_Left_OFF()
         );
@@ -550,16 +580,53 @@ public class CompareOverviewController {
 
     private void applyCurrentFiltersToTable() {
         // kdyby nebylo co filtrovate
-        if (masterRoot == null || manualTask == null) return;
+        if (masterRoot == null || editableManualTask == null) return;
 
         TreeItem<ComparedItemOperItemRowModel> filtredRoot =
-                TreeTableFilterService.createFiltredTree(masterRoot, manualTask.getGuiOperationFilters());
+                TreeTableFilterService.createFiltredTree(masterRoot, editableManualTask.getGuiOperationFilters());
         filesTreeTable.setRoot(filtredRoot);
     }
 
+    // nastavý listenery pro textová pole a pokud je nová hodnota jiná než v originalu tak zaznamená změnu
+    private void setupDirtyTrackers() {
+        tfLeftFolderPath.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (originalManualTask == null) return;
+            if (!newVal.equals(originalManualTask.getLeftPath())) {
+                markAsDirty();
+            };
+        });
+        tfRightFolderPath.textProperty().addListener((obs, oldVal, newVal) ->{
+            if (originalManualTask == null) return;
+            if (!newVal.equals(originalManualTask.getRightPath())) {
+                markAsDirty();
+            }
+        });
+    }
+
+    // nastaví proměnou označující změnu v TaskModelu
+    private void markAsDirty() {
+        if (!isDirtyFlag.get()) {
+            isDirtyFlag.set(true);
+            System.out.println("nastaveno true");
+        }
+    }
+
+    private void setIsDirtyFlagListener() {
+        isDirtyFlag.addListener((obs, oldVal, newVal) -> {
+           String newClass = "modificator_save";
+           if (newVal) {
+               if (!btnSaveTask.getStyleClass().contains("modificator_save")){
+                   btnSaveTask.getStyleClass().add("modificator_save");
+               }
+           } else {
+                btnSaveTask.getStyleClass().remove("modificator_save");
+           }
+        });
+    }
+
     public void loadView() {
-        tfLeftFolderPath.setText(manualTask.getLeftPath());
-        tfRightFolderPath.setText(manualTask.getRightPath());
+        tfLeftFolderPath.setText(editableManualTask.getLeftPath());
+        tfRightFolderPath.setText(editableManualTask.getRightPath());
     }
 
     private void setImageByBtnID(String id, GuiOperationFilters_TaskData filters) {
@@ -660,7 +727,8 @@ public class CompareOverviewController {
     }
 
     public void setTaskModel(ManualSyncTask tak) {
-        this.manualTask = tak;
+        this.originalManualTask = tak;
+        this.editableManualTask  = new ManualSyncTask(tak);
         // nastaví správný obrázek k rychlím filtrům
         setFastFiltersImg();
     };

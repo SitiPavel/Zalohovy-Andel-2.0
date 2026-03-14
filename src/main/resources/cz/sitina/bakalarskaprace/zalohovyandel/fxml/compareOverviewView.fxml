@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="500.0" minWidth="700.0" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.CompareOverviewController">
+<AnchorPane minHeight="500.0" minWidth="700.0" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.ManualSyncController">
    <children>
       <GridPane layoutX="300.0" layoutY="30.0" prefHeight="125.0" prefWidth="1081.0" styleClass="toolBox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -139,7 +139,7 @@
                      <padding>
                         <Insets bottom="5.0" />
                      </padding></Label>
-                  <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                  <Button fx:id="btnSaveTask" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveEditableTask" prefHeight="50.0" prefWidth="50.0" styleClass="toolBarButton">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -147,10 +147,6 @@
                            </image>
                         </ImageView>
                      </graphic>
-                     <styleClass>
-                        <String fx:value="toolBarButton" />
-                        <String fx:value="modificator_save" />
-                     </styleClass>
                   </Button>
                </children>
             </VBox>
@@ -435,11 +431,11 @@
             <TreeTableView fx:id="filesTreeTable" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0" styleClass="fileItemTable" GridPane.columnSpan="3" GridPane.rowSpan="2">
               <columns>
                 <TreeTableColumn fx:id="leftColName" editable="false" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
-                  <TreeTableColumn fx:id="leftColLastModifi" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Úprava" />
+                  <TreeTableColumn fx:id="leftColLastModify" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Úprava" />
                 <TreeTableColumn fx:id="leftColSize" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Velikost" />
                   <TreeTableColumn id="OperationColCompareOverview" fx:id="operationCol" editable="false" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" text="Operace" />
                   <TreeTableColumn fx:id="rightColName" editable="false" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
-                  <TreeTableColumn fx:id="rightColLastModifi" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Úprava" />
+                  <TreeTableColumn fx:id="rightColLastModify" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Úprava" />
                   <TreeTableColumn fx:id="rightColSize" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Velikost" />
               </columns>
                <columnResizePolicy>

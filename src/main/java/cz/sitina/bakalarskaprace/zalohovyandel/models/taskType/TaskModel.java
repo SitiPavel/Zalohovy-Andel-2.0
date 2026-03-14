@@ -18,7 +18,7 @@ public abstract class TaskModel {
     private String status;
     private final LocalDate creationDate;
     private List<String> blockList = new ArrayList<>();
-    private GuiOperationFilters_TaskData GuiOperationFilters;
+    private GuiOperationFilters_TaskData guiOperationFilters;
 
     /// uležená data pro porovnání
     private CompareStrategy compareStrategy = CompareStrategy.BIDIRECTIONAL_SYNC;
@@ -39,7 +39,56 @@ public abstract class TaskModel {
         this.rightPath = rightPath;
         this.description = description;
         this.creationDate = LocalDate.now();
-        this.GuiOperationFilters = new GuiOperationFilters_TaskData();
+        this.guiOperationFilters = new GuiOperationFilters_TaskData();
+    }
+
+    public TaskModel( TaskTypes taskType,
+                      String name,
+                      String leftPath,
+                      String rightPath,
+                      String description,
+                      GuiOperationFilters_TaskData GuiOperationFilters) {
+
+        this.id = System.currentTimeMillis();
+        this.taskType = taskType;
+
+        this.name = name;
+        this.leftPath = leftPath;
+        this.rightPath = rightPath;
+        this.description = description;
+        this.creationDate = LocalDate.now();
+        // složitý typ který by bez new poslal jen odkaz
+        this.guiOperationFilters = GuiOperationFilters;
+    }
+
+    protected TaskModel( TaskModel source) {
+        this.id = source.id;
+        this.name = source.name;
+        this.taskType = source.taskType;
+        this.leftPath = source.leftPath;
+        this.rightPath = source.rightPath;
+        this.description = source.description;
+        this.creationDate = source.creationDate;
+        this.isContentHash = source.isContentHash;
+        this.compareStrategy = source.compareStrategy;
+
+        // složité datové typy, proto vytvoříme nové, kdyby nebylo new tak by se sdílel jen odkaz a né objekt
+        this.blockList = new ArrayList<>(source.blockList);
+        this.guiOperationFilters = new GuiOperationFilters_TaskData(source.guiOperationFilters);
+
+    }
+
+    public void updateTaskModel(TaskModel task) {
+        this.name = task.name;
+        this.leftPath = task.leftPath;
+        this.rightPath = task.rightPath;
+        this.description = task.description;
+        this.isContentHash = task.isContentHash;
+        this.compareStrategy = task.compareStrategy;
+
+        this.blockList = new ArrayList<>(task.blockList);
+        this.guiOperationFilters = new GuiOperationFilters_TaskData(task.guiOperationFilters);
+
     }
 
     //getry
@@ -77,7 +126,7 @@ public abstract class TaskModel {
         return isContentHash;
     }
     public GuiOperationFilters_TaskData getGuiOperationFilters() {
-        return GuiOperationFilters;
+        return guiOperationFilters;
     }
 
     //setry

@@ -16,6 +16,18 @@ public class GuiOperationFilters_TaskData {
     public GuiOperationFilters_TaskData() {
     }
 
+    public GuiOperationFilters_TaskData(GuiOperationFilters_TaskData source) {
+        this.isActive_EQUALS = source.isActive_EQUALS();
+        this.isActive_IGNORE = source.isActive_IGNORE();
+        this.isActive_DELETE_LEFT = source.isActive_DELETE_LEFT();
+        this.isActive_DELETE_RIGHT = source.isActive_DELETE_RIGHT();
+        this.isActive_UPDATE_LEFT = source.isActive_UPDATE_LEFT();
+        this.isActive_UPDATE_RIGHT = source.isActive_UPDATE_RIGHT();
+        this.isActive_ADD_LEFT = source.isActive_ADD_LEFT();
+        this.isActive_ADD_RIGHT = source.isActive_ADD_RIGHT();
+        this.isActive_UNKNOWN = source.isActive_UNKNOWN();
+    }
+
     // Getry
     public boolean isActive_EQUALS() {
         return isActive_EQUALS;

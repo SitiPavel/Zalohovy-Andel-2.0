@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class RecapitulationBeforeCopyFilesController {
+public class RecapitulationBeforeCopyFilesController  {
     private ComparedDataAndStatisticsForCompereOverview comparedAndStatisticsData;
     private final IconManagerUtility  iconManager = new IconManagerUtility();
 

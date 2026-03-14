@@ -4,6 +4,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.AutoBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -65,7 +66,9 @@ public class TaskOverviewController {
                     if (taskModel instanceof ManualSyncTask mst) {
                         appFrameController.showCompareOverview(mst);
                     } else {
-                        System.out.println("Neznámý typ task");/*ERROR ✪ */
+                        ErrorUtility.getInstance("Kritická chyba",
+                                "Neznámý typ úlohy",
+                                "Aplikace nezná vybraný typ úlohy!");
                     }
                 });
             }
