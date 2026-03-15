@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
@@ -231,6 +232,30 @@ public class ManualSyncController implements TaskController {
             }
         });
 
+        operationCol.setCellFactory(column -> {
+            return new TreeTableCell<ComparedItemOperItemRowModel, CompareOperations>() {
+
+                private final ImageView imageView = treeTableGuiModify.findAndSetForOperationIcon(this);
+
+                @Override
+                protected void updateItem(CompareOperations operation, boolean empty) {
+                    super.updateItem(operation, empty);
+
+                    if (empty || operation == null) {
+                        setGraphic(null);
+                        setText(null);
+                    } else {
+                        Image icon = treeTableGuiModify.getIconForOperation(operation);
+                        imageView.setImage(icon);
+
+                        setGraphic(imageView);
+                        setText(null);
+                    }
+
+                }
+            };
+        });
+
         // nastavení pravého sloupce názvů
         rightColName.setCellFactory(cellData ->
             new TreeTableCell<ComparedItemOperItemRowModel, String>() {
@@ -268,15 +293,10 @@ public class ManualSyncController implements TaskController {
             });
 
 
-        // nastavení pravého sloupce názvů
-        ///treeTableGuiModify.setColumnIndentLevelToolTipsIconByFormat(rightColName);
-
         filesTreeTable.setShowRoot(false);
 
         // nastavení generování Obarvených řádků podle operace
         treeTableGuiModify.rowFormatingByOperation(filesTreeTable);
-        //  nastaví generování ikon do sloupce operace
-        treeTableGuiModify.setOperationColumnIcon(operationCol);
 
         setIsDirtyFlagListener();
     }

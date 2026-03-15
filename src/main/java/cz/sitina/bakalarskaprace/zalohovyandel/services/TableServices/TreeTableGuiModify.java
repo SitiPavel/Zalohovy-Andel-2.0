@@ -10,6 +10,8 @@ import javafx.scene.image.ImageView;
 
 import java.util.List;
 
+
+
 public class TreeTableGuiModify {
     private final IconManagerUtility iconManager = new IconManagerUtility();
 
@@ -74,53 +76,30 @@ public class TreeTableGuiModify {
      * metoda - setCellFactory
      * */
 
+    /// nastaví objekt pro ikonu
+    public ImageView findAndSetForOperationIcon(TreeTableCell<?,?> cell) {
+        ImageView imageView = new ImageView();
+        //Inicializační blok, spustí se pouze jednou
 
-    /// nastaví ikonu operace každému řádku
-    public void setOperationColumnIcon(TreeTableColumn<ComparedItemOperItemRowModel, CompareOperations> operationCol) {
-        operationCol.setCellFactory(column ->
-                new TreeTableCell<ComparedItemOperItemRowModel, CompareOperations>() {
+        cell.getStyleClass().add("operationCell");
+            // zachování poměrů a vyhlazení při změně velikosti
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
 
-                    private final ImageView imageView = new ImageView();
-                    { //Inicializační blok, spustí se pouze jednou
+        // vycentrování
+        cell.setAlignment(javafx.geometry.Pos.CENTER);
+        cell.setStyle("-fx-padding: 0px;");
+        // outomatická velikost podle šířky sloupce ařádků
+        imageView.fitWidthProperty().bind(cell.widthProperty());
+        imageView.fitHeightProperty().bind(cell.heightProperty());
 
-                        getStyleClass().add("operationCell");
-                        // zachování poměrů a vyhlazení při změně velikosti
-                        imageView.setPreserveRatio(true);
-                        imageView.setSmooth(true);
-
-                        // vycentrování
-                        setAlignment(javafx.geometry.Pos.CENTER);
-                        setStyle("-fx-padding: 0px;");
-                        // outomatická velikost podle šířky sloupce ařádků
-                        imageView.fitWidthProperty().bind(widthProperty());
-                        imageView.fitHeightProperty().bind(heightProperty());
-                    }
-
-                    @Override
-                    protected void updateItem(CompareOperations item, boolean empty) {
-                        super.updateItem(item, empty);
-
-                        if (empty || item == null) {
-                            setGraphic(null);
-                            setText(null);
-                            return;
-                        }
-                        Image icon = getIconForOperation(item);
-
-                        if (icon != null) {
-                            imageView.setImage(icon);
-                            setGraphic(imageView);
-                            setText(null);
-                        }else {
-                            setGraphic(null);
-                            setText(item.toString());
-                        }
-                    }
-                });
+        return imageView;
     }
 
+
+
     ///  vrátí správnou ikonu operace
-    private Image getIconForOperation(CompareOperations operation) {
+    public Image getIconForOperation(CompareOperations operation) {
         switch (operation) {
             case EQUALS ->      {return  iconManager.getIconEquals();}
             case IGNORE ->      {return  iconManager.getIconIgnore();}

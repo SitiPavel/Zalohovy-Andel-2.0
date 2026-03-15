@@ -8,6 +8,7 @@ module cz.sitina.bakalarskaprace.zalohovyandel {
     requires org.kordamp.ikonli.javafx;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.datatype.jsr310;
+    requires java.desktop;
 
     opens cz.sitina.bakalarskaprace.zalohovyandel.models.taskType to com.fasterxml.jackson.databind;
     opens cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks to com.fasterxml.jackson.databind;
