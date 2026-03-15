@@ -25,7 +25,6 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -64,6 +63,8 @@ public class ManualSyncController implements TaskController {
     private final FileScannerService fileScannerService = new FileScannerService();
     private TreeTableBuilderService treeTableBuilder = new TreeTableBuilderService();
     private final IconManagerUtility imageManager = new IconManagerUtility();
+    private final PopupDialogService popupDialogService = new PopupDialogService();
+
 
     private final ComparisonService comparisonService = new ComparisonService();
     private final CompareOverviewService compareOverviewService = new CompareOverviewService();
@@ -232,8 +233,9 @@ public class ManualSyncController implements TaskController {
             }
         });
 
-        operationCol.setCellFactory(column -> {
-            return new TreeTableCell<ComparedItemOperItemRowModel, CompareOperations>() {
+        operationCol.setCellFactory(col  -> {
+
+            TreeTableCell<ComparedItemOperItemRowModel, CompareOperations> cell = new TreeTableCell<>() {
 
                 private final ImageView imageView = treeTableGuiModify.findAndSetForOperationIcon(this);
 
@@ -251,9 +253,22 @@ public class ManualSyncController implements TaskController {
                         setGraphic(imageView);
                         setText(null);
                     }
-
                 }
             };
+            cell.setOnMouseClicked(event -> {
+                if (!cell.isEmpty() && event.getButton() == javafx.scene.input.MouseButton.SECONDARY) {
+                    ComparedItemOperItemRowModel rowItem = cell.getTreeTableRow().getItem();
+
+                    if (rowItem != null) {
+                        popupDialogService.showOperationPopupWindow(rowItem);
+                    }
+
+                    // Zastavení dalšího probublávání události
+                    event.consume();
+                }
+
+            });
+            return cell;
         });
 
         // nastavení pravého sloupce názvů
