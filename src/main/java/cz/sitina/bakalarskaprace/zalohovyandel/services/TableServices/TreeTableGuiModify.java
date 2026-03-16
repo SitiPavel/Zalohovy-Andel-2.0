@@ -128,15 +128,6 @@ public class TreeTableGuiModify {
     }
 
 
-    ///  nastavení odsazení názvů na řádcích
-   /* public void setColumnIndentLevelToolTipsIconByFormat(TreeTableColumn col) {
-        col.setCellFactory(column -> {
-            return new TreeTableCell<ComparedItemOperItemRowModel, String>() {
-
-
-
-        });
-    }*/
 
     /// --- Výpočet odsazení (Indentation) ---
     // Získáme index buňky

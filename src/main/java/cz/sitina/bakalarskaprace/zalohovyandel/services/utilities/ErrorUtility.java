@@ -24,5 +24,13 @@ public class ErrorUtility {
         alert.showAndWait();
     }
 
+    public static void showError_pointlessCompareOperation(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Chyba operace");
+        alert.setHeaderText("Vznikla nesmyslná operace!");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 
 }

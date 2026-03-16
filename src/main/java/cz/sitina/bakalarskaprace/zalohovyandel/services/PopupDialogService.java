@@ -8,42 +8,49 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TreeItem;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
 public class PopupDialogService {
 
-    public void showOperationPopupWindow(ComparedItemOperItemRowModel rowItem) {
+    public void showOperationPopupWindow(TreeItem<ComparedItemOperItemRowModel> treeItem) {
         String path = "/cz/sitina/bakalarskaprace/zalohovyandel/fxml/popup/";
         String fxmlPath;
         boolean isFolder = false;
 
-        if (rowItem.getOperation().toString().contains("FOLDER")) {
+        if (treeItem.getValue().getOperation().toString().contains("FOLDER")) {
             fxmlPath = path + "changeFolderOperation.fxml";
             isFolder = true;
         } else {
             fxmlPath = path + "changeFileOperation.fxml";
         }
 
-        openDialog(fxmlPath, rowItem, isFolder);
+        openDialog(fxmlPath, treeItem, isFolder);
     }
 
-    private void openDialog(String fxmlPath, ComparedItemOperItemRowModel rowItem, boolean isFolder) {
+    private void openDialog(String fxmlPath, TreeItem<ComparedItemOperItemRowModel> treeItem, boolean isFolder) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
 
             ChangeFolderOrFileOperationController controller = loader.getController();
             controller.setFolder(isFolder);
-            controller.setComparedItemOperItemRowModel(rowItem);
+            controller.setComparedItemOperItemRowModel(treeItem);
 
 
             Stage stage = new Stage();
-            stage.setTitle("Nastavení operace");
-            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.setScene(new Scene(root));
+            // při zněně focus (na jiné okno) se toto okno zaře
+            stage.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+                if (!isNowFocused) {
+                    stage.close();
+                }
+            });
             stage.show();
 
         } catch (Exception e) {

@@ -260,7 +260,7 @@ public class ManualSyncController implements TaskController {
                     ComparedItemOperItemRowModel rowItem = cell.getTreeTableRow().getItem();
 
                     if (rowItem != null) {
-                        popupDialogService.showOperationPopupWindow(rowItem);
+                        popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem());
                     }
 
                     // Zastavení dalšího probublávání události
