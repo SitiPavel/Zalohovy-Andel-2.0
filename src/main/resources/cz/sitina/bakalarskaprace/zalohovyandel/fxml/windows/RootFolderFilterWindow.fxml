@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane maxHeight="540.0" maxWidth="700.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="340.0" prefWidth="500.0" styleClass="liteDarkConteiner" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.RootFolderFilterController">
+   <stylesheets>
+      <URL value="@../../css/globlCss.css" />
+      <URL value="@../../css/windowsStyle.css" />
+   </stylesheets>
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Label prefHeight="31.0" prefWidth="460.0" styleClass="coloredBoltHeader0" text="Vyberte složky, které budou porovnány" AnchorPane.topAnchor="0.0" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <styleClass>
+                  <String fx:value="mainConteinerStyle" />
+                  <String fx:value="conteinerModify_Radius15" />
+               </styleClass>
+               <children>
+                  <VBox layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label fx:id="lbRootPath" text="C:\cesta">
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/iconsSmall/FOLDER.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <styleClass>
+                              <String fx:value="darkBoltText" />
+                              <String fx:value="borderModify_Only1100_Radius10" />
+                              <String fx:value="allBorder_2" />
+                              <String fx:value="borderModify_primary2" />
+                           </styleClass>
+                           <padding>
+                              <Insets right="6.0" />
+                           </padding>
+                        </Label>
+                        <VBox fx:id="childConteiner" minHeight="40.0" VBox.vgrow="ALWAYS">
+                           <styleClass>
+                              <String fx:value="allBorder_2" />
+                              <String fx:value="borderModify_Only0111_Radius15" />
+                              <String fx:value="borderModify_primary2" />
+                           </styleClass>
+                           <padding>
+                              <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <Button layoutX="385.0" layoutY="270.0" mnemonicParsing="false" onAction="#setChanges" text="Potvrdit">
+               <styleClass>
+                  <String fx:value="button_Primary1" />
+                  <String fx:value="WindowTitle_L1_Dark" />
+               </styleClass>
+            </Button>
+         </children>
+      </AnchorPane>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</AnchorPane>

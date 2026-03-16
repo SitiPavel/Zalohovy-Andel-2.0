@@ -3,6 +3,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.CompareProgresController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.ManualCompareSettingsController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.RecapitulationBeforeCopyFilesController;
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.RootFolderFilterController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.TaskRepository;
@@ -315,6 +316,9 @@ public class ManualSyncController implements TaskController {
         treeTableGuiModify.rowFormatingByOperation(filesTreeTable);
 
         setIsDirtyFlagListener();
+
+        // posluchače pro textová pole složek
+        setupDirtyTrackers();
     }
 
     public void readAndSetStatistic() {
@@ -344,6 +348,28 @@ public class ManualSyncController implements TaskController {
             tfLeftFolderPath.setText(directory.getAbsolutePath());
         }
 
+    }
+
+    @FXML
+    public void leftRootFilter(ActionEvent event) {
+        try {
+            FXMLLoader loader = WindowManager.loadFXML("RootFolderFilterWindow.fxml");
+            RootFolderFilterController controller = loader.getController();
+            controller.setOriginalPath(originalManualTask.getLeftPath());
+            controller.setEditedPath(editableManualTask.getLeftPath());
+            controller.setEditFilteredFolders(editableManualTask.getRootFilteredFolders_Left());
+            controller.setOriginFilteredFolders(originalManualTask.getRootFilteredFolders_Left());
+            controller.setRootPath(editableManualTask.getLeftPath());
+            controller.setIsChanged(() -> markAsDirty());
+
+
+            WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
+
+        } catch (IOException e) {
+            ErrorUtility.showError_WindowLoading(e);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -482,6 +508,28 @@ public class ManualSyncController implements TaskController {
     }
 
     @FXML
+    public void RightRootFilter(ActionEvent event ){
+        try {
+            FXMLLoader loader = WindowManager.loadFXML("RootFolderFilterWindow.fxml");
+            RootFolderFilterController controller = loader.getController();
+            controller.setOriginalPath(originalManualTask.getRightPath());
+            controller.setEditedPath(editableManualTask.getRightPath());
+            controller.setEditFilteredFolders(editableManualTask.getRootFilteredFolders_Right());
+            controller.setOriginFilteredFolders(originalManualTask.getRootFilteredFolders_Right());
+            controller.setRootPath(editableManualTask.getRightPath());
+            controller.setIsChanged(() -> markAsDirty());
+
+            WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
+
+        } catch (IOException e) {
+            ErrorUtility.showError_WindowLoading(e);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @FXML
     public void choseRightFolder(ActionEvent event) {
         File directory = compareOverviewService.findDirectory(event);
         if (directory != null) {
@@ -542,7 +590,6 @@ public class ManualSyncController implements TaskController {
         TreeTableFolderOperationMakerService.getFolderOperation(masterRoot);
 
         applyCurrentFiltersToTable();
-        setupDirtyTrackers();
 
     }
     public void loadCompateDataAfterChange(ComparedDataAndStatisticsForCompereOverview statisticsAndComparedData,
@@ -643,12 +690,14 @@ public class ManualSyncController implements TaskController {
             if (!newVal.equals(originalManualTask.getLeftPath())) {
                 markAsDirty();
             };
+            editableManualTask.setLeftPath(newVal);
         });
         tfRightFolderPath.textProperty().addListener((obs, oldVal, newVal) ->{
             if (originalManualTask == null) return;
             if (!newVal.equals(originalManualTask.getRightPath())) {
                 markAsDirty();
             }
+            editableManualTask.setRightPath(newVal);
         });
     }
 

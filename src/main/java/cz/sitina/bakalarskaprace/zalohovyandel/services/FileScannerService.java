@@ -2,13 +2,17 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
-import javafx.beans.property.SimpleStringProperty;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
-import java.util.stream.Stream;
+
 
 public class FileScannerService {
 
@@ -146,6 +150,36 @@ public class FileScannerService {
         }
         return filesMap;
 
+    }
+
+    // najde použe složky v zadané cestě
+    public List<String> loadDirectSubfolders(Path rootPath) {
+
+        if (!isRightFolderPath(rootPath)) {
+            ErrorUtility.getInstance("Chyba cesty",
+                    "Zadaná cesta neexistuje nebo není složka",
+                    "Cesta: " + rootPath.toString());
+            return new ArrayList<>();
+        }
+
+
+        List<String> result = new ArrayList<>();
+
+        try (Stream<Path> paths = Files.list(rootPath)) {
+            paths.filter(Files::isDirectory)
+                    .forEach(path -> {
+                        String fullPath = path.toAbsolutePath().toString();
+                        result.add(fullPath);
+                    });
+
+
+        }catch (IOException e) {
+            e.printStackTrace();
+            ErrorUtility.getInstance("Chyba souboru",
+                    "Nepodařilo se načíst soubory",
+                    "Cesta: " + rootPath.toString());
+        }
+        return result;
     }
 
     /// kontroluje zda cesta existuje a jestli je to složka

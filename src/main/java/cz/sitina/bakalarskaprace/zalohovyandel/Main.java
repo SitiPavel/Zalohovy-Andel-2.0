@@ -26,13 +26,14 @@ public class Main extends Application {
 
         TaskRepository taskRepository = new TaskRepository();
 
-        ///  pouze na první test data
         //createFirstData(taskRepository);
 
         // načítá data při zapnutí aplikace
+       /**/
        for (TaskModel task: jsonManager.loadAllTasks()){
+
             taskRepository.add(task);
-        }
+        }/**/
 
 
         String resourcesPath = "/cz/sitina/bakalarskaprace/zalohovyandel/";

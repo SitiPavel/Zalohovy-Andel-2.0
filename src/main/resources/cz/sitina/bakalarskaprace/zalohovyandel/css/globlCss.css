@@ -23,9 +23,25 @@
     -fx-font-size: 15px;
     -fx-font-weight: bold;
 }
+.darkBoltText {
+    -fx-text-fill: -fx-color-textDark;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
 
 .DarkBoltHeader0 {
     -fx-text-fill: -fx-color-textDark;
+    -fx-font-size: 21 px;
+    -fx-font-weight: bold;
+}
+.coloredBoltHeader0 {
+    -fx-text-fill: -fx-color-primary1;
+    -fx-font-size: 21 px;
+    -fx-font-weight: bold;
+}
+
+.liteBoltHeader0 {
+    -fx-text-fill: -fx-color-textLight;
     -fx-font-size: 21 px;
     -fx-font-weight: bold;
 }
@@ -74,6 +90,15 @@
 
 .borderModify_Radius15{
     -fx-border-radius: 15;
+}
+
+/*ozančení rohů: 1010/levíHorní, PravíHOrní, pravýDolní, levýDolní    */
+.borderModify_Only0111_Radius15{
+    -fx-border-radius: 0 15 15 15;
+}
+
+.borderModify_Only1100_Radius10{
+    -fx-border-radius: 10 10 0 0;
 }
 
 

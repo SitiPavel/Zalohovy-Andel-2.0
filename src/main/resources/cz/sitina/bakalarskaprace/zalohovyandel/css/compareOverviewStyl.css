@@ -16,6 +16,12 @@
     -fx-border-style: solid;
     -fx-border-width: 1;
 }
+.FilterFolderPatchBtn {
+    -fx-background-color: -fx-color-mark6;
+    -fx-border-color: -fx-color-mark5;
+    -fx-border-style: solid;
+    -fx-border-width: 1;
+}
 
 .folderPathImput {
     -fx-background-color: -fx-color-primary2;

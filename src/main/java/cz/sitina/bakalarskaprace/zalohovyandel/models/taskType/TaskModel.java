@@ -31,6 +31,7 @@ public abstract class TaskModel {
     private List<String> blockList = new ArrayList<>();
     private GuiOperationFilters_TaskData guiOperationFilters;
 
+
     /// uležená data pro porovnání
     private CompareStrategy compareStrategy = CompareStrategy.BIDIRECTIONAL_SYNC;
     private boolean isContentHash = false;
@@ -54,6 +55,7 @@ public abstract class TaskModel {
         this.description = description;
         this.creationDate = LocalDate.now();
         this.guiOperationFilters = new GuiOperationFilters_TaskData();
+
     }
 
     public TaskModel( TaskTypes taskType,
@@ -102,7 +104,6 @@ public abstract class TaskModel {
 
         this.blockList = new ArrayList<>(task.blockList);
         this.guiOperationFilters = new GuiOperationFilters_TaskData(task.guiOperationFilters);
-
     }
 
     //getry
@@ -170,5 +171,6 @@ public abstract class TaskModel {
     public void setContentHash(boolean contentHash) {
         isContentHash = contentHash;
     }
+
 }
 

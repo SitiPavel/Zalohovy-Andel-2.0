@@ -44,6 +44,27 @@ public class WindowManager {
 
     }
 
+    // 2 KROK: načte připravený loader jako modulární okno podle velikosti z FXML
+    public static void openNewWindowAutoSized(FXMLLoader loader, String title) {
+
+        Parent root = loader.getRoot();
+
+        Stage newStage = new Stage();
+        newStage.setTitle(title);
+        Scene scene = new Scene(root);
+        newStage.setScene(scene);
+
+        // Přikáže oknu, aby se přesně přizpůsobilo vypočítané velikosti scény
+        newStage.sizeToScene();
+        newStage.setResizable(false);
+
+        newStage.getIcons().add(new Image(Objects.requireNonNull(WindowManager.class.getResourceAsStream(
+                "/cz/sitina/bakalarskaprace/zalohovyandel/images/ZalohovyAndelLogo70x70.png"))));
+
+        newStage.initModality(Modality.APPLICATION_MODAL);
+        newStage.showAndWait();
+    }
+
     //2 KROK: načte připravený loader jako modulární okno ve kterém mohou běžet různé načítání atd...
     public static Stage openRunningWindow(FXMLLoader loader, String title, int width, int height) {
 

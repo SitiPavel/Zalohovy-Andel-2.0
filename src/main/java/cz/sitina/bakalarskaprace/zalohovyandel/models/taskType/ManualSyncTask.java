@@ -4,10 +4,15 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilte
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes.MANUAL_SYNCHRONIZATION;
 
 public class ManualSyncTask extends TaskModel{
+
+    private List<String> rootFilteredFolders_Left;
+    private List<String> rootFilteredFolders_Right;
 
 
 
@@ -19,14 +24,29 @@ public class ManualSyncTask extends TaskModel{
     public ManualSyncTask(String name, String leftPath,
                           String rightPath, String description) {
         super( MANUAL_SYNCHRONIZATION, name, leftPath, rightPath, description);
+        this.rootFilteredFolders_Left = new ArrayList<>();
+        this.rootFilteredFolders_Right = new ArrayList<>();
+
     }
 
     public ManualSyncTask(ManualSyncTask source) {
         super(source);
+        this.rootFilteredFolders_Left = new ArrayList<>(source.rootFilteredFolders_Left);
+        this.rootFilteredFolders_Right = new ArrayList<>(source.rootFilteredFolders_Right);
     }
 
-    public void updateTaskModel(TaskModel task) {
+    public void updateTaskModel(ManualSyncTask task) {
         super.updateTaskModel(task);
+        this.rootFilteredFolders_Left = new ArrayList<>(task.getRootFilteredFolders_Left());
+        this.rootFilteredFolders_Right = new ArrayList<>(task.getRootFilteredFolders_Right());
     }
 
+
+    public List<String> getRootFilteredFolders_Left() {
+        return rootFilteredFolders_Left;
+    }
+
+    public List<String> getRootFilteredFolders_Right() {
+        return rootFilteredFolders_Right;
+    }
 }

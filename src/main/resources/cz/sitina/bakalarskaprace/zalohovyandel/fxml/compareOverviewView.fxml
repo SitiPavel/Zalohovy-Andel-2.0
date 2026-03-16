@@ -38,11 +38,11 @@
                <children>
                   <HBox nodeOrientation="LEFT_TO_RIGHT" prefHeight="31.0" prefWidth="258.0">
                      <children>
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="findFolderPatchBtn">
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#leftRootFilter" prefHeight="25.0" prefWidth="25.0" styleClass="FilterFolderPatchBtn">
                            <graphic>
                               <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../images/icons/cloud.png" />
+                                    <Image url="@../images/icons/rootFileFilter.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -154,11 +154,11 @@
                <children>
                   <HBox nodeOrientation="LEFT_TO_RIGHT" prefHeight="31.0" prefWidth="258.0">
                      <children>
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="findFolderPatchBtn">
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#RightRootFilter" prefHeight="25.0" prefWidth="25.0" styleClass="FilterFolderPatchBtn">
                            <graphic>
                               <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../images/icons/cloud.png" />
+                                    <Image url="@../images/icons/rootFileFilter.png" />
                                  </image>
                               </ImageView>
                            </graphic>
