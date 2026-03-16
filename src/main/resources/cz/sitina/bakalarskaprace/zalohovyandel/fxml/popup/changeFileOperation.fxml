@@ -24,7 +24,7 @@
                <children>
                   <VBox alignment="TOP_CENTER">
                      <children>
-                        <Button fx:id="btnSetOperAddLeft" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperAddLeft" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
+                        <Button fx:id="btnSetOperAddLeft" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperByBtnId" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -36,7 +36,7 @@
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="btnSetOperUpdateLeft" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperUpdateLeft" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
+                        <Button fx:id="btnSetOperUpdateLeft" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperByBtnId" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -48,7 +48,7 @@
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="btnSetOperDeleteLeft" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperDeleteLeft" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
+                        <Button fx:id="btnSetOperDeleteLeft" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperByBtnId" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -60,7 +60,7 @@
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="btnSetOperBlock" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperBlock" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
+                        <Button fx:id="btnSetOperBlock" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperByBtnId" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -92,7 +92,7 @@
                               <Image url="@../../images/icons/modified_right.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="btnSetOperDeleteBoth" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperDeleteBoth" prefHeight="35.0" prefWidth="45.0" styleClass="lightBorderButton_small">
+                        <Button fx:id="btnSetOperDeleteBoth" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperByBtnId" prefHeight="35.0" prefWidth="45.0" styleClass="lightBorderButton_small">
                            <VBox.margin>
                               <Insets bottom="5.0" />
                            </VBox.margin>
@@ -104,7 +104,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="btnSetOperEqals" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperEqals" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
+                        <Button fx:id="btnSetOperEqals" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperByBtnId" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
                            <graphic>
                               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -126,7 +126,7 @@
                         <Insets left="5.0" right="5.0" top="5.0" />
                      </padding>
                      <children>
-                        <Button fx:id="btnSetOperAddRight" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperAddRight" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
+                        <Button fx:id="btnSetOperAddRight" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperByBtnId" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -138,7 +138,7 @@
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="btnSetOperUpdateRight" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperUpdateRight" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
+                        <Button fx:id="btnSetOperUpdateRight" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperByBtnId" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -150,7 +150,7 @@
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="btnSetOperDeleteRight" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperDeleteRight" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
+                        <Button fx:id="btnSetOperDeleteRight" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperByBtnId" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -162,7 +162,7 @@
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="btnSetOperUnknow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperUnknow" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
+                        <Button fx:id="btnSetOperUnknow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOperByBtnId" prefHeight="35.0" prefWidth="35.0" styleClass="lightBorderButton_small">
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>

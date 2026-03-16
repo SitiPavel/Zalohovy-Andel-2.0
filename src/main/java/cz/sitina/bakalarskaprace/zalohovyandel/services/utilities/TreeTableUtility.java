@@ -117,12 +117,17 @@ public class TreeTableUtility {
 
     // kontroluje zda operace může být použita na řádek souboru
     public static boolean cenBeOperationUsed(CompareOperations oper, ComparedItemOperItemRowModel rowItem) {
+
+        boolean existLeft =  !rowItem.getLeftItem().getFileName().isEmpty();
+        boolean existRight =  !rowItem.getRightItem().getFileName().isEmpty();
+
         // oba dva existují    1 <-> 1
-        if (rowItem.getLeftItem() != null && rowItem.getRightItem() != null) {
+        if (existLeft && existRight) {
             return true;
         }
+
         // existuje jen v pravo  0 -> 1
-        else if (rowItem.getLeftItem() == null && rowItem.getRightItem() != null) {
+        else if (!existLeft && existRight) {
             if ( oper.equals(ADD_LEFT) ||
                     oper.equals(DELETE_RIGHT) ||
                     oper.equals(IGNORE) ||
@@ -134,7 +139,7 @@ public class TreeTableUtility {
 
         }
         // existuje jen v levo  1 <- 0
-        else if (rowItem.getLeftItem() != null && rowItem.getRightItem() == null) {
+        else if (existLeft && !existRight) {
             if (oper.equals(ADD_RIGHT) ||
                     oper.equals(DELETE_LEFT) ||
                     oper.equals(IGNORE) ||

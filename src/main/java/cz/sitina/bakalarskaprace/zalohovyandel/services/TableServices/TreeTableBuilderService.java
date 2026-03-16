@@ -98,8 +98,13 @@ public class TreeTableBuilderService {
                                 new FileItemModel()   // Pravá strana
                         );
 
-                        folderRow.getLeftItem().setFileName(iFolderInPath);
-                        folderRow.getRightItem().setFileName(iFolderInPath);
+                        if (whereIsntNullPath == 10 || whereIsntNullPath == 11) {
+                            folderRow.getLeftItem().setFileName(iFolderInPath);
+                        } else {
+                            folderRow.getRightItem().setFileName(iFolderInPath);
+                        }
+
+
 
 
                         // 3. Vytvoříme TreeItem a propojíme s rodičem

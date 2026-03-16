@@ -36,6 +36,7 @@ public class ChangeFolderOrFileOperationController {
     public void initialize() {
 
     }
+    /*
     ///  Nastavení tlačítek
     @FXML public void setOperAddLeft(ActionEvent event) {
         String buttonId = ((Node) event.getSource()).getId();
@@ -118,12 +119,13 @@ public class ChangeFolderOrFileOperationController {
         }
         close(event);
     }
-
+*/
 
     // univerzální pro všechny tlačítka
+    @FXML
     public void setOperByBtnId(ActionEvent event) {
         String buttonId = ((Node) event.getSource()).getId();
-        CompareOperations oper =  getOperation(buttonId, isFolder);
+        CompareOperations oper =  getOperationToSett(buttonId, isFolder);
 
         if (oper != null) {
 
@@ -164,7 +166,7 @@ public class ChangeFolderOrFileOperationController {
     }
 
     // podle id tlačítka nám tjistí kterou operaci chce uživatel nastavit
-    private CompareOperations getOperation(String btnId, boolean isFolder) {
+    private CompareOperations getOperationToSett(String btnId, boolean isFolder) {
         CompareOperations operd;
         // rozlišujeme abychom našli operaci ke složce nebo k souboru (oba mají jiný switch)
         // a zkontrolovali zda operace může být přidělena
@@ -172,7 +174,7 @@ public class ChangeFolderOrFileOperationController {
             operd = getOperationByBtnID_Folder(btnId);
             // převedeme jen pro kontrolu smysluplnosti operace
             CompareOperations basicOperation = TreeTableUtility.getBaseOperation(operd);
-            if (TreeTableUtility.cenBeOperationUsed(operd,treeItem.getValue()) && operd != null) {
+            if (TreeTableUtility.cenBeOperationUsed(basicOperation,treeItem.getValue())) {
                 return operd;
             } else {
                 return null;
@@ -188,10 +190,6 @@ public class ChangeFolderOrFileOperationController {
 
         }
     }
-
-
-
-
 
 
 
@@ -237,7 +235,11 @@ public class ChangeFolderOrFileOperationController {
         this.treeItem = treeItem;
         // nastavení aktivní operace do GUI
         Button activeButton = getActiveButton(rowItem.getOperation());
-        activeButton.getStyleClass().add("modificator_save");
+        if (treeItem.getValue().getOperation() != FOLDER &&
+                treeItem.getValue().getOperation() !=FOLDER_UNEVEN ) {
+            activeButton.getStyleClass().add("modificator_save");
+        }
+
     }
 
     private Button getActiveButton(CompareOperations oper)  {
