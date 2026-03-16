@@ -21,6 +21,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableF
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableGuiModify;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.TreeTableUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -78,7 +79,6 @@ public class ManualSyncController implements TaskController {
 
     // definované důležité proměnné
     private List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
-    private final TreeItem<ComparedItemOperItemRowModel> root = new TreeItem<>();
     private TreeItem<ComparedItemOperItemRowModel> masterRoot;
 
     private final ManualCompareSettingsController compareSetting = new ManualCompareSettingsController();
@@ -162,7 +162,6 @@ public class ManualSyncController implements TaskController {
 
     @FXML private ImageView imgPieChar_Right;
     @FXML private Label lbPieChar_Right;
-
 
 
 
@@ -260,7 +259,8 @@ public class ManualSyncController implements TaskController {
                     ComparedItemOperItemRowModel rowItem = cell.getTreeTableRow().getItem();
 
                     if (rowItem != null) {
-                        popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem());
+                        popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(),
+                                ()-> readAndSetStatistic());
                     }
 
                     // Zastavení dalšího probublávání události
@@ -308,6 +308,7 @@ public class ManualSyncController implements TaskController {
             });
 
 
+
         filesTreeTable.setShowRoot(false);
 
         // nastavení generování Obarvených řádků podle operace
@@ -316,6 +317,12 @@ public class ManualSyncController implements TaskController {
         setIsDirtyFlagListener();
     }
 
+    public void readAndSetStatistic() {
+        ComparedDataAndStatisticsForCompereOverview statistics = new ComparedDataAndStatisticsForCompereOverview();
+        TreeTableUtility.readStatisticForOperationBackupSize(masterRoot, statistics);
+        loadCompateDataAfterChange(statistics ,tfLeftFolderPath.getText(), tfRightFolderPath.getText());
+
+    }
 
     public boolean isUnsavedChanges() {
         return isDirtyFlag.get();
@@ -326,8 +333,9 @@ public class ManualSyncController implements TaskController {
         isDirtyFlag.set(false);
     }
 
-    //===================
-    // Metody reagující na uživatele
+
+    ///===================
+    /// Metody reagující na uživatele
 
     @FXML
     public void choseLeftFolder(ActionEvent event) {
@@ -514,54 +522,7 @@ public class ManualSyncController implements TaskController {
         lbRightFreeSpace.setText(utility.getFormatedSize(rightFolderStatistic.getFreeSpace()));
         pbRightUsedSpace.setProgress((double) rightFolderStatistic.getUsedSpace() /rightFolderStatistic.getTotalSpace());
 
-        //
-
-
-        // nastavení textu do labels
-        lbLeftAddCount.setText(String.valueOf(statisticsAndComparedData.getLeftAddCount()));
-        lbLeftUpdateCount.setText(String.valueOf(statisticsAndComparedData.getLeftUpdateCount()));
-        lbLeftDeleteCount.setText(String.valueOf(statisticsAndComparedData.getLeftDeleteCount()));
-        lbIgnoreCount.setText(String.valueOf(statisticsAndComparedData.getIgnoreCount()));
-        lbEqualsCount.setText(String.valueOf(statisticsAndComparedData.getEqualsCount()));
-        lbUnknownCount.setText(String.valueOf(statisticsAndComparedData.getUnknownCount()));
-        lbRightDeleteCount.setText(String.valueOf(statisticsAndComparedData.getRightDeleteCount()));
-        lbRightUpdateCount.setText(String.valueOf(statisticsAndComparedData.getRightUpdateCount()));
-        lbRightAddCount.setText(String.valueOf(statisticsAndComparedData.getRightAddCount()));
-
-        /// zobrazení plánované
-        // nastavení levého koláčového grafu
-        if (utility.isSazeSmalerThenFreeSpace(
-                                                leftFolder,
-                                                statisticsAndComparedData.getDataTransportSize_left())) {
-            imgPieChar_Left.setImage(imageManager.getPieChartYellow_ToLeft());
-            isLeftOperationSizeSmalerThenLeftFolder =true;
-        } else {
-            imgPieChar_Left.setImage(imageManager.getPieChartRed_ToLeft());
-            isLeftOperationSizeSmalerThenLeftFolder = false;
-        }
-
-        if (utility.isSazeSmalerThenFreeSpace(
-                                                rightFolder,
-                                                statisticsAndComparedData.getDataTransportSize_right())) {
-            imgPieChar_Right.setImage(imageManager.getPieChartYellow_ToRight()) ;
-            isRightOperationSizeSmalerThenRightFolder =true;
-        } else {
-            imgPieChar_Right.setImage(imageManager.getPieChartRed_ToRight());
-            isRightOperationSizeSmalerThenRightFolder = false;
-        }
-
-        // nastavení textů
-        lbPieChar_Left.setText(String.valueOf(
-                utility.getFormatedSize(
-                        statisticsAndComparedData.getDataTransportSize_left()
-                )
-        ));
-        lbPieChar_Right.setText(String.valueOf(
-                utility.getFormatedSize(
-                        statisticsAndComparedData.getDataTransportSize_right()
-                )
-        ));
-
+        loadCompateDataAfterChange(data, leftFolder, rightFolder);
 
         // strom
         resultComparedList = statisticsAndComparedData.getComparedFilesList();
@@ -582,6 +543,53 @@ public class ManualSyncController implements TaskController {
 
         applyCurrentFiltersToTable();
         setupDirtyTrackers();
+
+    }
+    public void loadCompateDataAfterChange(ComparedDataAndStatisticsForCompereOverview statisticsAndComparedData,
+                                           String leftFolder, String rightFolder) {
+
+        // nastavení textu do labels
+        lbLeftAddCount.setText(String.valueOf(statisticsAndComparedData.getLeftAddCount()));
+        lbLeftUpdateCount.setText(String.valueOf(statisticsAndComparedData.getLeftUpdateCount()));
+        lbLeftDeleteCount.setText(String.valueOf(statisticsAndComparedData.getLeftDeleteCount()));
+        lbIgnoreCount.setText(String.valueOf(statisticsAndComparedData.getIgnoreCount()));
+        lbEqualsCount.setText(String.valueOf(statisticsAndComparedData.getEqualsCount()));
+        lbUnknownCount.setText(String.valueOf(statisticsAndComparedData.getUnknownCount()));
+        lbRightDeleteCount.setText(String.valueOf(statisticsAndComparedData.getRightDeleteCount()));
+        lbRightUpdateCount.setText(String.valueOf(statisticsAndComparedData.getRightUpdateCount()));
+        lbRightAddCount.setText(String.valueOf(statisticsAndComparedData.getRightAddCount()));
+
+        /// zobrazení plánované
+        // nastavení levého koláčového grafu
+        if (utility.isSazeSmalerThenFreeSpace(  leftFolder,
+                statisticsAndComparedData.getDataTransportSize_left())) {
+            imgPieChar_Left.setImage(imageManager.getPieChartYellow_ToLeft());
+            isLeftOperationSizeSmalerThenLeftFolder =true;
+        } else {
+            imgPieChar_Left.setImage(imageManager.getPieChartRed_ToLeft());
+            isLeftOperationSizeSmalerThenLeftFolder = false;
+        }
+
+        if (utility.isSazeSmalerThenFreeSpace(  rightFolder,
+                statisticsAndComparedData.getDataTransportSize_right())) {
+            imgPieChar_Right.setImage(imageManager.getPieChartYellow_ToRight()) ;
+            isRightOperationSizeSmalerThenRightFolder =true;
+        } else {
+            imgPieChar_Right.setImage(imageManager.getPieChartRed_ToRight());
+            isRightOperationSizeSmalerThenRightFolder = false;
+        }
+
+        // nastavení textů do koláču
+        lbPieChar_Left.setText(String.valueOf(
+                utility.getFormatedSize(
+                        statisticsAndComparedData.getDataTransportSize_left()
+                )
+        ));
+        lbPieChar_Right.setText(String.valueOf(
+                utility.getFormatedSize(
+                        statisticsAndComparedData.getDataTransportSize_right()
+                )
+        ));
 
     }
 

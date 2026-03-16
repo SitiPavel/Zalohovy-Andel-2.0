@@ -98,9 +98,12 @@ public class TreeTableBuilderService {
                                 new FileItemModel()   // Pravá strana
                         );
 
-                        if (whereIsntNullPath == 10 || whereIsntNullPath == 11) {
+                        if (whereIsntNullPath == 01 ) {
                             folderRow.getLeftItem().setFileName(iFolderInPath);
+                        } else if (whereIsntNullPath == 10) {
+                            folderRow.getRightItem().setFileName(iFolderInPath);
                         } else {
+                            folderRow.getLeftItem().setFileName(iFolderInPath);
                             folderRow.getRightItem().setFileName(iFolderInPath);
                         }
 

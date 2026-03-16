@@ -1,7 +1,10 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.popupControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFilterService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFolderOperationMakerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.TreeTableUtility;
 import javafx.event.ActionEvent;
@@ -14,6 +17,9 @@ import javafx.stage.Stage;
 import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations.*;
 
 public class ChangeFolderOrFileOperationController {
+    // Proměnná pro uložení příkazu k přepořítání statistik z venčí
+    private Runnable onUpdateSuccess;
+
 
     private Boolean isFolder= false;
     private ComparedItemOperItemRowModel rowItem;
@@ -36,90 +42,10 @@ public class ChangeFolderOrFileOperationController {
     public void initialize() {
 
     }
-    /*
-    ///  Nastavení tlačítek
-    @FXML public void setOperAddLeft(ActionEvent event) {
-        String buttonId = ((Node) event.getSource()).getId();
-        if (isFolder) {
-            rowItem.setOperation(FOLDER_ADD_LEFT);
-        } else {
-            rowItem.setOperation(ADD_LEFT);
-        }
-        close(event);
+    /// callBack
+    public void setOnUpdateSuccess(Runnable onUpdateSuccess) {
+        this.onUpdateSuccess = onUpdateSuccess;
     }
-    @FXML public void setOperAddRight(ActionEvent event) {
-        if (isFolder) {
-            rowItem.setOperation(FOLDER_ADD_RIGHT);
-        } else {
-            rowItem.setOperation(ADD_RIGHT);
-        }
-        close(event);
-    }
-    @FXML public void setOperUpdateLeft(ActionEvent event) {
-        if (isFolder) {
-            rowItem.setOperation(FOLDER_UPDATE_LEFT);
-        } else {
-            rowItem.setOperation(UPDATE_LEFT);
-        }
-        close(event);
-    }
-    @FXML public void setOperUpdateRight(ActionEvent event) {
-        if (isFolder) {
-            rowItem.setOperation(FOLDER_UPDATE_RIGHT);
-        } else {
-            rowItem.setOperation(UPDATE_RIGHT);
-        }
-        close(event);
-    }
-    @FXML public void setOperDeleteLeft(ActionEvent event) {
-        if (isFolder) {
-            rowItem.setOperation(FOLDER_DELETE_LEFT);
-        } else {
-            rowItem.setOperation(DELETE_LEFT);
-        }
-        close(event);
-    }
-    @FXML public void setOperDeleteBoth(ActionEvent event) {
-        if (isFolder) {
-            rowItem.setOperation(FOLDER_DELETE_BOTH);
-        } else {
-            rowItem.setOperation(DELETE_BOTH);
-        }
-        close(event);
-    }
-    @FXML public void setOperDeleteRight(ActionEvent event) {
-        if (isFolder) {
-            rowItem.setOperation(FOLDER_DELETE_RIGHT);
-        } else {
-            rowItem.setOperation(DELETE_RIGHT);
-        }
-        close(event);
-    }
-    @FXML public void setOperBlock(ActionEvent event) {
-        if (isFolder) {
-            rowItem.setOperation(FOLDER_IGNORE);
-        } else {
-            rowItem.setOperation(IGNORE);
-        }
-        close(event);
-    }
-    @FXML public void setOperEqals(ActionEvent event) {
-        if (isFolder) {
-            rowItem.setOperation(FOLDER_EQUALS);
-        } else {
-            rowItem.setOperation(EQUALS);
-        }
-        close(event);
-    }
-    @FXML public void setOperUnknow(ActionEvent event) {
-        if (isFolder) {
-            rowItem.setOperation(FOLDER_UNKNOWN);
-        } else {
-            rowItem.setOperation(UNKNOWN);
-        }
-        close(event);
-    }
-*/
 
     // univerzální pro všechny tlačítka
     @FXML
@@ -135,15 +61,22 @@ public class ChangeFolderOrFileOperationController {
                 } // true když se dokáže na všechny děti (soubory/složky) nastavit vybraná operace
                 else if (setAllChildrenOfFolder(treeItem, oper)) {
                     // má novou operaci proto je nutno nastavit všechny předky
-                    TreeTableUtility.updateOperationForParentFolders(treeItem);
+                    TreeTableFolderOperationMakerService.updateOperationForParentFolders(treeItem);
                 } else {
                     ErrorUtility.showError_pointlessCompareOperation("Složka obsahuje soubor, " +
                             "na který nelze aplikovat tuto operaci! ");
                 }
+
+
             } else {
                 rowItem.setOperation(oper);
-                TreeTableUtility.updateOperationForParentFolders(treeItem);
+                TreeTableFolderOperationMakerService.updateOperationForParentFolders(treeItem);
             }
+            // callback do kontroleru pro obnovu statistik
+            if (onUpdateSuccess != null) {
+                onUpdateSuccess.run();
+            }
+
         } else {
             ErrorUtility.showError_pointlessCompareOperation("Zadaná operace nemůže být použita, " +
                 "jestliže je na nějaké straně prázdný řádek. " +
@@ -152,16 +85,18 @@ public class ChangeFolderOrFileOperationController {
         close(event);
     }
 
+
+
     private boolean setAllChildrenOfFolder(TreeItem<ComparedItemOperItemRowModel> currentItem,
                                                  CompareOperations operationToSett) {
 
         CompareOperations basicOper = TreeTableUtility.getBaseOperation(operationToSett);
 
-        if (!TreeTableUtility.validateOperationForChildrenRecursively(currentItem, basicOper)) {
+        if (!TreeTableFolderOperationMakerService.validateOperationForChildrenRecursively(currentItem, basicOper)) {
             return false;
         }
 
-        TreeTableUtility.applyOperationOnChyldrensRecursively(currentItem, basicOper);
+        TreeTableFolderOperationMakerService.applyOperationOnChyldrensRecursively(currentItem, basicOper);
         return true;
     }
 

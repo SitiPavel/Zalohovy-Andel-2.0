@@ -7,6 +7,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.TreeTableUtility;
 
 
 import java.util.*;
@@ -45,7 +46,7 @@ public class ComparisonService {
         List<String> sortedKeys =  new ArrayList<>(allKeys);
         Collections.sort(sortedKeys);
 
-        CompareOperations operations;
+        CompareOperations operation;
 
         // proměná pro počítadlo
         long totalFiles = allKeys.size();
@@ -78,58 +79,33 @@ public class ComparisonService {
             if (taskModel instanceof ManualSyncTask MSC) {
                 switch (MSC.getCompareStrategy()) {
                     case BIDIRECTIONAL_SYNC ->
-                        operations = biDirectionalStrategy.compare(leftItem,rightItem);
+                        operation = biDirectionalStrategy.compare(leftItem,rightItem);
                     case BACKUP_TO_RIGHT ->
-                        operations = oneWayToRightStrategy.compare(leftItem,rightItem);
+                        operation = oneWayToRightStrategy.compare(leftItem,rightItem);
                     case BACKUP_TO_LEFT ->
-                        operations = oneWayToLeftStrategy.compare(leftItem, rightItem);
+                        operation = oneWayToLeftStrategy.compare(leftItem, rightItem);
                     case MIRRORING_to_RIGHT ->
-                        operations = mirroringToRightStrategy.compare(leftItem,rightItem);
+                        operation = mirroringToRightStrategy.compare(leftItem,rightItem);
                     case MIRRORING_TO_lEFT ->
-                        operations = mirroringToLeftStrategy.compare(leftItem, rightItem);
-                    case null, default -> operations = UNKNOWN;
+                        operation = mirroringToLeftStrategy.compare(leftItem, rightItem);
+                    case null, default -> operation = UNKNOWN;
                 }
             } else {
-                operations = UNKNOWN;
+                operation = UNKNOWN;
             }
             /* ✪ */
 
             // zaznamenává počet jednotlivích operací pro statistiky do GUI
-            switch (operations) {
-                case EQUALS -> dataModel.attributeEqualsCount(1);
-                case IGNORE -> dataModel.attributeIgnoreCount(1);
-                case DELETE_LEFT -> dataModel.attributeLeftDeleteCount(1);
-                case DELETE_RIGHT -> dataModel.attributeRightDeleteCount(1);
-                case DELETE_BOTH -> {
-                    dataModel.attributeLeftDeleteCount(1);
-                    dataModel.attributeRightDeleteCount(1);
-                }
-                case UPDATE_LEFT -> {
-                    dataModel.attributeLeftUpdateCount(1);
-                    dataModel.attributeDataTransportSize_left(rightItem.getFileSize());
-                }
-                case UPDATE_RIGHT -> {
-                    dataModel.attributeRightUpdateCount(1);
-                    dataModel.attributeDataTransportSize_right(leftItem.getFileSize());
-                }
-                case ADD_LEFT -> {
-                    dataModel.attributeLeftAddCount(1);
-                    dataModel.attributeDataTransportSize_left(rightItem.getFileSize());
-                }
-                case ADD_RIGHT -> {
-                    dataModel.attributeRightAddCount(1);
-                    dataModel.attributeDataTransportSize_right(leftItem.getFileSize());
-                }
-                case UNKNOWN -> dataModel.attributeUnknownCount(1);
-            }
+            TreeTableUtility.countFiltersAndSizePie( new ComparedItemOperItemRowModel(leftItem,operation,rightItem)
+                                                    , dataModel);
 
             // podle operace a kde je null vytvoříme řádek
             if (leftItem == null && rightItem != null) {
-                rowModel = new ComparedItemOperItemRowModel(new FileItemModel(), operations, rightItem);
+                rowModel = new ComparedItemOperItemRowModel(new FileItemModel(), operation, rightItem);
             } else if (leftItem != null && rightItem == null) {
-                rowModel = new ComparedItemOperItemRowModel(leftItem, operations, new FileItemModel());
+                rowModel = new ComparedItemOperItemRowModel(leftItem, operation, new FileItemModel());
             } else if (leftItem != null) {
-                rowModel = new ComparedItemOperItemRowModel(leftItem, operations, rightItem);
+                rowModel = new ComparedItemOperItemRowModel(leftItem, operation, rightItem);
             }
 
             resultComparedList.add(rowModel);

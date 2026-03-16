@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class PopupDialogService {
 
-    public void showOperationPopupWindow(TreeItem<ComparedItemOperItemRowModel> treeItem) {
+    public void showOperationPopupWindow(TreeItem<ComparedItemOperItemRowModel> treeItem, Runnable onSuccess) {
         String path = "/cz/sitina/bakalarskaprace/zalohovyandel/fxml/popup/";
         String fxmlPath;
         boolean isFolder = false;
@@ -29,10 +29,10 @@ public class PopupDialogService {
             fxmlPath = path + "changeFileOperation.fxml";
         }
 
-        openDialog(fxmlPath, treeItem, isFolder);
+        openDialog(fxmlPath, treeItem, isFolder, onSuccess);
     }
 
-    private void openDialog(String fxmlPath, TreeItem<ComparedItemOperItemRowModel> treeItem, boolean isFolder) {
+    private void openDialog(String fxmlPath, TreeItem<ComparedItemOperItemRowModel> treeItem, boolean isFolder, Runnable onSuccess) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
@@ -40,6 +40,7 @@ public class PopupDialogService {
             ChangeFolderOrFileOperationController controller = loader.getController();
             controller.setFolder(isFolder);
             controller.setComparedItemOperItemRowModel(treeItem);
+            controller.setOnUpdateSuccess(onSuccess);
 
 
             Stage stage = new Stage();
