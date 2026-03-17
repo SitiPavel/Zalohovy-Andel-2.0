@@ -94,7 +94,7 @@ public class FileScannerService {
                         String fileName = dir.getFileName().toString().toLowerCase();
 
                         // pokud název v malích písmenech je na seznamu blokovaných složek
-                        if (skippedFolders.contains(fileName) || skippedFiles.contains(fileName) || ignoredPaths.contains(dir)) {
+                        if (skippedFolders.contains(fileName) || ignoredPaths.contains(dir)) {
                             return FileVisitResult.SKIP_SUBTREE;
                         }
                     }
@@ -175,8 +175,10 @@ public class FileScannerService {
         try (Stream<Path> paths = Files.list(rootPath)) {
             paths.filter(Files::isDirectory)
                     .forEach(path -> {
-                        String fullPath = path.toAbsolutePath().toString();
-                        result.add(fullPath);
+                        if (!skippedFolders.contains(path.getFileName().toString().toLowerCase())) {
+                            String fullPath = path.toAbsolutePath().toString();
+                            result.add(fullPath);
+                        }
                     });
 
 

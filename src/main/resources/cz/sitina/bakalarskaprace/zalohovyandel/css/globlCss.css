@@ -139,6 +139,11 @@
     -fx-background-color: -fx-color-mark5-50;
 }
 
+.backgroundModify_transparent {
+    -fx-background-color: -fx-color-Transparent;
+    -fx-background: -fx-color-Transparent;
+}
+
 
 /*  ===========================================
             ToolBar
