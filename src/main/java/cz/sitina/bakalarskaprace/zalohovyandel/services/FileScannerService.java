@@ -64,7 +64,7 @@ public class FileScannerService {
             ));
 
 
-    public Map<String, FileItemModel> scanFolder(String rootDirectory) {
+    public Map<String, FileItemModel> scanFolder(String rootDirectory, List<String> filtredFiles) {
 
 
         HashMap<String, FileItemModel> filesMap = new HashMap<>();
@@ -77,6 +77,13 @@ public class FileScannerService {
                     "Cesta: " + rootDirectory);
         }
 
+        Set<Path> ignoredPaths = new HashSet<>();
+        if (!filtredFiles.isEmpty() ) {
+            for (String folder : filtredFiles) {
+                ignoredPaths.add(Paths.get(folder));
+            }
+        }
+
 
         try {
             Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
@@ -87,7 +94,7 @@ public class FileScannerService {
                         String fileName = dir.getFileName().toString().toLowerCase();
 
                         // pokud název v malích písmenech je na seznamu blokovaných složek
-                        if (skippedFolders.contains(fileName)) {
+                        if (skippedFolders.contains(fileName) || skippedFiles.contains(fileName) || ignoredPaths.contains(dir)) {
                             return FileVisitResult.SKIP_SUBTREE;
                         }
                     }
