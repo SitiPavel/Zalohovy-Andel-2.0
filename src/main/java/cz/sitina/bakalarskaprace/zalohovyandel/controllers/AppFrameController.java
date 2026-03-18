@@ -1,6 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
-import cz.sitina.bakalarskaprace.zalohovyandel.models.TaskRepository;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;

@@ -1,11 +1,8 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.models;
+package cz.sitina.bakalarskaprace.zalohovyandel.models.repositories;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.time.format.TextStyle;
-import java.util.List;
 
 public class TaskRepository {
 

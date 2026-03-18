@@ -2,12 +2,10 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BlockedFileTreeRow;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -22,8 +20,8 @@ public class TreeTableBuilderService {
 
 
 
-    public void setTreeTable(TreeItem<ComparedItemOperItemRowModel> root,
-                             List<ComparedItemOperItemRowModel> comparedList
+    public void buildTreeTableItemOperItem(TreeItem<ComparedItemOperItemRowModel> root,
+                                           List<ComparedItemOperItemRowModel> comparedList
                             ){
 
         // načtení do TreeTableView
@@ -133,10 +131,22 @@ public class TreeTableBuilderService {
 
     }
 
+    public void buildTreeTableBlockedFiles(TreeItem<BlockedFileTreeRow> root, List<String> blockedFilesList) {
+        if (root == null || blockedFilesList == null || blockedFilesList.isEmpty()) {
+            System.out.println("buildTreeTableBlockedFiles: root nebo blockedFilesList je null, popřípadě je " +
+                    "blockedFilesList prázdný");
+            return;
+        }
+
+
+    }
+
+
+
 
 
     //*
-    // důležité protože po sestavení stromu | řazení během sestavování stromu by seřazoval algoritmus celí strom při
+    // důležité po sestavení stromu | řazení během sestavování stromu by seřazoval algoritmus celí strom při
     // každém novém prvku
     private void sortChildrenRecursively(TreeItem<ComparedItemOperItemRowModel> item) {
 

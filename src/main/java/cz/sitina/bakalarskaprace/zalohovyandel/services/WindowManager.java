@@ -2,7 +2,9 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -87,5 +89,11 @@ public class WindowManager {
         newStage.show();
 
         return newStage;
+    }
+
+    public static void findByActionAndClose(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 }

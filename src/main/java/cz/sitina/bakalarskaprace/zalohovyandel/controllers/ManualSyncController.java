@@ -6,7 +6,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.Rec
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.RootFolderFilterController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.TaskRepository;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilters_TaskData;
@@ -588,7 +588,7 @@ public class ManualSyncController implements TaskController {
 
 
         //  vložíme esitující objekty a metoda nám z nich do root nastaví řádky
-        treeTableBuilder.setTreeTable(masterRoot, resultComparedList);
+        treeTableBuilder.buildTreeTableItemOperItem(masterRoot, resultComparedList);
 
         // nastavíme operace pro složky
         TreeTableFolderOperationMakerService.getFolderOperation(masterRoot);

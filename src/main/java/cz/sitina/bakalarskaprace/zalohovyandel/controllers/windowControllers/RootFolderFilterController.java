@@ -1,6 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -52,9 +53,7 @@ public class RootFolderFilterController {
             isChanged.run();
         }
 
-        Node node = (Node) event.getSource();
-        Stage stage = (Stage) node.getScene().getWindow();
-        stage.close();
+        WindowManager.findByActionAndClose(event);
     }
 
 

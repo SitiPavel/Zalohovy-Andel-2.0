@@ -1,6 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
-import cz.sitina.bakalarskaprace.zalohovyandel.models.TaskRepository;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.AutoBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
@@ -8,7 +8,6 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
@@ -16,9 +15,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
-import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes.AUTO_BACKUP;
-import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes.MANUAL_SYNCHRONIZATION;
 
 public class TaskOverviewController {
 

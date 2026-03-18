@@ -1,7 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.AppFrameController;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.TaskRepository;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;

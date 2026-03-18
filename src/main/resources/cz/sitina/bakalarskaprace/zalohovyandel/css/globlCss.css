@@ -77,6 +77,13 @@
     -fx-font-weight: bold;
     -fx-text-fill: -fx-color-primary1;
 }
+
+.TextModify_RedColor {
+    -fx-text-fill: -fx-color-mark2;
+}
+
+
+
 /*  ===========================================
             Hlavní obsah
     =========================================== */
@@ -99,6 +106,10 @@
 
 .borderModify_Only1100_Radius10{
     -fx-border-radius: 10 10 0 0;
+}
+
+.borderModify_Only0011_Radius10{
+    -fx-border-radius: 0 0 10 10;
 }
 
 

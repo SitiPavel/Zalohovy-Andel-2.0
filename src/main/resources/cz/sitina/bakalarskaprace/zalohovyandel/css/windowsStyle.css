@@ -210,3 +210,82 @@
 }
 
 
+
+/* ----------------------------
+        TreeeTable
+------------------------------*/
+/* 1. Hlavní kontejner tabulky */
+.fileItemTableWindowStyl1 {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-border-color: -fx-color-mark5;
+    -fx-border-style: solid;
+    -fx-border-width: 3 2 2 2;
+}
+
+/* Pokud tabulka neobsahuje data */
+.fileItemTableWindowStyl1 .placeholder .label {
+    -fx-text-fill: -fx-color-textDark;
+}
+
+/* 2. Hlavička - pozadí za textem a tlačítky */
+.fileItemTableWindowStyl1 .column-header-background {
+    -fx-background-color: -fx-color-primary2;
+    -fx-max-height: 30px;
+    -fx-min-height: 30px;
+    -fx-pref-height: 30px;
+}
+
+/* Hlavička - samotné buňky sloupců */
+.fileItemTableWindowStyl1 .column-header {
+    -fx-background-color: -fx-color-primary2;
+}
+
+/* Hlavička - text v záhlaví */
+.fileItemTableWindowStyl1 .column-header .label {
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-color-textLight;
+}
+
+/* Prázdné místo, pokud sloupce nevyplní celou šířku tabulky */
+.fileItemTableWindowStyl1 .filler {
+    -fx-background-color: -fx-color-primary1;
+}
+
+/* 3. Řádky */
+.fileItemTableWindowStyl1 .tree-table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: solid;
+    -fx-border-color: -fx-color-primary2;
+    -fx-cell-size: 22px;
+}
+
+/* Samotné buňky v řádku a jejich text */
+.fileItemTableWindowStyl1 .tree-table-cell {
+    -fx-text-fill: -fx-color-textDark;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent; /* Skryje defaultní ohraničení buněk */
+}
+
+
+/* =========================================
+   5. VYBRANÝ ŘÁDEK (SELECTED STATE)
+========================================== */
+
+/* Pozadí vybraného řádku */
+.fileItemTableWindowStyl1 .tree-table-row-cell:selected {
+    -fx-background-color: -fx-color-primary2;
+    -fx-border-color: -fx-color-textLight;
+    -fx-border-width: 1 0 1 0;
+    -fx-border-style: solid;
+    /* Následující řádek zruší defaultní modrý overlay v JavaFX */
+    -fx-table-cell-border-color: transparent;
+}
+
+/* Text ve vybraném řádku (Píše se na úroveň buněk uvnitř vybraného řádku) */
+.fileItemTableWindowStyl1 .tree-table-row-cell:selected .tree-table-cell {
+    -fx-text-fill: -fx-color-primary1;
+}
+
+

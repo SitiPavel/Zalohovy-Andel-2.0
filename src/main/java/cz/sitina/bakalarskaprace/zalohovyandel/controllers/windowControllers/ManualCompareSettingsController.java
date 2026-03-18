@@ -82,9 +82,7 @@ public class ManualCompareSettingsController {
             }
 
             //zavření okna
-            Node source = (Node) event.getSource();
-            Stage stage = (Stage) source.getScene().getWindow();
-            stage.close();
+            WindowManager.findByActionAndClose(event);
         }
 
     }
