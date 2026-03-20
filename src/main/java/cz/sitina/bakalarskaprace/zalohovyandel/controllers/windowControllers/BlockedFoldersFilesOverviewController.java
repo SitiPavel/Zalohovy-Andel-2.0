@@ -17,8 +17,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class BlockedFoldersFilesOverviewController {
 
@@ -32,7 +31,7 @@ public class BlockedFoldersFilesOverviewController {
 
     private TaskModel taskModel;
     private TreeItem<BlockedFileTreeRow> rootItem;
-    private List<String> editableBlockList;
+    private Set<String> editableBlockList;
 
     private BlockedTreeTableGuiService blockedTreeGui = new BlockedTreeTableGuiService();
     private TreeTableGuiModify treeGui = new TreeTableGuiModify();
@@ -95,7 +94,6 @@ public class BlockedFoldersFilesOverviewController {
                     Button button = new Button();
 
                     {
-
                         blockedTreeGui.getButtonDeleteListItem(button, rootItem,
                             taskModel.getLeftPath(), taskModel.getRightPath(),
                             this,
@@ -232,7 +230,7 @@ public class BlockedFoldersFilesOverviewController {
 
     public void setTaskModel(TaskModel taskModel) {
         this.taskModel = taskModel;
-        this.editableBlockList = new ArrayList<>(taskModel.getBlockList());
+        this.editableBlockList = new LinkedHashSet<>(taskModel.getBlockList());
 
 
         rootItem = new TreeItem<>(new BlockedFileTreeRow(taskModel.getLeftPath(), "root", true, true, true));

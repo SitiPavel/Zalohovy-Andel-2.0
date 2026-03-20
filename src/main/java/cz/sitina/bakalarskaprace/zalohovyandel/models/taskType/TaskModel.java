@@ -8,7 +8,9 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -28,7 +30,7 @@ public abstract class TaskModel {
     private String description;
     private String status;
     private LocalDate creationDate;
-    private List<String> blockList = new ArrayList<>();
+    private Set<String> blockList = new LinkedHashSet<>();
     private GuiOperationFilters_TaskData guiOperationFilters;
 
 
@@ -89,7 +91,7 @@ public abstract class TaskModel {
         this.compareStrategy = source.compareStrategy;
 
         // složité datové typy, proto vytvoříme nové, kdyby nebylo new tak by se sdílel jen odkaz a né objekt
-        this.blockList = new ArrayList<>(source.blockList);
+        this.blockList = new LinkedHashSet<>(source.blockList);
         this.guiOperationFilters = new GuiOperationFilters_TaskData(source.guiOperationFilters);
 
     }
@@ -102,7 +104,7 @@ public abstract class TaskModel {
         this.isContentHash = task.isContentHash;
         this.compareStrategy = task.compareStrategy;
 
-        this.blockList = new ArrayList<>(task.blockList);
+        this.blockList = new LinkedHashSet<>(task.blockList);
         this.guiOperationFilters = new GuiOperationFilters_TaskData(task.guiOperationFilters);
     }
 
@@ -128,7 +130,7 @@ public abstract class TaskModel {
     public LocalDate getCreationDate() {
         return creationDate;
     }
-    public List<String> getBlockList() {
+    public Set<String> getBlockList() {
         return blockList;
     }
     public String getStatus() {
@@ -157,7 +159,7 @@ public abstract class TaskModel {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setBlockList(List<String> blockList) {
+    public void setBlockList(Set<String> blockList) {
         this.blockList = blockList;
     }
     public void setStatus(String status) {

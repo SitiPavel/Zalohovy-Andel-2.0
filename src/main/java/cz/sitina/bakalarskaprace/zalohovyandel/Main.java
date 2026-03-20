@@ -26,9 +26,10 @@ public class Main extends Application {
 
         TaskRepository taskRepository = new TaskRepository();
 
-        //createFirstData(taskRepository);
 
-        // načítá data při zapnutí aplikace
+
+        /// načítá data při zapnutí aplikace
+        //createFirstData(taskRepository); //Pro vytvoření dat
        /**/
        for (TaskModel task: jsonManager.loadAllTasks()){
 

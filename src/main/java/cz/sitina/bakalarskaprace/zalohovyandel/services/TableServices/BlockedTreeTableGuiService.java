@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 
 import javax.sound.sampled.Line;
 import java.util.List;
+import java.util.Set;
 
 public class BlockedTreeTableGuiService {
 
@@ -41,7 +42,7 @@ public class BlockedTreeTableGuiService {
                                         TreeItem<BlockedFileTreeRow> rootItem,
                                         String leftRootPath, String rightRootPath,
                                         TreeTableCell<BlockedFileTreeRow, String> cell,
-                                        List<String> blockList) {
+                                        Set<String> blockList) {
 
         {
             button.setText("✘");

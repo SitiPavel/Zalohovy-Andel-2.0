@@ -6,13 +6,11 @@ import javafx.scene.control.TreeItem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class BlockedTreeTableService {
 
-    public static void  buildTreeTableBlockedFiles(TreeItem<BlockedFileTreeRow> root, List<String> blockedFilesList,
+    public static void  buildTreeTableBlockedFiles(TreeItem<BlockedFileTreeRow> root, Set<String> blockedFilesList,
                                            String leftRootString, String rightRootString) {
         if (root == null || blockedFilesList == null || blockedFilesList.isEmpty()) {
             System.out.println("buildTreeTableBlockedFiles: root nebo blockedFilesList je null, popřípadě je " +
@@ -103,11 +101,11 @@ public class BlockedTreeTableService {
 
     // metoda nám pročistí duplicity a zbytečné itemy v listu, když se nově vloží složka /dokumenty tak
     // všechny potomci (/dokumenty/skola) se z listu odstraní a automaticky budou všechny zablokovány
-    public static void cleanRedundantPaths(List<String> blockPaths) {
+    public static void cleanRedundantPaths(Set<String> blockPaths) {
         if (blockPaths == null || blockPaths.isEmpty()) {
             return;
         }
-        List<String> toRemove = new ArrayList<>();
+        Set<String> toRemove = new LinkedHashSet<>();
 
         // aktuální cesta kterou porovnáváme
         for (String currentPathString : blockPaths) {
@@ -129,7 +127,10 @@ public class BlockedTreeTableService {
     }
 
     // odstraní ze String listu vše co začíná @deletedPath
-    public static void removeItemAndChildren(String deletedPath, List<String> blockList) {
-        blockList.removeIf(path -> path.startsWith(deletedPath));
+    public static void removeItemAndChildren(String deletedPathStr, Set<String> blockSet) {
+        Path deletedPath = Path.of(deletedPathStr);
+
+        // FAKTA: Převedeme oba texty na Path a necháme Javu porovnat celé uzly cesty
+        blockSet.removeIf(pathStr -> Path.of(pathStr).startsWith(deletedPath));
     }
 }

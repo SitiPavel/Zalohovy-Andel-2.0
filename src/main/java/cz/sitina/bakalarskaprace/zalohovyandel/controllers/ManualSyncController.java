@@ -204,6 +204,8 @@ public class ManualSyncController implements TaskController {
             Tooltip tooltip = utility.createToolTip_600ms();
             // nastavení obrázku pro oddělení složky a souboru
 
+            ImageView view = new ImageView();
+
             @Override
             protected void updateItem(String item, boolean empty) {
 
@@ -218,7 +220,7 @@ public class ManualSyncController implements TaskController {
                     tooltip.setText(item);
                     setTooltip(tooltip);
 
-                    ImageView view = treeTableGuiModify.getIconByRowFormat(
+                     view = treeTableGuiModify.getIconByRowFormat(
                             getTreeTableRow().getItem().getOperation(),
                             ""
                     );
@@ -233,6 +235,7 @@ public class ManualSyncController implements TaskController {
             TreeTableCell<ComparedItemOperItemRowModel, CompareOperations> cell = new TreeTableCell<>() {
 
                 private final ImageView imageView = treeTableGuiModify.findAndSetForOperationIcon(this);
+                Image icon = null;
 
                 @Override
                 protected void updateItem(CompareOperations operation, boolean empty) {
@@ -242,7 +245,7 @@ public class ManualSyncController implements TaskController {
                         setGraphic(null);
                         setText(null);
                     } else {
-                        Image icon = treeTableGuiModify.getIconForOperation(operation);
+                        icon = treeTableGuiModify.getIconForOperation(operation);
                         imageView.setImage(icon);
 
                         setGraphic(imageView);
@@ -272,7 +275,7 @@ public class ManualSyncController implements TaskController {
             new TreeTableCell<ComparedItemOperItemRowModel, String>() {
                 // 1. Vytvoříme Tooltip pouze JEDNOU pro životní cyklus buňky
                 private final Tooltip myTooltip = new Tooltip();
-
+                ImageView view =  new ImageView();
 
                 @Override
                 protected void updateItem(String item, boolean empty) {
@@ -283,7 +286,7 @@ public class ManualSyncController implements TaskController {
                         setText(null);
                         setGraphic(null);
                         setPadding(Insets.EMPTY);
-                        setTooltip(null); // Důležité: odebereme Tooltip, aby nestrašil na prázdném řádku
+                        setTooltip(null);
                         return;
                     }
                     setText(item);
@@ -291,7 +294,7 @@ public class ManualSyncController implements TaskController {
                     // Nastavení ikony podle formátu
                     myTooltip.setText(item);
                     setTooltip(myTooltip);
-                    ImageView view = treeTableGuiModify.getIconByRowFormat(
+                    view = treeTableGuiModify.getIconByRowFormat(
                             getTreeTableRow().getItem().getOperation(),
                             ""
                     );
