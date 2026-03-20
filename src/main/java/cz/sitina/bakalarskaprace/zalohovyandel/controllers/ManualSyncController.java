@@ -183,6 +183,8 @@ public class ManualSyncController implements TaskController {
         rightColLastModify.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getRightItem().getFormatedLastModified());
 
+        Label tablePlaceholder = new Label("Není porovnána levá s pravou složkou, nutno porovnat!");
+        filesTreeTable.setPlaceholder(tablePlaceholder);
 
         /// NASTAVENÍ SLOUPCŮ
         // Stylování sloupců

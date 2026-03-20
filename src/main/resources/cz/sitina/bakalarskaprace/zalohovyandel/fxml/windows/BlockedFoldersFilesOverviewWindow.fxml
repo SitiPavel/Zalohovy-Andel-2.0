@@ -113,8 +113,8 @@
                   <TreeTableView fx:id="treeTableBlockedFiles" minHeight="200.0" minWidth="400.0" sortMode="ONLY_FIRST_LEVEL">
                     <columns>
                       <TreeTableColumn fx:id="blockedFileName" editable="false" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="486.0" sortable="false" text="Nazev" />
-                        <TreeTableColumn fx:id="isExistPath" prefWidth="62.0" resizable="false" text="Nalezeno" />
-                      <TreeTableColumn fx:id="blockedFileClose" prefWidth="45.0" resizable="false" text=" ✘" />
+                        <TreeTableColumn fx:id="isExistPath" editable="false" prefWidth="62.0" resizable="false" sortable="false" text="Nalezeno" />
+                      <TreeTableColumn fx:id="blockedFileClose" editable="false" prefWidth="45.0" resizable="false" sortable="false" text=" ✘" />
                     </columns>
                      <columnResizePolicy>
                         <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

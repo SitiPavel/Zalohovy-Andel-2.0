@@ -400,13 +400,13 @@
          <children>
             <TreeTableView fx:id="filesTreeTable" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0" styleClass="fileItemTable" GridPane.columnSpan="3" GridPane.rowSpan="2">
               <columns>
-                <TreeTableColumn fx:id="leftColName" editable="false" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
-                  <TreeTableColumn fx:id="leftColLastModify" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Úprava" />
-                <TreeTableColumn fx:id="leftColSize" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Velikost" />
-                  <TreeTableColumn id="OperationColCompareOverview" fx:id="operationCol" editable="false" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" text="Operace" />
-                  <TreeTableColumn fx:id="rightColName" editable="false" minWidth="150.0" prefWidth="-1.0" text="Název souboru" />
-                  <TreeTableColumn fx:id="rightColLastModify" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Úprava" />
-                  <TreeTableColumn fx:id="rightColSize" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" text="Velikost" />
+                <TreeTableColumn fx:id="leftColName" editable="false" minWidth="150.0" prefWidth="-1.0" sortable="false" text="Název souboru" />
+                  <TreeTableColumn fx:id="leftColLastModify" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" sortable="false" text="Úprava" />
+                <TreeTableColumn fx:id="leftColSize" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" sortable="false" text="Velikost" />
+                  <TreeTableColumn id="OperationColCompareOverview" fx:id="operationCol" editable="false" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" sortable="false" text="Operace" />
+                  <TreeTableColumn fx:id="rightColName" editable="false" minWidth="150.0" prefWidth="-1.0" sortable="false" text="Název souboru" />
+                  <TreeTableColumn fx:id="rightColLastModify" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" sortable="false" text="Úprava" />
+                  <TreeTableColumn fx:id="rightColSize" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" sortable="false" text="Velikost" />
               </columns>
                <columnResizePolicy>
                   <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

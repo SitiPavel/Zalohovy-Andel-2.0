@@ -9,10 +9,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUti
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -41,6 +38,9 @@ public class TaskOverviewController {
     public void initialize() {
         int entrySize = 20;
         int typeSize = 30;
+
+        Label tablePlaceholder = new Label("Nejsou vytvořené úlohy!");
+        taskTable.setPlaceholder(tablePlaceholder);
 
 
         // nastavení vzhledu buňky pro vstup do úlohy = přidání tpačítka s ikonou
