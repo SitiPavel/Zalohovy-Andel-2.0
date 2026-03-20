@@ -1,9 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.CompareProgresController;
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.ManualCompareSettingsController;
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.RecapitulationBeforeCopyFilesController;
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.RootFolderFilterController;
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
@@ -15,7 +12,6 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.*;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableBuilderService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFilterService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFolderOperationMakerService;
@@ -69,7 +65,6 @@ public class ManualSyncController implements TaskController {
 
 
     private final ComparisonService comparisonService = new ComparisonService();
-    private final CompareOverviewService compareOverviewService = new CompareOverviewService();
     private final TreeTableGuiModify treeTableGuiModify = new TreeTableGuiModify();
     private final JsonDataManagerService jsonManager = new JsonDataManagerService();
     private final Utility utility = new Utility();
@@ -343,7 +338,7 @@ public class ManualSyncController implements TaskController {
 
     @FXML
     public void choseLeftFolder(ActionEvent event) {
-        File directory = compareOverviewService.findDirectory(event);
+        File directory = FileScannerService.findDirectory_Default(event);
         if (directory != null) {
             tfLeftFolderPath.setText(directory.getAbsolutePath());
         }
@@ -462,6 +457,21 @@ public class ManualSyncController implements TaskController {
         }
     }
 
+    @FXML void showBlockList(ActionEvent event) {
+        try {
+            FXMLLoader loader = loadFXML("BlockedFoldersFilesOverviewWindow.fxml");
+            BlockedFoldersFilesOverviewController controller = loader.getController();
+            controller.setTaskModel(editableManualTask);
+
+            WindowManager.openNewWindow(loader, "Seznam blokovaných souborů a složek", 750, 500);
+        }  catch (Exception e) {
+            ErrorUtility.getInstance("Kritická chyba",
+                    "Nastala chyba okna",
+                    "");
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     public void showTaskOverviewGUI(ActionEvent event) {
         appFrameController.showTasksOverview();
@@ -535,7 +545,7 @@ public class ManualSyncController implements TaskController {
 
     @FXML
     public void choseRightFolder(ActionEvent event) {
-        File directory = compareOverviewService.findDirectory(event);
+        File directory = FileScannerService.findDirectory_Default(event);
         if (directory != null) {
             tfRightFolderPath.setText(directory.getAbsolutePath());
         }

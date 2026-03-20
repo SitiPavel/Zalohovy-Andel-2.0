@@ -7,7 +7,9 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import javafx.scene.control.*;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 
@@ -63,7 +65,6 @@ public class TreeTableBuilderService {
 
             for (int i = 0; pathLength > i ; i++) {
                 String iFolderInPath = notNullPath.getName(i).toString(); //
-                TreeItem<ComparedItemOperItemRowModel> findedItem;
 
                 boolean isFile = (i == pathLength - 1);
 
@@ -130,19 +131,6 @@ public class TreeTableBuilderService {
         //Nastavení funkcí
 
     }
-
-    public void buildTreeTableBlockedFiles(TreeItem<BlockedFileTreeRow> root, List<String> blockedFilesList) {
-        if (root == null || blockedFilesList == null || blockedFilesList.isEmpty()) {
-            System.out.println("buildTreeTableBlockedFiles: root nebo blockedFilesList je null, popřípadě je " +
-                    "blockedFilesList prázdný");
-            return;
-        }
-
-
-    }
-
-
-
 
 
     //*

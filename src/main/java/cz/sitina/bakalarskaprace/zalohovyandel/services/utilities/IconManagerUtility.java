@@ -102,6 +102,10 @@ public class IconManagerUtility {
             new Image(getClass().getResourceAsStream(path_visualObjects + "file20x20.png"));
     private final Image folder20x20 =
             new Image(getClass().getResourceAsStream(path_visualObjects + "folder20x20.png"));
+    private final Image blockedFolder =
+            new Image(getClass().getResourceAsStream(path_visualObjects + "blockedFolder.png"));
+    private final Image blockedFile =
+            new Image(getClass().getResourceAsStream(path_visualObjects + "blockedFile.png"));
 
 
 
@@ -370,5 +374,25 @@ public class IconManagerUtility {
 
     public Image getFile20x20() {
         return file20x20;
+    }
+
+    public String getPath_visualObjects() {
+        return path_visualObjects;
+    }
+
+    public String getPath_icons() {
+        return path_icons;
+    }
+
+    public String getPath_iconsSmall() {
+        return path_iconsSmall;
+    }
+
+    public Image getBlockedFolder() {
+        return blockedFolder;
+    }
+
+    public Image getBlockedFile() {
+        return blockedFile;
     }
 }

@@ -2,7 +2,13 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -198,6 +204,67 @@ public class FileScannerService {
         } else {
             return true;
         }
+    }
+
+    public static File findDirectory_InitPath(ActionEvent event, String path) {
+        return findDirectory(event, path);
+    }
+
+    public static File findDirectory_Default(ActionEvent event) {
+        return findDirectory(event, "");
+    }
+
+    private static File findDirectory(ActionEvent event, String initialPath) {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Vyber složku pro výjimku");
+
+        if (initialPath != null && !initialPath.isEmpty()) {
+            File initialFolder = new File(initialPath);
+            if (initialFolder.exists() && initialFolder.isDirectory()) {
+                directoryChooser.setInitialDirectory(initialFolder);
+            } else {
+                System.err.println("Zadaná výchozí složka neexistuje, otevírám standardní umístění");
+            }
+        }else {
+            System.err.println("initialPath je null nebo prázdný, otevírám standardní umístění");
+        }
+
+        Node source = (Node) event.getSource();
+        Window stage = source.getScene().getWindow();
+
+        return directoryChooser.showDialog(stage);
+
+    }
+
+    public static File findFile_InitPath(ActionEvent event, String path) {
+        return findFile(event, path);
+    }
+
+    public static File findFile_Default(ActionEvent event) {
+        return findFile(event, "");
+    }
+
+    private static File findFile(ActionEvent event, String initialPath) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Vyber soubor pro výjimku");
+
+        // Nastavení výchozí SLOŽKY (ve které se okno otevře)
+        if (initialPath != null && !initialPath.isEmpty()) {
+            File initialFolder = new File(initialPath);
+
+            if (initialFolder.exists() && initialFolder.isDirectory()) {
+                fileChooser.setInitialDirectory(initialFolder);
+            } else {
+                System.err.println("Zadaná výchozí složka neexistuje, otevírám standardní umístění");
+            }
+        } else {
+            System.err.println("initialPath je null nebo prázdný, otevírám standardní umístění");
+        }
+
+        Node source = (Node) event.getSource();
+        Window stage = source.getScene().getWindow();
+
+        return fileChooser.showOpenDialog(stage);
     }
 
 

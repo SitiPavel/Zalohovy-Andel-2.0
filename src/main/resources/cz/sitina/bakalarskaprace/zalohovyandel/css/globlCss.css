@@ -221,6 +221,10 @@
     -fx-cursor: hand;
 }
 
+/* MODIFERY */
+.modify_opacity1 {
+    -fx-opacity: 1;
+}
 
 
 

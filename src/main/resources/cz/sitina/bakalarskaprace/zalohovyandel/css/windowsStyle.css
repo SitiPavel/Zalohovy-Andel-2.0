@@ -55,6 +55,27 @@
     -fx-background-color: -fx-color-lightBackground;
 }
 
+.button_NonBackground{
+    -fx-border-color: -fx-color-primary2;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 15px;
+    -fx-background-insets: 1;
+    -fx-cursor: hand;
+}
+.button_NonBackground:pressed {
+    -fx-background-color: -fx-color-lightBackground;
+}
+
+.buttonModify_backgroundRed {
+    -fx-background-color: -fx-color-mark2;
+}
+
+.buttonModify_backgroundBrown {
+    -fx-background-color: -fx-color-folder5;
+}
+
 
 /*  ===========================================
             Styly pro nastavení
@@ -95,6 +116,8 @@
     -fx-background-insets: 5;
 }
 
+
+
 /* ----------------------------
         Check box styly
 ------------------------------*/
@@ -118,15 +141,14 @@
 
 /* 3. Fajfka (Mark) - Tvar */
 .checkBox_styl1 .mark {
-    /* JavaFX defaultní tvar je trochu tlustý, toto je hezčí tenká fajfka (SVG path) */
     -fx-shape: "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z";
-    -fx-background-color: transparent; /* Ve výchozím stavu není vidět */
+    -fx-background-color: transparent;
     -fx-scale-shape: true;
     -fx-padding: 2px;
 }
 
 .checkBox_styl1:selected .box {
-    -fx-background-color: -fx-color-primary1; /* Modrá výplň (nebo tvá barva) */
+    -fx-background-color: -fx-color-primary1;
     -fx-border-color: -fx-color-primary2;
 }
 
@@ -263,9 +285,11 @@
 
 /* Samotné buňky v řádku a jejich text */
 .fileItemTableWindowStyl1 .tree-table-cell {
+    -fx-font-size: 13px;
     -fx-text-fill: -fx-color-textDark;
     -fx-font-weight: bold;
-    -fx-border-color: transparent; /* Skryje defaultní ohraničení buněk */
+    -fx-border-width: 0 1 0 1;
+    -fx-border-color: -fx-color-textDark;
 }
 
 

@@ -62,7 +62,11 @@
                               <Insets bottom="-2.0" left="1.0" right="1.0" top="-2.0" />
                            </padding>
                         </Button>
-                        <TextField fx:id="tfLeftFolderPath" prefHeight="25.0" prefWidth="200.0" promptText="C:\Plocha\Dokumenty" styleClass="folderPathImput" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="tfLeftFolderPath" prefHeight="25.0" prefWidth="200.0" promptText="C:\Cesta\Ke\Složce\Levá" HBox.hgrow="ALWAYS">
+                           <styleClass>
+                              <String fx:value="folderPathImput" />
+                              <String fx:value="WindowTitle_L1" />
+                           </styleClass></TextField>
                      </children>
                   </HBox>
                   <HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="254.0">
@@ -178,7 +182,11 @@
                               <Insets bottom="-2.0" left="1.0" right="1.0" top="-2.0" />
                            </padding>
                         </Button>
-                        <TextField fx:id="tfRightFolderPath" prefHeight="25.0" prefWidth="200.0" promptText="D:\Zaloha\Dokumenty" styleClass="folderPathImput" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="tfRightFolderPath" prefHeight="25.0" prefWidth="200.0" promptText="C:\Cesta\Ke\Složce\Pravá" HBox.hgrow="ALWAYS">
+                           <styleClass>
+                              <String fx:value="folderPathImput" />
+                              <String fx:value="WindowTitle_L1" />
+                           </styleClass></TextField>
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -262,17 +270,14 @@
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../images/icons/StartSync.png" />
+                                    <Image url="@../images/icons/jurnal.png" />
                                  </image>
                               </ImageView>
                            </graphic>
                            <styleClass>
                               <String fx:value="toolBarButton" />
-                              <String fx:value="modificator_snychronizationButton" />
+                              <String fx:value="modificator_jurnalButton" />
                            </styleClass>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
                         </Button>
                      </children>
                      <VBox.margin>
@@ -284,39 +289,20 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="102.0" styleClass="layout_justifyContent">
                      <children>
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showBlockList" prefHeight="50.0" prefWidth="50.0">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../images/icons/jurnal.png" />
+                                    <Image url="@../images/icons/blockList.png" />
                                  </image>
                               </ImageView>
                            </graphic>
                            <styleClass>
                               <String fx:value="toolBarButton" />
-                              <String fx:value="modificator_jurnalButton" />
+                              <String fx:value="toolBarButtonLite" />
                            </styleClass>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
                         </Button>
                         <Region prefHeight="200.0" prefWidth="200.0" />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../images/icons/autoBacUp.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <styleClass>
-                              <String fx:value="toolBarButton" />
-                              <String fx:value="modificator_autobackupButton" />
-                           </styleClass>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </Button>
                      </children>
                      <VBox.margin>
                         <Insets />
@@ -377,6 +363,7 @@
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" prefHeight="66.0" prefWidth="80.0" VBox.vgrow="NEVER">
                      <children>
+                        <Region prefHeight="200.0" prefWidth="200.0" />
                         <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
@@ -388,23 +375,6 @@
                            <styleClass>
                               <String fx:value="toolBarButton" />
                               <String fx:value="modificator_jurnalButton" />
-                           </styleClass>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </Button>
-                        <Region prefHeight="200.0" prefWidth="200.0" />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../images/icons/blockList.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <styleClass>
-                              <String fx:value="toolBarButton" />
-                              <String fx:value="toolBarButtonLite" />
                            </styleClass>
                         </Button>
                      </children>

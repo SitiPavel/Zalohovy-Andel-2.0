@@ -1,6 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BlockedFileTreeRow;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import javafx.geometry.Insets;
@@ -173,5 +174,15 @@ public class TreeTableGuiModify {
 
         return imageView;
 
+    }
+
+    public CheckBox getCheckBox(boolean isSelected) {
+        CheckBox checkBox = new CheckBox();
+        {
+            checkBox.setSelected(isSelected);
+            checkBox.getStyleClass().addAll("checkBox_styl2", "modify_opacity1");
+            checkBox.setDisable(true);
+        }
+        return checkBox;
     }
 }
