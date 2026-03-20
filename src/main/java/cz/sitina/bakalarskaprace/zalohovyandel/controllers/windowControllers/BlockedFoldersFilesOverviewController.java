@@ -32,6 +32,7 @@ public class BlockedFoldersFilesOverviewController {
     private TaskModel taskModel;
     private TreeItem<BlockedFileTreeRow> rootItem;
     private Set<String> editableBlockList;
+    private Runnable isBlockSetChanged;
 
     private BlockedTreeTableGuiService blockedTreeGui = new BlockedTreeTableGuiService();
     private TreeTableGuiModify treeGui = new TreeTableGuiModify();
@@ -196,8 +197,12 @@ public class BlockedFoldersFilesOverviewController {
 
     @FXML
     public void closeWindow_Save(ActionEvent event) {
-        taskModel.getBlockList().clear();
-        taskModel.getBlockList().addAll(editableBlockList);
+        if (!taskModel.getBlockSet().equals(editableBlockList)) {
+            isBlockSetChanged.run();
+            taskModel.getBlockSet().clear();
+            taskModel.getBlockSet().addAll(editableBlockList);
+        }
+
         WindowManager.findByActionAndClose(event);
     }
 
@@ -230,7 +235,7 @@ public class BlockedFoldersFilesOverviewController {
 
     public void setTaskModel(TaskModel taskModel) {
         this.taskModel = taskModel;
-        this.editableBlockList = new LinkedHashSet<>(taskModel.getBlockList());
+        this.editableBlockList = new LinkedHashSet<>(taskModel.getBlockSet());
 
 
         rootItem = new TreeItem<>(new BlockedFileTreeRow(taskModel.getLeftPath(), "root", true, true, true));
@@ -238,5 +243,9 @@ public class BlockedFoldersFilesOverviewController {
         treeTableBlockedFiles.setRoot(rootItem);
 
         rootItem.setExpanded(true);
+    }
+
+    public void setIsBlockSetChanged(Runnable isBlockSetChanged) {
+        this.isBlockSetChanged = isBlockSetChanged;
     }
 }

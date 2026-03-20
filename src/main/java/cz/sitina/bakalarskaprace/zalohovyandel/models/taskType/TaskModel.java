@@ -7,9 +7,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 @JsonTypeInfo(
@@ -130,7 +128,7 @@ public abstract class TaskModel {
     public LocalDate getCreationDate() {
         return creationDate;
     }
-    public Set<String> getBlockList() {
+    public Set<String> getBlockSet() {
         return blockList;
     }
     public String getStatus() {
@@ -159,7 +157,7 @@ public abstract class TaskModel {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setBlockList(Set<String> blockList) {
+    public void setBlockSet(Set<String> blockList) {
         this.blockList = blockList;
     }
     public void setStatus(String status) {

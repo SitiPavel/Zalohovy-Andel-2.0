@@ -465,6 +465,9 @@ public class ManualSyncController implements TaskController {
             FXMLLoader loader = loadFXML("BlockedFoldersFilesOverviewWindow.fxml");
             BlockedFoldersFilesOverviewController controller = loader.getController();
             controller.setTaskModel(editableManualTask);
+            controller.setIsBlockSetChanged(() -> {
+                markAsDirty();
+            });
 
             WindowManager.openNewWindow(loader, "Seznam blokovaných souborů a složek", 750, 500);
         }  catch (Exception e) {
@@ -489,6 +492,12 @@ public class ManualSyncController implements TaskController {
 
     @FXML
     public void startRecapitulationForCopy(ActionEvent event) {
+        if (masterRoot == null || masterRoot.getChildren() == null || masterRoot.getChildren().isEmpty()) {
+            ErrorUtility.getInstance("Chyba seznamu porovnání",
+                    "Není vytvořen seznam s konkrétními kroky pro porovnání souborů!",
+                    "Nutno levou a pravou složku nejdříve porovnat a až potom synchronizovat!");
+            return;
+        }
         if (statisticsAndComparedData.isDataMoveOperations()) {
             // kontrola jestli se záloha vejde do disku
             if (!isRightOperationSizeSmalerThenRightFolder || !isLeftOperationSizeSmalerThenLeftFolder) {
