@@ -10,6 +10,8 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.TreeTableUtility;
 
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -69,14 +71,16 @@ public class ComparisonService {
             FileItemModel leftItem = leftFilesMap.get(relativePath);
             FileItemModel rightItem = rightFilesMap.get(relativePath);
 
-            /**
-            if (relativePath je v hashMap ignorovaných souborů pro tuto úlohu) {
-                CompareOperations operations = CompareOperations.IGNORE;
-            }
-             * */
+            Path relativePathObject = Paths.get(relativePath);
+            // zjisštění zda je v seznamu blokovaných = nutno porovnat cesty aby nebyly naopak lomítka / a \
+            Boolean isBlocked = taskModel.getBlockSet().stream()
+                    .anyMatch(blockedStr -> relativePathObject.startsWith(Path.of(blockedStr)));
+
+            if (isBlocked) {
+                operation = CompareOperations.IGNORE;
 
             /// porovná jaká strategie se použije a vratí nám operaci pro tento řídek souboru
-            if (taskModel instanceof ManualSyncTask MSC) {
+            }else if (taskModel instanceof ManualSyncTask MSC) {
                 switch (MSC.getCompareStrategy()) {
                     case BIDIRECTIONAL_SYNC ->
                         operation = biDirectionalStrategy.compare(leftItem,rightItem);
