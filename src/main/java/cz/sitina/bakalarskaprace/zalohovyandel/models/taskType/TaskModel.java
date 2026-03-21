@@ -3,11 +3,14 @@ package cz.sitina.bakalarskaprace.zalohovyandel.models.taskType;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilters_TaskData;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JurnalBackupInfo;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @JsonTypeInfo(
@@ -29,6 +32,8 @@ public abstract class TaskModel {
     private String status;
     private LocalDate creationDate;
     private Set<String> blockList = new LinkedHashSet<>();
+    private List<JurnalBackupInfo> jurnalInfoList;
+
     private GuiOperationFilters_TaskData guiOperationFilters;
 
 
@@ -55,6 +60,7 @@ public abstract class TaskModel {
         this.description = description;
         this.creationDate = LocalDate.now();
         this.guiOperationFilters = new GuiOperationFilters_TaskData();
+        this.jurnalInfoList = new ArrayList<>();
 
     }
 
@@ -75,6 +81,7 @@ public abstract class TaskModel {
         this.creationDate = LocalDate.now();
         // složitý typ který by bez new poslal jen odkaz
         this.guiOperationFilters = GuiOperationFilters;
+        this.jurnalInfoList = new ArrayList<>();
     }
 
     protected TaskModel( TaskModel source) {
@@ -91,6 +98,7 @@ public abstract class TaskModel {
         // složité datové typy, proto vytvoříme nové, kdyby nebylo new tak by se sdílel jen odkaz a né objekt
         this.blockList = new LinkedHashSet<>(source.blockList);
         this.guiOperationFilters = new GuiOperationFilters_TaskData(source.guiOperationFilters);
+        this.jurnalInfoList = new ArrayList<>(source.jurnalInfoList);
 
     }
 
@@ -104,6 +112,7 @@ public abstract class TaskModel {
 
         this.blockList = new LinkedHashSet<>(task.blockList);
         this.guiOperationFilters = new GuiOperationFilters_TaskData(task.guiOperationFilters);
+        this.jurnalInfoList = new ArrayList<>(task.jurnalInfoList);
     }
 
     //getry
@@ -137,6 +146,11 @@ public abstract class TaskModel {
     public CompareStrategy getCompareStrategy() {
         return compareStrategy;
     }
+
+    public List<JurnalBackupInfo> getJurnalInfoList() {
+        return jurnalInfoList;
+    }
+
     public boolean isContentHash() {
         return isContentHash;
     }
@@ -172,5 +186,8 @@ public abstract class TaskModel {
         isContentHash = contentHash;
     }
 
+    public void setJurnalInfoList(List<JurnalBackupInfo> jurnalInfoList) {
+        this.jurnalInfoList = jurnalInfoList;
+    }
 }
 

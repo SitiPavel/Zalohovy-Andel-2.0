@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+
+<TitledPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="334.0"
+            prefWidth="500.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.components.JurnalItemController">
+   <graphic>
+      <HBox alignment="CENTER">
+         <children>
+            <ImageView fx:id="imgTitleProcesStatus" fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/visualObjects/cros.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="imgTitleStrategy" fitHeight="21.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/visualObjects/biDirectionalSync.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin>
+            </ImageView>
+            <Label fx:id="lbStartDate" text="30.12.2023">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Label>
+            <Label fx:id="lbStartTime" text="16:30">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#deleteThisJurnalItem" text="Smazat">
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+               <styleClass>
+                  <String fx:value="WindowTitle_L1_Dark" />
+                  <String fx:value="button_NonBackground" />
+                  <String fx:value="buttonModify_backgroundRed" />
+               </styleClass>
+            </Button>
+         </children>
+      </HBox>
+   </graphic>
+   <styleClass>
+      <String fx:value="liteDarkConteiner" />
+      <String fx:value="titlePain_styl1" />
+   </styleClass>
+   <stylesheets>
+      <URL value="@../../css/globlCss.css" />
+      <URL value="@../../css/windowsStyle.css" />
+   </stylesheets>
+   <content>
+      <VBox prefWidth="500.0">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+         <children>
+            <HBox>
+               <children>
+                  <Label styleClass="darkBoltText" text="Výsledek:" />
+                  <Label fx:id="lbFinishProcesStatus" styleClass="darkBoltText" text="Přerušeno">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/visualObjects/cros.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lbSuccessCount" styleClass="darkBoltText" text="00000000">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/visualObjects/successfullyFinish.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <Label fx:id="lbErrorCount" styleClass="darkBoltText" text="00000000">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/visualObjects/error.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="darkBoltText" text="Strategie:  " />
+                  <ImageView fx:id="imgStrategi" fitHeight="150.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../images/visualObjects/biDirectionalSync.png" />
+                     </image>
+                  </ImageView>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lbSkipCount1" styleClass="darkBoltText" text="00000000">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/visualObjects/skipedFile.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="darkBoltText" text="Doba trvání:">
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="lbDurationTime" styleClass="darkBoltText" text="5:35" />
+               </children>
+            </HBox>
+            <TitledPane fx:id="ErrorPathsConteiner" maxHeight="250.0" maxWidth="1.7976931348623157E308" minHeight="10.0" minWidth="200.0" styleClass="titlePain_styl2" text="Nepodařilo se zpracovat" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </TitledPane>
+         </children>
+      </VBox>
+   </content>
+</TitledPane>

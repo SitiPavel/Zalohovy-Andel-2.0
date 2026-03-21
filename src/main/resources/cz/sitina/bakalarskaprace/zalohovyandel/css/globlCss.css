@@ -87,9 +87,6 @@
 /*  ===========================================
             Hlavní obsah
     =========================================== */
-.mainConteinerStyle {
-    -fx-background-color: -fx-color-lightBackground;
-}
 
 .conteinerModify_Radius15{
     -fx-background-radius: 15;
@@ -112,7 +109,9 @@
     -fx-border-radius: 0 0 10 10;
 }
 
-
+.mainConteinerStyle {
+    -fx-background-color: -fx-color-lightBackground;
+}
 
 .bottomBar {
     -fx-background-color: -fx-color-primary2;

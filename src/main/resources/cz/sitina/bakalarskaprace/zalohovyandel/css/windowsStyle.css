@@ -116,8 +116,62 @@
     -fx-background-insets: 5;
 }
 
+/* ----------------------------
+        TitlePain styly
+------------------------------*/
+
+.titlePain_styl1 {
+}
+
+.titlePain_styl1 .title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-color: -fx-color-lightBackground;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: solid;
+}
+
+.titlePain_styl1 .title .text {
+    -fx-fill: -fx-color-textDark;
+    -fx-font-weight: bold;
+}
 
 
+.titlePain_styl1 .content {
+    -fx-text-fill: -fx-color-textDark;
+    -fx-background-color: -fx-color-folder5-50  ;
+}
+.titlePain_styl1 .title .arrow-button .arrow {
+    -fx-background-color: -fx-color-textDark;   /* Obarvení samotné šipky na bílo */
+}
+
+
+.titlePain_styl2 {
+}
+
+.titlePain_styl2 .title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-color: -fx-color-primary2;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: solid;
+}
+
+
+.titlePain_styl2 .title .text {
+    -fx-fill: -fx-color-textLight;
+    -fx-font-weight: bold;
+}
+
+
+.titlePain_styl2 .content {
+    -fx-text-fill: -fx-color-textDark;
+    -fx-background-color: -fx-color-darkBackground  ;
+}
+
+.titlePain_styl2 .title .arrow-button .arrow {
+    -fx-background-color: -fx-color-textDark;   /* Obarvení samotné šipky na bílo */
+}
 /* ----------------------------
         Check box styly
 ------------------------------*/
