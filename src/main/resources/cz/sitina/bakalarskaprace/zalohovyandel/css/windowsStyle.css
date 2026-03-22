@@ -127,7 +127,7 @@
     -fx-font-size: 15px;
     -fx-font-weight: bold;
     -fx-background-color: -fx-color-lightBackground;
-    -fx-border-width: 0 0 1 0;
+    -fx-border-width: 0 0 2 0;
     -fx-border-style: solid;
 }
 
@@ -172,6 +172,60 @@
 .titlePain_styl2 .title .arrow-button .arrow {
     -fx-background-color: -fx-color-textDark;   /* Obarvení samotné šipky na bílo */
 }
+/* ----------------------------
+        ListView styly
+------------------------------*/
+
+.listview_Styl1 {
+    -fx-background-color: transparent;
+}
+
+.listview_Styl1 .list-cell {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-textLight;
+    -fx-border-color: transparent;
+    -fx-padding: 5px 10px;
+}
+
+.listview_Styl1 .list-cell:empty {
+    -fx-background-color: transparent;
+}
+
+/* 1. Odstranění základního pozadí posuvníku (zprůhlednění) */
+.listview_Styl1 .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12px; /* Zúžení posuvníku pro modernější vzhled */
+}
+
+/* 2. Stylování dráhy (Track) */
+.listview_Styl1 .scroll-bar:vertical .track {
+    -fx-background-color: -fx-color-primary2;
+    -fx-border-color: transparent;
+    -fx-background-radius: 5;
+}
+
+/* 3. Stylování samotného jezdce (Thumb) */
+.listview_Styl1 .scroll-bar:vertical .thumb {
+    -fx-background-color: -fx-color-primary1;
+    -fx-background-radius: 6px;
+}
+
+
+/* 4. Skrytí horního a dolního tlačítka se šipkami (Moderní UI je většinou nepoužívají) */
+.listview_Styl1 .scroll-bar:vertical .increment-button,
+.listview_Styl1 .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0; /* Zruší zabrané místo */
+}
+
+.listview_Styl1 .scroll-bar:vertical .increment-arrow,
+.listview_Styl1 .scroll-bar:vertical .decrement-arrow {
+    -fx-shape: " "; /* Vymaže tvar šipky */
+    -fx-padding: 0;
+}
+
+
 /* ----------------------------
         Check box styly
 ------------------------------*/

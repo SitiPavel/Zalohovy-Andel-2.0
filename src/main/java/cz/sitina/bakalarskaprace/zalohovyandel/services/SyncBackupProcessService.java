@@ -19,7 +19,8 @@ public class SyncBackupProcessService {
     int processedFileCount = 0;
 
     public interface ProgressCallback {
-        void onProgress(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount);
+        void onProgress(long bytesProcessed, long totalBytes, String currentFile,
+                        int processedFileCount, String currentAbsolutFilePath);
         void onItemCompleted(boolean success);
     }
 
@@ -39,7 +40,7 @@ public class SyncBackupProcessService {
         Path leftRoot = Paths.get(task.getLeftPath());
         Path rightRoot= Paths.get(task.getRightPath());
 
-        callback.onProgress(globalProcessedBytes, totalBytes, "Start...", processedFileCount);
+        callback.onProgress(globalProcessedBytes, totalBytes, "Start...", processedFileCount, "");
         boolean success = true;
 
         for (ComparedItemOperItemRowModel row : itemsToProcess) {
@@ -64,7 +65,7 @@ public class SyncBackupProcessService {
                         copyFileWithProgress(source, target,
                                 globalProcessedBytes, totalBytes,
                                 currentFileName, callback,
-                                isCancelled);
+                                isCancelled, source.toString());
                         processedFileCount++;
                     }
                     case ADD_RIGHT, UPDATE_RIGHT -> {
@@ -75,24 +76,30 @@ public class SyncBackupProcessService {
                         copyFileWithProgress(source, target,
                                 globalProcessedBytes, totalBytes,
                                 currentFileName, callback,
-                                isCancelled);
+                                isCancelled, source.toString());
                         processedFileCount++;
                     }
                     case DELETE_LEFT -> {
                         Files.deleteIfExists(leftItem.getFileAbsolutePath());
                         processedFileCount++;
-                        callback.onProgress(globalProcessedBytes, totalBytes, currentFileName, processedFileCount);
+                        callback.onProgress(globalProcessedBytes, totalBytes
+                                , currentFileName, processedFileCount,
+                                leftItem.getFileAbsolutePath().toString());
                     }
                     case DELETE_RIGHT -> {
                         Files.deleteIfExists(rightItem.getFileAbsolutePath());
                         processedFileCount++;
-                        callback.onProgress(globalProcessedBytes, totalBytes, currentFileName, processedFileCount);
+                        callback.onProgress(globalProcessedBytes, totalBytes,
+                                currentFileName, processedFileCount,
+                                rightItem.getFileAbsolutePath().toString());
                     }
                     case DELETE_BOTH -> {
                         Files.deleteIfExists(leftItem.getFileAbsolutePath());
                         Files.deleteIfExists(rightItem.getFileAbsolutePath());
                         processedFileCount++;
-                        callback.onProgress(globalProcessedBytes, totalBytes, currentFileName, processedFileCount);
+                        callback.onProgress(globalProcessedBytes, totalBytes,
+                                currentFileName, processedFileCount,
+                                leftItem.getFileAbsolutePath().toString());
                     }
                 }
                 if (operations.name().contains("ADD") || operations.name().contains("UPDATE")) {
@@ -127,7 +134,8 @@ public class SyncBackupProcessService {
     private void copyFileWithProgress(Path source, Path target,
                                       long alreadyProcessedGlobal, long totalBytes,
                                       String fileName, ProgressCallback callback,
-                                      java.util.function.Supplier<Boolean> isCancelled) throws IOException {
+                                      java.util.function.Supplier<Boolean> isCancelled,
+                                      String currentAbsolutFilePath) throws IOException {
 
         // pokud složka neexistuje
         if (target.getParent() != null) {
@@ -155,11 +163,15 @@ public class SyncBackupProcessService {
                 //nechceme jlásit každých blok proto budeme kopírovat 1 MB od posledního glášení
                 // pokud bychom hlásili každý blok mohlo byt to zahltit aplikaci
                 if ( (bytesCopiedForThisFile - lastReportedBites)  >= 1024*1024) {
-                    callback.onProgress(alreadyProcessedGlobal + bytesCopiedForThisFile, totalBytes, fileName, processedFileCount);
+                    callback.onProgress(alreadyProcessedGlobal + bytesCopiedForThisFile,
+                            totalBytes, fileName,
+                            processedFileCount, currentAbsolutFilePath);
                     lastReportedBites = bytesCopiedForThisFile;
                 }
             }
-            callback.onProgress(alreadyProcessedGlobal + bytesCopiedForThisFile, totalBytes, fileName, processedFileCount);
+            callback.onProgress(alreadyProcessedGlobal + bytesCopiedForThisFile,
+                    totalBytes, fileName,
+                    processedFileCount, currentAbsolutFilePath);
         }//Soubor je přenesen a uzavřen
 
         /*

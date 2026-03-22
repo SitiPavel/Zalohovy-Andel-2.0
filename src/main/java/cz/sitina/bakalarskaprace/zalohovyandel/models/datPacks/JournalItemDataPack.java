@@ -13,33 +13,37 @@ public class JournalItemDataPack {
 
     private long id;
     private LocalDateTime dateTimeOfStart;
-    private LocalTime procesDuration;
+    private LocalTime processDuration;
 
     private CompareStrategy compareStrategy;
     private FinishProcesStatus finishProcesStatus;
 
-    private int sucessCount;
     private int failCount;
-    private int skipedFiles;
+    private int fileCount;
 
-    private Set<ComparedItemOperItemRowModel> failPathList;
+    private Set<String> failPathList;
 
     public JournalItemDataPack() {
     }
 
-    public JournalItemDataPack(LocalDateTime DateTime, LocalTime procesDuration, CompareStrategy compareStrategy,
-                               FinishProcesStatus finishProcesStatus, int sucessCount, int failCount,
-                               Set<ComparedItemOperItemRowModel> failPathList, int skipedFiles) {
+    public JournalItemDataPack(LocalDateTime DateTime,
+                               LocalTime processDuration,
+                               CompareStrategy compareStrategy,
+                               FinishProcesStatus finishProcesStatus,
+                               int fileCount,
+                               int failCount,
+                               Set<String> failPathList
+    ) {
         this.id = System.currentTimeMillis();
         this.dateTimeOfStart = DateTime;
-        this.procesDuration = procesDuration;
+        this.processDuration = processDuration;
 
         this.compareStrategy = compareStrategy;
         this.finishProcesStatus = finishProcesStatus;
 
-        this.sucessCount = sucessCount;
         this.failCount = failCount;
-        this.skipedFiles = skipedFiles;
+        this.fileCount = fileCount;
+
 
         this.failPathList = new LinkedHashSet<>(failPathList);
 
@@ -57,8 +61,8 @@ public class JournalItemDataPack {
         return dateTimeOfStart;
     }
 
-    public LocalTime getProcesDuration() {
-        return procesDuration;
+    public LocalTime getProcessDuration() {
+        return processDuration;
     }
 
     public CompareStrategy getCompareStrategy() {
@@ -69,19 +73,15 @@ public class JournalItemDataPack {
         return finishProcesStatus;
     }
 
-    public int getSucessCount() {
-        return sucessCount;
-    }
-
     public int getFailCount() {
         return failCount;
     }
 
-    public Set<ComparedItemOperItemRowModel> getFailPathList() {
+    public Set<String> getFailPathList() {
         return failPathList;
     }
 
-    public int getSkipedFiles() {
-        return skipedFiles;
+    public int getFileCount() {
+        return fileCount;
     }
 }

@@ -12,22 +12,20 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUti
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 
 public class RecapitulationBeforeCopyFilesController  {
     private ComparedDataAndStatisticsForCompereOverview comparedAndStatisticsData;
     private final IconManagerUtility  iconManager = new IconManagerUtility();
 
-    private TaskModel task;
+    private  TaskModel originTask;
+    private TaskModel editedTask;
     private boolean isStrategyModified;
     private CompareStrategy strategy;
     private List<ComparedItemOperItemRowModel> list;
@@ -75,9 +73,9 @@ public class RecapitulationBeforeCopyFilesController  {
             //načítáme okno
             FXMLLoader loader = WindowManager.loadFXML("copyProcessWindow.fxml");
             CopyProcessController copyProcessController = loader.getController();
-            copyProcessController.startProcess(task, list);
+            copyProcessController.startProcess(originTask, editedTask, list);
 
-            String title = (task instanceof ManualSyncTask) ? "Synchronizace souborů" : "Záloha souborů";
+            String title = (editedTask instanceof ManualSyncTask) ? "Synchronizace souborů" : "Záloha souborů";
             Stage copyProcessStage = WindowManager.openRunningWindow(loader, title, 750, 400);
 
             copyProcessStage.setOnCloseRequest(e -> copyProcessController.cancelAction());
@@ -106,8 +104,12 @@ public class RecapitulationBeforeCopyFilesController  {
         this.comparedAndStatisticsData = comparedAndStatisticsData;
     }
 
-    public void setTask(TaskModel task) {
-        this.task = task;
+    public void setEditedTask(TaskModel editedTask) {
+        this.editedTask = editedTask;
+    }
+
+    public void setOriginTask(TaskModel originTask) {
+        this.originTask = originTask;
     }
 
     public void setStrategyModified(boolean strategyModified) {

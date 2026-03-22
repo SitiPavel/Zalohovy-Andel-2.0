@@ -115,6 +115,11 @@ public abstract class TaskModel {
         this.jurnalInfoList = new ArrayList<>(task.jurnalInfoList);
     }
 
+    public void updateAllJournalList(List<JournalItemDataPack> journalList) {
+        jurnalInfoList.clear();
+        jurnalInfoList.addAll(journalList);
+    }
+
     //getry
     public long getId() {
         return id;
@@ -186,7 +191,7 @@ public abstract class TaskModel {
         isContentHash = contentHash;
     }
 
-    public void setJurnalInfoList(List<JournalItemDataPack> jurnalInfoList) {
+    public void setJournalInfoList(List<JournalItemDataPack> jurnalInfoList) {
         this.jurnalInfoList = jurnalInfoList;
     }
 }

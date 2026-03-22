@@ -1,8 +1,11 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.SyncBackupProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.animation.KeyFrame;
@@ -23,7 +26,13 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class CopyProcessController {
@@ -48,8 +57,11 @@ public class CopyProcessController {
     @FXML private HBox containerProcessed;
     @FXML private HBox containerError;
 
-    private TaskModel taskModel;
     private SyncBackupProcessService syncBackupProcessService = new SyncBackupProcessService();
+    private JsonDataManagerService jsonService = new JsonDataManagerService();
+
+    private TaskModel originTaskModel;
+    private TaskModel editedTaskModel;
     private XYChart.Series<Number, Number> speedSeries;
     private Task<Void> syncBackupProcessTask;
     private long startTime;
@@ -60,6 +72,15 @@ public class CopyProcessController {
     private int fileCount = 0;
     private int errorCount = 0;
     private boolean isChartConfigured;
+    int totalFilesToProcess = 0;
+    int filesInItemOperItemROw;
+    String currentFilePath = "";
+
+    /// žurnál info
+    private LocalDateTime dateTimeOfStart = LocalDateTime.now();
+    private int successCount;
+    private Set<String> failPathList = new HashSet<>();
+
 
     public void initialize() {
         // nastavení default celého grafu
@@ -82,14 +103,16 @@ public class CopyProcessController {
     }
 
     public void startProcess(
-            TaskModel taskModel,
+            TaskModel originTaskModel,
+            TaskModel editedTaskModel,
             List<ComparedItemOperItemRowModel> list
     ) {
-        this.taskModel = taskModel;
+        this.originTaskModel = originTaskModel;
+        this.editedTaskModel = editedTaskModel;
         isChartConfigured =false;
 
         // Získáme celkový počet souborů
-        int totalFilesToProcess = list.size();
+        totalFilesToProcess = list.size();
 
         speedSeries.getData().clear();
         speedSeries.getData().add(new XYChart.Data<>(0, 0));
@@ -97,8 +120,11 @@ public class CopyProcessController {
 
 
 
+
+
+
         // nastavení nadpisu
-        if (taskModel instanceof ManualSyncTask) {
+        if (editedTaskModel instanceof ManualSyncTask) {
             lbHeader.setText("Probíhá synchronizace");
         } else {
             lbHeader.setText("Probíhá zálohování");
@@ -110,7 +136,7 @@ public class CopyProcessController {
 
 
                 syncBackupProcessService.executeCopyFiles(
-                        taskModel,
+                        editedTaskModel,
                         list,
                         new SyncBackupProcessService.ProgressCallback() {
                             private long lastTime = startTime;
@@ -120,9 +146,10 @@ public class CopyProcessController {
 
 
                             @Override
-                            public void onProgress(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount) {
+                            public void onProgress(long bytesProcessed, long totalBytes, String currentFile,
+                                                   int processedFileCount, String callbackCurrentFile) {
 
-
+                                currentFilePath = callbackCurrentFile;
                                 // 1. Změna nadpisů a os (Jen jednou na začátku)
                                 if (!isChartConfigured) {
                                     Platform.runLater(() -> {
@@ -192,6 +219,7 @@ public class CopyProcessController {
 
                                         Platform.runLater(() -> {
                                             lbProcessedCount.setText(String.valueOf(processedFileCount));
+                                            successCount =processedFileCount;
                                             updateSpeedChart(speedPerSecond, percentDone, expectedTime);
                                         });
 
@@ -234,23 +262,25 @@ public class CopyProcessController {
         uiTimeline.play();
 
         // závěrečná informace o dokončení procesu
-        syncBackupProcessTask.setOnSucceeded(event -> processFinished(
-                "Uspěšně dokončeno.", "✔", false));
+        syncBackupProcessTask.setOnSucceeded(event ->
+                processFinished("Uspěšně dokončeno.", "✔", false, FinishProcesStatus.SUCCESS));
+
         syncBackupProcessTask.setOnCancelled(event -> processFinished(
-                "Proces byl přerušen.", "✘", false));
+                "Proces byl přerušen.", "✘", false, FinishProcesStatus.INTERRUPTED));
 
         syncBackupProcessTask.setOnFailed(event ->  {
                 String msg = "Vyskytla se neznámá chyba";
                 if (syncBackupProcessTask.getException() != null){
                     msg = syncBackupProcessTask.getException().getMessage();
                 }
-                processFinished("Vyskytla se chyba.", "Chyba: " + msg, true);
+                processFinished("Vyskytla se chyba.", "Chyba: " + msg, true,FinishProcesStatus.FAILURE);
         });
 
         chartProgressBackground.setPrefWidth(0);
         chartProgressBackground.prefWidthProperty().bind(
                 chartContainer.widthProperty().multiply(syncBackupProcessTask.progressProperty())
         );
+
 
         new Thread(syncBackupProcessTask).start();
     }
@@ -267,7 +297,7 @@ public class CopyProcessController {
         return String.format("%02d:%02d:%02d", s/3600, (s % 3600) / 60,  s % 60);
     }
 
-    private void processFinished(String title, String message, boolean isError) {
+    private void processFinished(String title, String message, boolean isError, FinishProcesStatus finishProcesStatus) {
         uiTimeline.stop();
         btnCancel.setText("Zavřít");
         lbHeader.setText(title);
@@ -277,6 +307,27 @@ public class CopyProcessController {
             System.out.println(message);
         }
 
+        // příprava dat, vytvoření a vložení journal reportu do modelů
+        long durationMillis = System.currentTimeMillis() - startTime;
+        LocalTime processDuration = LocalTime.ofSecondOfDay(durationMillis / 1000);
+
+        if (finishProcesStatus == FinishProcesStatus.FAILURE) {
+            failPathList.add(currentFilePath);
+        }
+
+        JournalItemDataPack reportData = new JournalItemDataPack(
+                dateTimeOfStart,
+                processDuration,
+                editedTaskModel.getCompareStrategy(),
+                finishProcesStatus,
+                fileCount,
+                errorCount,
+                failPathList
+        );
+        originTaskModel.getJurnalInfoList().add(reportData);
+        editedTaskModel.getJurnalInfoList().add(reportData);
+
+        jsonService.updateTask_saveOldSave(originTaskModel);
     }
 
     @FXML
@@ -290,8 +341,6 @@ public class CopyProcessController {
         } else {
             ((Stage) btnCancel.getScene().getWindow()).close();
         }
-        errorCount =0;
-        fileCount =0;
     }
 
 }

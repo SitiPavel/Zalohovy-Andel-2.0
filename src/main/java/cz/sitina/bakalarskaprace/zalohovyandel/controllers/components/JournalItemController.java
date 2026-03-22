@@ -8,14 +8,16 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Formatter;
+import java.util.List;
 
 public class JournalItemController {
 
+    @FXML private TitledPane rootTitlePain;
     // nadpis
     @FXML private ImageView imgTitleProcessStatus;
     @FXML private ImageView imgTitleStrategy;
@@ -28,15 +30,26 @@ public class JournalItemController {
     @FXML private Label lbDurationTime;
     @FXML private Label lbSuccessCount;
     @FXML private Label lbErrorCount;
-    @FXML private Label lbSkipCount;
-    @FXML private TitledPane errorPathsContainer;
-
-    private Utility utility = new Utility();
+    @FXML private ListView errorPathsContent;
 
 
+    private List<JournalItemDataPack> copyOfEditedJournal;
+    private JournalItemDataPack dataPack;
+    private ListView<JournalItemDataPack> lvJournalContainer;
 
+    @FXML
+    private void initialize() {
+        rootTitlePain.setExpanded(false);
+
+        errorPathsContent.setStyle(
+                "-fx-background-color: transparent; " +
+                        "-fx-control-inner-background: transparent; " +
+                        "-fx-padding: 0;"
+        );
+    }
 
     public void setItem(JournalItemDataPack dataPack) {
+        this.dataPack = dataPack;
         // nadpis
         imgTitleProcessStatus.setImage(GuiUtiliy.findIconForStrategy(dataPack.getCompareStrategy()));
         imgTitleStrategy.setImage(GuiUtiliy.getIconProcessStatus(dataPack.getFinishProcesStatus()));
@@ -48,14 +61,13 @@ public class JournalItemController {
         lbImgFinishProcessStatus.setImage(GuiUtiliy.getIconProcessStatus(dataPack.getFinishProcesStatus()));
         imgStrategy.setImage(GuiUtiliy.findIconForStrategy(dataPack.getCompareStrategy()));
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
-        lbDurationTime.setText(dataPack.getProcesDuration().format(formatterTime));
-        lbSuccessCount.setText(String.valueOf(dataPack.getSucessCount()));
+        lbDurationTime.setText(dataPack.getProcessDuration().format(formatterTime));
+        lbSuccessCount.setText(String.valueOf(dataPack.getFileCount()));
         lbErrorCount.setText(String.valueOf(dataPack.getFailCount()));
-        lbSkipCount.setText(String.valueOf(dataPack.getSkipedFiles()));
 
-
-
-
+        for (String path : dataPack.getFailPathList()) {
+            errorPathsContent.getItems().add(path);
+        }
 
 
     }
@@ -69,9 +81,22 @@ public class JournalItemController {
     }
 
     @FXML
-    private void deleteThisJurnalItem(ActionEvent event ) {
+    private void deleteThisJournalItem(ActionEvent event ) {
+        copyOfEditedJournal.removeIf(item -> item.getId() == dataPack.getId());
+        refreshErrorContentList();
+    }
 
+    private void refreshErrorContentList() {
+        lvJournalContainer.getItems().clear();
+        lvJournalContainer.getItems().addAll(copyOfEditedJournal);
+    }
+
+    public void setCopyOfEditedJournal(List<JournalItemDataPack> copyOfEditedJournal) {
+        this.copyOfEditedJournal = copyOfEditedJournal;
     }
 
 
+    public void setThisTitlePane(ListView listView) {
+        this.lvJournalContainer = listView;
+    }
 }

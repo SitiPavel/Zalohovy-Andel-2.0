@@ -78,10 +78,13 @@ public class Main extends Application {
                 CompareStrategy.BIDIRECTIONAL_SYNC,    // compareStrategy: Zvolená strategie z Enumu
                 FinishProcesStatus.SUCCESS,            // finishProcesStatus: Stav dokončení z Enumu
                 120,                                   // sucessCount: Počet úspěšných
-                0,                                     // failCount: Počet selhání
-                new java.util.LinkedHashSet<>(),       // failPathList: Prázdný Set pro selhané položky
-                5                                      // skipedFiles: Počet přeskočených
+                2,                                     // failCount: Počet selhání
+                new java.util.LinkedHashSet<>(List.of("D:\\testBakalarky\\Test05\\_gsdata_", "D:\\testBakalarky" +
+                        "\\Test05\\Nový Dokument Microsoft Wordu.docx"))       //
+                // failPathList: Prázdný Set pro selhané
+                // položky
         ));
+
 
 
         taskRepository.add(new ManualSyncTask("zaloha manual 1",

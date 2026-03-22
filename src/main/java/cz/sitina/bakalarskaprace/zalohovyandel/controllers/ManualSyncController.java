@@ -512,7 +512,8 @@ public class ManualSyncController implements TaskController {
             try {
                 FXMLLoader loader = loadFXML("recapitulationBeforeCopyFiles.fxml");
                 RecapitulationBeforeCopyFilesController controller = loader.getController();
-                controller.setTask(editableManualTask);
+                controller.setEditedTask(editableManualTask);
+                controller.setOriginTask(originalManualTask);
                 controller.setComparedAndStatisticsData(statisticsAndComparedData);
                 controller.setStrategyModified(false);
                 controller.setList(resultComparedList);
@@ -537,11 +538,12 @@ public class ManualSyncController implements TaskController {
     }
 
     @FXML
-    public void showJurnal(ActionEvent event) {
+    public void showJournal(ActionEvent event) {
         try {
             FXMLLoader loader = loadFXML("journalWindow.fxml");
             JournalController controller = loader.getController();
-            controller.setTaskModel(editableManualTask);
+            controller.setEditedTask(editableManualTask);
+            controller.setIsChanged(() -> markAsDirty());
 
             WindowManager.openNewWindowAutoSized(loader, "Journal");
 

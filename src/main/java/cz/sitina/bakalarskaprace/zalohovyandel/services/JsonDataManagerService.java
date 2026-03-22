@@ -72,12 +72,6 @@ public class JsonDataManagerService {
         deleteOldBackup();
     }
 
-    public void saveAllTask_SaveOldSave(List<TaskModel> taskList) {
-        createBackup();
-        saveAllTasks_rewriteOldSave(taskList);
-        deleteOldBackup();
-
-    }
 
     /// přepisují uložený soubor, nevratně je ztracen
     public void saveNewTask_rewriteOldSave(TaskModel task) {
@@ -86,6 +80,31 @@ public class JsonDataManagerService {
         saveAllTasks_rewriteOldSave(TaskList);
     }
 
+    public void updateTask_saveOldSave(TaskModel updatedTask) {
+        List<TaskModel> taskList = loadAllTasks();
+        boolean found = false;
+        for (TaskModel taskModel : taskList) {
+            if (taskModel.getId() == updatedTask.getId()) {
+                taskModel.updateTaskModel(updatedTask);
+                found = true;
+
+            }
+        }
+        if (found) {
+            saveAllTask_SaveOldSave(taskList);
+        }
+
+    }
+    public void updateTask_rewriteOldSave(TaskModel task) {
+
+    }
+
+    public void saveAllTask_SaveOldSave(List<TaskModel> taskList) {
+        createBackup();
+        saveAllTasks_rewriteOldSave(taskList);
+        deleteOldBackup();
+
+    }
 
     public void saveAllTasks_rewriteOldSave(List<TaskModel> tasks) {
         try {
