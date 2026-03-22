@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane prefHeight="550.0" prefWidth="800.0" styleClass="liteDarkConteiner" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.JournaController">
+<AnchorPane prefHeight="550.0" prefWidth="800.0" styleClass="liteDarkConteiner" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.JournalController">
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -30,7 +29,7 @@
                         </Label>
                         <HBox alignment="CENTER_RIGHT">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#deleteAll" text="Smazat vše">
+                              <Button mnemonicParsing="false" onAction="#deleteAllItems" text="Smazat vše">
                                  <styleClass>
                                     <String fx:value="WindowTitle_L1_Dark" />
                                     <String fx:value="button_NonBackground" />
@@ -42,11 +41,11 @@
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </HBox>
-                        <ListView fx:id="lvJurnalConteiner" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="300.0">
+                        <ListView fx:id="lvJournalContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="300.0">
                            <styleClass>
-                              <String fx:value="backgroundModify_transparent" />
                               <String fx:value="allBorder_2" />
                               <String fx:value="borderModify_Only0111_Radius15" />
+                              <String fx:value="backgroundModify_transparent" />
                            </styleClass>
                         </ListView>
                      </children>

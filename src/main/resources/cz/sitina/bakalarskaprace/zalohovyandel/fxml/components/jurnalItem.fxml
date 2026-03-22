@@ -12,19 +12,16 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-
-<TitledPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="334.0"
-            prefWidth="500.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.components.JurnalItemController">
+<TitledPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="430.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.components.JournalItemController">
    <graphic>
-      <HBox alignment="CENTER">
+      <HBox alignment="CENTER" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" prefHeight="25.0">
          <children>
-            <ImageView fx:id="imgTitleProcesStatus" fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imgTitleProcessStatus" fitHeight="20.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
                <image>
                   <Image url="@../../images/visualObjects/cros.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="imgTitleStrategy" fitHeight="21.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imgTitleStrategy" fitHeight="21.0" fitWidth="130.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
                <image>
                   <Image url="@../../images/visualObjects/biDirectionalSync.png" />
                </image>
@@ -32,17 +29,12 @@
                   <Insets left="5.0" right="5.0" />
                </HBox.margin>
             </ImageView>
-            <Label fx:id="lbStartDate" text="30.12.2023">
+            <Label fx:id="lbStartDate" text="30.12.2023 16:51">
                <HBox.margin>
                   <Insets left="5.0" />
                </HBox.margin>
             </Label>
-            <Label fx:id="lbStartTime" text="16:30">
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </Label>
-            <Region HBox.hgrow="ALWAYS" />
+            <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#deleteThisJurnalItem" text="Smazat">
                <padding>
                   <Insets left="5.0" right="5.0" />
@@ -73,14 +65,17 @@
             <HBox>
                <children>
                   <Label styleClass="darkBoltText" text="Výsledek:" />
-                  <Label fx:id="lbFinishProcesStatus" styleClass="darkBoltText" text="Přerušeno">
+                  <Label fx:id="lbFinishProcessStatus" styleClass="darkBoltText" text="Přerušeno">
                      <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="lbImgFinishProcessStatus" fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../images/visualObjects/cros.png" />
                            </image>
                         </ImageView>
                      </graphic>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
                   </Label>
                   <Region HBox.hgrow="ALWAYS" />
                   <Label fx:id="lbSuccessCount" styleClass="darkBoltText" text="00000000">
@@ -112,13 +107,13 @@
             <HBox>
                <children>
                   <Label styleClass="darkBoltText" text="Strategie:  " />
-                  <ImageView fx:id="imgStrategi" fitHeight="150.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="imgStrategy" fitHeight="150.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../images/visualObjects/biDirectionalSync.png" />
                      </image>
                   </ImageView>
                   <Region HBox.hgrow="ALWAYS" />
-                  <Label fx:id="lbSkipCount1" styleClass="darkBoltText" text="00000000">
+                  <Label fx:id="lbSkipCount" styleClass="darkBoltText" text="00000000">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -145,7 +140,7 @@
                   <Label fx:id="lbDurationTime" styleClass="darkBoltText" text="5:35" />
                </children>
             </HBox>
-            <TitledPane fx:id="ErrorPathsConteiner" maxHeight="250.0" maxWidth="1.7976931348623157E308" minHeight="10.0" minWidth="200.0" styleClass="titlePain_styl2" text="Nepodařilo se zpracovat" VBox.vgrow="ALWAYS">
+            <TitledPane fx:id="errorPathsContainer" maxHeight="250.0" maxWidth="1.7976931348623157E308" minHeight="10.0" minWidth="200.0" styleClass="titlePain_styl2" text="Nepodařilo se zpracovat" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>

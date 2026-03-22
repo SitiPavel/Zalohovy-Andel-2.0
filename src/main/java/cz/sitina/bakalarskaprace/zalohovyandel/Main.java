@@ -1,6 +1,8 @@
 package cz.sitina.bakalarskaprace.zalohovyandel;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.AppFrameController;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
@@ -59,11 +61,27 @@ public class Main extends Application {
 
     private void createFirstData(TaskRepository taskRepository) {
 
-        taskRepository.add(new ManualSyncTask("Test operací pro složky",
+
+        ManualSyncTask task1 = new ManualSyncTask("Test operací pro složky",
                 "D:\\testBakalarky\\Test03",
                 "D:\\testBakalarky\\Test06",
-                "testuje jestli se dobře přidělují operace složkám")
-        );
+                "testuje jestli se dobře přidělují operace složkám");
+        taskRepository.add(task1);
+
+        task1.getBlockSet().add("skola\\semestr1");
+        task1.getBlockSet().add("skola\\semestr2\\PRIPO-to-podstatné (1).docx");
+        task1.getBlockSet().add("DSC_0063.NEF");
+
+        task1.getJurnalInfoList().add(new JournalItemDataPack(
+                java.time.LocalDateTime.now(),         // DateTime: Aktuální datum a čas spuštění
+                java.time.LocalTime.of(0, 15, 30),     // procesDuration: Např. 15 minut a 30 vteřin
+                CompareStrategy.BIDIRECTIONAL_SYNC,    // compareStrategy: Zvolená strategie z Enumu
+                FinishProcesStatus.SUCCESS,            // finishProcesStatus: Stav dokončení z Enumu
+                120,                                   // sucessCount: Počet úspěšných
+                0,                                     // failCount: Počet selhání
+                new java.util.LinkedHashSet<>(),       // failPathList: Prázdný Set pro selhané položky
+                5                                      // skipedFiles: Počet přeskočených
+        ));
 
 
         taskRepository.add(new ManualSyncTask("zaloha manual 1",

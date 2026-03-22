@@ -7,6 +7,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtiliy;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -57,13 +58,7 @@ public class RecapitulationBeforeCopyFilesController  {
         lbRightUpdateCount.setText(String.valueOf(comparedAndStatisticsData.getRightUpdateCount()));
         lbRightAddCount.setText(String.valueOf(comparedAndStatisticsData.getRightAddCount()));
 
-        switch (strategy) {
-            case BIDIRECTIONAL_SYNC -> imgCompareStrategy.setImage(iconManager.getBiDirectionalSync());
-            case BACKUP_TO_RIGHT -> imgCompareStrategy.setImage(iconManager.getOneWayLeftToRight());
-            case BACKUP_TO_LEFT -> imgCompareStrategy.setImage(iconManager.getOneWayRightToLeft());
-            case MIRRORING_to_RIGHT -> imgCompareStrategy.setImage(iconManager.getMirroringLeftToRight());
-            case MIRRORING_TO_lEFT -> imgCompareStrategy.setImage(iconManager.getMirroringRightToLeft());
-        }
+        imgCompareStrategy.setImage(GuiUtiliy.findIconForStrategy(strategy));
 
         // indikátor upravy se naastaví podle
         modifiedIndicator.setDisable(isStrategyModified);

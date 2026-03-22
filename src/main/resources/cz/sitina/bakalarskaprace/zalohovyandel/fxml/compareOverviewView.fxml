@@ -266,7 +266,7 @@
                            </HBox.margin>
                         </Button>
                         <Region prefHeight="200.0" prefWidth="200.0" />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showJurnal" prefHeight="50.0" prefWidth="50.0">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>

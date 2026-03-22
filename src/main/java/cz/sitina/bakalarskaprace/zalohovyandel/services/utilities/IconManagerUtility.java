@@ -90,6 +90,19 @@ public class IconManagerUtility {
     private final Image manualSync_TabbleIcon =
             new Image(getClass().getResourceAsStream(path_iconsSmall + "manualSync_TabbleIcon.png"));
 
+
+    //**********************************/
+    // status = výsledek procesu
+    private final Image cros =
+            new Image(getClass().getResourceAsStream(path_visualObjects + "cros.png"));
+    private final Image checkMark =
+            new Image(getClass().getResourceAsStream(path_visualObjects + "checkMark.png"));
+    private final Image error =
+            new Image(getClass().getResourceAsStream(path_visualObjects + "error.png"));
+
+
+
+
     //**********************************/
     // nějaké GUI prvky - mají funkčnost
     private final Image entryIcon =
@@ -394,5 +407,17 @@ public class IconManagerUtility {
 
     public Image getBlockedFile() {
         return blockedFile;
+    }
+
+    public Image getCros() {
+        return cros;
+    }
+
+    public Image getCheckMark() {
+        return checkMark;
+    }
+
+    public Image getError() {
+        return error;
     }
 }

@@ -40,6 +40,7 @@ public class TaskOverviewController {
         int typeSize = 30;
 
         Label tablePlaceholder = new Label("Nejsou vytvořené úlohy!");
+        tablePlaceholder.getStyleClass().add("DarkBoltHeader1");
         taskTable.setPlaceholder(tablePlaceholder);
 
 

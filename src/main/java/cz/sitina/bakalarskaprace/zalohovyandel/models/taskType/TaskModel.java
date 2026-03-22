@@ -3,7 +3,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.models.taskType;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilters_TaskData;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JurnalBackupInfo;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes;
 
@@ -32,7 +32,7 @@ public abstract class TaskModel {
     private String status;
     private LocalDate creationDate;
     private Set<String> blockList = new LinkedHashSet<>();
-    private List<JurnalBackupInfo> jurnalInfoList;
+    private List<JournalItemDataPack> jurnalInfoList;
 
     private GuiOperationFilters_TaskData guiOperationFilters;
 
@@ -147,7 +147,7 @@ public abstract class TaskModel {
         return compareStrategy;
     }
 
-    public List<JurnalBackupInfo> getJurnalInfoList() {
+    public List<JournalItemDataPack> getJurnalInfoList() {
         return jurnalInfoList;
     }
 
@@ -186,7 +186,7 @@ public abstract class TaskModel {
         isContentHash = contentHash;
     }
 
-    public void setJurnalInfoList(List<JurnalBackupInfo> jurnalInfoList) {
+    public void setJurnalInfoList(List<JournalItemDataPack> jurnalInfoList) {
         this.jurnalInfoList = jurnalInfoList;
     }
 }

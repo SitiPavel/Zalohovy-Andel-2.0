@@ -184,6 +184,7 @@ public class ManualSyncController implements TaskController {
                 cellData.getValue().getValue().getRightItem().getFormatedLastModified());
 
         Label tablePlaceholder = new Label("Není porovnaná levá s pravou složkou, nutno porovnat!");
+        tablePlaceholder.getStyleClass().add("DarkBoltHeader1");
         filesTreeTable.setPlaceholder(tablePlaceholder);
 
         /// NASTAVENÍ SLOUPCŮ
@@ -532,6 +533,21 @@ public class ManualSyncController implements TaskController {
                     "V porovnání nejsou položky, vyžadují manipulaci",
                     "Aby mohla být synchronizace/záloha spuštěna musí obsahovat alespoň jednu z těchto operací: " +
                             "PŘIDAT, UPRAVIT, SMAZAT na libovolnou stranu");
+        }
+    }
+
+    @FXML
+    public void showJurnal(ActionEvent event) {
+        try {
+            FXMLLoader loader = loadFXML("journalWindow.fxml");
+            JournalController controller = loader.getController();
+            controller.setTaskModel(editableManualTask);
+
+            WindowManager.openNewWindowAutoSized(loader, "Journal");
+
+
+        } catch (IOException e) {
+            ErrorUtility.showError_WindowLoading(e);
         }
     }
 
