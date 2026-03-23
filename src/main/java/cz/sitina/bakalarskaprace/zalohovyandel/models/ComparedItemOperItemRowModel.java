@@ -4,6 +4,8 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.nio.file.Path;
+
 public class ComparedItemOperItemRowModel {
 
     private ObjectProperty<FileItemModel> leftItem;
@@ -18,6 +20,14 @@ public class ComparedItemOperItemRowModel {
 
     public boolean isFolder() {
         return this.operation.getValue() == CompareOperations.FOLDER;
+    }
+
+    public Path getNotNullPath() {
+        if (leftItem.getValue().getFileAbsolutePath() != null) {
+            return leftItem.getValue().getFileAbsolutePath();
+        } else {
+            return rightItem.getValue().getFileAbsolutePath();
+        }
     }
 
     ///GETRY

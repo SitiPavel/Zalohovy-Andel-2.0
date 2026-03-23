@@ -2,7 +2,11 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services.utilities;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
+import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.image.Image;
+import javafx.scene.input.ScrollEvent;
 
 import javax.swing.text.IconView;
 
@@ -27,4 +31,7 @@ public  class GuiUtiliy {
             case INTERRUPTED -> iconManager.getCros();
         };
     }
+
+
+
 }

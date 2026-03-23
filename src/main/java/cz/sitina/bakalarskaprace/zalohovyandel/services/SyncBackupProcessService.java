@@ -20,8 +20,8 @@ public class SyncBackupProcessService {
 
     public interface ProgressCallback {
         void onProgress(long bytesProcessed, long totalBytes, String currentFile,
-                        int processedFileCount, String currentAbsolutFilePath);
-        void onItemCompleted(boolean success);
+                        int processedFileCount);
+        void onItemCompleted(boolean success, ComparedItemOperItemRowModel row);
     }
 
     public void executeCopyFiles(
@@ -40,7 +40,7 @@ public class SyncBackupProcessService {
         Path leftRoot = Paths.get(task.getLeftPath());
         Path rightRoot= Paths.get(task.getRightPath());
 
-        callback.onProgress(globalProcessedBytes, totalBytes, "Start...", processedFileCount, "");
+        callback.onProgress(globalProcessedBytes, totalBytes, "Start...", processedFileCount);
         boolean success = true;
 
         for (ComparedItemOperItemRowModel row : itemsToProcess) {
@@ -83,23 +83,20 @@ public class SyncBackupProcessService {
                         Files.deleteIfExists(leftItem.getFileAbsolutePath());
                         processedFileCount++;
                         callback.onProgress(globalProcessedBytes, totalBytes
-                                , currentFileName, processedFileCount,
-                                leftItem.getFileAbsolutePath().toString());
+                                , currentFileName, processedFileCount);
                     }
                     case DELETE_RIGHT -> {
                         Files.deleteIfExists(rightItem.getFileAbsolutePath());
                         processedFileCount++;
                         callback.onProgress(globalProcessedBytes, totalBytes,
-                                currentFileName, processedFileCount,
-                                rightItem.getFileAbsolutePath().toString());
+                                currentFileName, processedFileCount);
                     }
                     case DELETE_BOTH -> {
                         Files.deleteIfExists(leftItem.getFileAbsolutePath());
                         Files.deleteIfExists(rightItem.getFileAbsolutePath());
                         processedFileCount++;
                         callback.onProgress(globalProcessedBytes, totalBytes,
-                                currentFileName, processedFileCount,
-                                leftItem.getFileAbsolutePath().toString());
+                                currentFileName, processedFileCount);
                     }
                 }
                 if (operations.name().contains("ADD") || operations.name().contains("UPDATE")) {
@@ -112,7 +109,7 @@ public class SyncBackupProcessService {
                 success = false;
             }
 
-            callback.onItemCompleted(success);
+            callback.onItemCompleted(success, row);
         }
     }
     private void  copyFile(Path source, Path target) throws IOException {
@@ -164,14 +161,12 @@ public class SyncBackupProcessService {
                 // pokud bychom hlásili každý blok mohlo byt to zahltit aplikaci
                 if ( (bytesCopiedForThisFile - lastReportedBites)  >= 1024*1024) {
                     callback.onProgress(alreadyProcessedGlobal + bytesCopiedForThisFile,
-                            totalBytes, fileName,
-                            processedFileCount, currentAbsolutFilePath);
+                            totalBytes, fileName, processedFileCount);
                     lastReportedBites = bytesCopiedForThisFile;
                 }
             }
             callback.onProgress(alreadyProcessedGlobal + bytesCopiedForThisFile,
-                    totalBytes, fileName,
-                    processedFileCount, currentAbsolutFilePath);
+                    totalBytes, fileName, processedFileCount);
         }//Soubor je přenesen a uzavřen
 
         /*

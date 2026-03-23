@@ -5,6 +5,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPa
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtiliy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -106,8 +107,7 @@ public class JournalController {
         this.copyOfEditedJournal = new ArrayList<>(editedTask.getJurnalInfoList());
         if (!copyOfEditedJournal.isEmpty()) {
             for (JournalItemDataPack item: copyOfEditedJournal) {
-                lvJournalContainer.getItems().add(item);
-
+                lvJournalContainer.getItems().add(0,item);
             }
         }
 

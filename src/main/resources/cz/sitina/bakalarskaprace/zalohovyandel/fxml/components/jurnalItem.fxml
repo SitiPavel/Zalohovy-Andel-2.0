@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<TitledPane fx:id="rootTitlePain" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="430.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.components.JournalItemController">
+<TitledPane fx:id="rootTitlePain" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="430.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.components.JournalItemController">
    <graphic>
-      <HBox alignment="CENTER" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="250.0" prefHeight="25.0">
+      <HBox alignment="CENTER" maxHeight="25.0" maxWidth="1000.0" minHeight="25.0" minWidth="250.0" prefHeight="25.0">
          <children>
             <ImageView fx:id="imgTitleProcessStatus" fitHeight="20.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
                <image>
@@ -35,7 +35,19 @@
                   <Insets left="5.0" />
                </HBox.margin>
             </Label>
-            <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+            <Label fx:id="lbTitleErrorCount" styleClass="darkBoltText" text="00000000">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../images/visualObjects/error.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="50.0" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#deleteThisJournalItem" text="Smazat">
                <padding>
                   <Insets left="5.0" right="5.0" />
@@ -129,12 +141,32 @@
                   <Label fx:id="lbDurationTime" styleClass="darkBoltText" text="5:35" />
                </children>
             </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="darkBoltText" text="Levá: ">
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="lbLeftRootPath" styleClass="darkBoltText" text="\\cesta\" />
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="darkBoltText" text="Pravá: ">
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="lbRightRootPath" styleClass="darkBoltText" text="\\Cesta\" />
+               </children>
+            </HBox>
             <TitledPane fx:id="errorPathsContainer" maxHeight="250.0" maxWidth="1.7976931348623157E308" minHeight="60.0" minWidth="200.0" styleClass="titlePain_styl2" text="Nepodařilo se zpracovat" VBox.vgrow="ALWAYS">
                <VBox.margin>
-                  <Insets top="20.0" />
+                  <Insets top="10.0" />
                </VBox.margin>
                <content>
-                  <ListView fx:id="errorPathsContent" maxHeight="200.0" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="250.0" styleClass="listview_Styl1" />
+                  <ListView fx:id="errorPathsContent" maxHeight="175.0" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="250.0" styleClass="listview_Styl1" />
                </content>
             </TitledPane>
          </children>

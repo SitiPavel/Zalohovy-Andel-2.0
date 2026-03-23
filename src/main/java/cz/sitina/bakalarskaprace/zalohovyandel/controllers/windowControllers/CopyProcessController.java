@@ -26,6 +26,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -73,8 +74,6 @@ public class CopyProcessController {
     private int errorCount = 0;
     private boolean isChartConfigured;
     int totalFilesToProcess = 0;
-    int filesInItemOperItemROw;
-    String currentFilePath = "";
 
     /// žurnál info
     private LocalDateTime dateTimeOfStart = LocalDateTime.now();
@@ -147,9 +146,8 @@ public class CopyProcessController {
 
                             @Override
                             public void onProgress(long bytesProcessed, long totalBytes, String currentFile,
-                                                   int processedFileCount, String callbackCurrentFile) {
+                                                   int processedFileCount) {
 
-                                currentFilePath = callbackCurrentFile;
                                 // 1. Změna nadpisů a os (Jen jednou na začátku)
                                 if (!isChartConfigured) {
                                     Platform.runLater(() -> {
@@ -231,8 +229,10 @@ public class CopyProcessController {
                                 }
                             }
 
+
+
                             @Override
-                            public void onItemCompleted(boolean success) {
+                            public void onItemCompleted(boolean success, ComparedItemOperItemRowModel row) {
                                 Platform.runLater(() ->{
                                     if (success) {
                                         fileCount++;
@@ -240,7 +240,10 @@ public class CopyProcessController {
                                     } else {
                                         errorCount++;
                                         lbErrorCount.setText(String.valueOf(errorCount));
+                                        Path errorPath = row.getNotNullPath();
+                                        failPathList.add(errorPath.toString());
                                     }
+
                                 });
                             }
                         },
@@ -311,9 +314,6 @@ public class CopyProcessController {
         long durationMillis = System.currentTimeMillis() - startTime;
         LocalTime processDuration = LocalTime.ofSecondOfDay(durationMillis / 1000);
 
-        if (finishProcesStatus == FinishProcesStatus.FAILURE) {
-            failPathList.add(currentFilePath);
-        }
 
         JournalItemDataPack reportData = new JournalItemDataPack(
                 dateTimeOfStart,
@@ -322,7 +322,10 @@ public class CopyProcessController {
                 finishProcesStatus,
                 fileCount,
                 errorCount,
-                failPathList
+                failPathList,
+                editedTaskModel.getLeftPath(),
+                editedTaskModel.getRightPath()
+
         );
         originTaskModel.getJurnalInfoList().add(reportData);
         editedTaskModel.getJurnalInfoList().add(reportData);

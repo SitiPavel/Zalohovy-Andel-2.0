@@ -21,6 +21,10 @@ public class JournalItemDataPack {
     private int failCount;
     private int fileCount;
 
+    private String leftRootPath;
+    private String rightRootPath;
+
+
     private Set<String> failPathList;
 
     public JournalItemDataPack() {
@@ -32,7 +36,9 @@ public class JournalItemDataPack {
                                FinishProcesStatus finishProcesStatus,
                                int fileCount,
                                int failCount,
-                               Set<String> failPathList
+                               Set<String> failPathList,
+                               String leftRootPath,
+                               String rightRootPath
     ) {
         this.id = System.currentTimeMillis();
         this.dateTimeOfStart = DateTime;
@@ -44,6 +50,8 @@ public class JournalItemDataPack {
         this.failCount = failCount;
         this.fileCount = fileCount;
 
+        this.leftRootPath =leftRootPath;
+        this.rightRootPath = rightRootPath;
 
         this.failPathList = new LinkedHashSet<>(failPathList);
 
@@ -83,5 +91,13 @@ public class JournalItemDataPack {
 
     public int getFileCount() {
         return fileCount;
+    }
+
+    public String getLeftRootPath() {
+        return leftRootPath;
+    }
+
+    public String getRightRootPath() {
+        return rightRootPath;
     }
 }

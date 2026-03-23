@@ -22,6 +22,7 @@ public class JournalItemController {
     @FXML private ImageView imgTitleProcessStatus;
     @FXML private ImageView imgTitleStrategy;
     @FXML private Label lbStartDate;
+    @FXML private Label lbTitleErrorCount;
 
     // obsah
     @FXML private Label lbFinishProcessStatus;
@@ -30,7 +31,9 @@ public class JournalItemController {
     @FXML private Label lbDurationTime;
     @FXML private Label lbSuccessCount;
     @FXML private Label lbErrorCount;
-    @FXML private ListView errorPathsContent;
+    @FXML private ListView<String> errorPathsContent;
+    @FXML private Label lbLeftRootPath;
+    @FXML private Label lbRightRootPath;
 
 
     private List<JournalItemDataPack> copyOfEditedJournal;
@@ -55,6 +58,7 @@ public class JournalItemController {
         imgTitleStrategy.setImage(GuiUtiliy.getIconProcessStatus(dataPack.getFinishProcesStatus()));
         DateTimeFormatter formatterDateTime = DateTimeFormatter.ofPattern("dd. MM. yyyy.   HH:mm");
         lbStartDate.setText(dataPack.getDateTimeOfStart().format(formatterDateTime));
+        lbTitleErrorCount.setText(String.valueOf(dataPack.getFailCount()));
 
         // obsah
         lbFinishProcessStatus.setText(getStatusName(dataPack.getFinishProcesStatus()));
@@ -64,11 +68,12 @@ public class JournalItemController {
         lbDurationTime.setText(dataPack.getProcessDuration().format(formatterTime));
         lbSuccessCount.setText(String.valueOf(dataPack.getFileCount()));
         lbErrorCount.setText(String.valueOf(dataPack.getFailCount()));
+        lbLeftRootPath.setText(dataPack.getLeftRootPath());
+        lbRightRootPath.setText(dataPack.getRightRootPath());
 
         for (String path : dataPack.getFailPathList()) {
             errorPathsContent.getItems().add(path);
         }
-
 
     }
 

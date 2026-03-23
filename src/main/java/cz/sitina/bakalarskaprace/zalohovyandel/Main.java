@@ -31,7 +31,7 @@ public class Main extends Application {
 
 
         /// načítá data při zapnutí aplikace
-        //createFirstData(taskRepository); //Pro vytvoření dat
+//        createFirstData(taskRepository); //Pro vytvoření dat
        /**/
        for (TaskModel task: jsonManager.loadAllTasks()){
 
@@ -80,9 +80,10 @@ public class Main extends Application {
                 120,                                   // sucessCount: Počet úspěšných
                 2,                                     // failCount: Počet selhání
                 new java.util.LinkedHashSet<>(List.of("D:\\testBakalarky\\Test05\\_gsdata_", "D:\\testBakalarky" +
-                        "\\Test05\\Nový Dokument Microsoft Wordu.docx"))       //
-                // failPathList: Prázdný Set pro selhané
-                // položky
+                        "\\Test05\\Nový Dokument Microsoft Wordu.docx")),
+                "D:\\testBakalarky\\Test03",
+                "D:\\testBakalarky\\Test06"
+
         ));
 
 

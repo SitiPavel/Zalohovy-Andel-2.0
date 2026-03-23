@@ -44,9 +44,16 @@
                         <ListView fx:id="lvJournalContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="300.0">
                            <styleClass>
                               <String fx:value="allBorder_2" />
-                              <String fx:value="borderModify_Only0111_Radius15" />
+                              <String fx:value="borderModify_Only0011_Radius10" />
                               <String fx:value="backgroundModify_transparent" />
+                              <String fx:value="listview_Styl1" />
                            </styleClass>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="20.0" />
+                           </VBox.margin>
                         </ListView>
                      </children>
                   </VBox>
