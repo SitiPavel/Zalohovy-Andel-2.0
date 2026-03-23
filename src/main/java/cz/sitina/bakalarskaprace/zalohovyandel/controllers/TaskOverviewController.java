@@ -1,7 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.AutoBackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
@@ -100,8 +100,10 @@ public class TaskOverviewController {
             else if (task instanceof ManualSyncTask manualSyncTask) {
                 iconToDisplay = iconManager.getManualSync_TabbleIcon();
 
-            } else if (task instanceof AutoBackupTask autoBackupTask) {
+            } else if (task instanceof BackupTask backupTask) {
+                iconToDisplay = iconManager.getBackup_TabbleIcon();
 
+                /*
                 if (autoBackupTask.isCompressed() &&
                         autoBackupTask.isEncripted()) {
                     iconToDisplay =  iconManager.getAutoBackupIcon_EncCom();
@@ -115,6 +117,7 @@ public class TaskOverviewController {
                 } else {
                     iconToDisplay = iconManager.getAutoBackupIcon();
                 }
+                */
             }
             return new SimpleObjectProperty<>(iconToDisplay);
         });
@@ -144,15 +147,15 @@ public class TaskOverviewController {
         taskColStatus.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getStatus()));
         taskColRepeatIntervals.setCellValueFactory(cellData -> {
-            if (cellData.getValue() instanceof AutoBackupTask autoBackupTask) {
-                return new SimpleStringProperty(autoBackupTask.repeatIntervalToString());
+            if (cellData.getValue() instanceof BackupTask backupTask) {
+                return new SimpleStringProperty(/*backupTask.repeatIntervalToString()*/);
             } else {
                 return new SimpleStringProperty("---");
             }
         });
         taskColCompression.setCellValueFactory(cellData ->{
-            if (cellData.getValue() instanceof AutoBackupTask autoBackupTask) {
-                if (autoBackupTask.isCompressed()) {
+            if (cellData.getValue() instanceof BackupTask backupTask) {
+                if (backupTask.isCompressed()) {
                     return new SimpleStringProperty("✓");
                 } else {
                     return new SimpleStringProperty("✘");
@@ -162,8 +165,8 @@ public class TaskOverviewController {
             }
         });
         taskColEncryption.setCellValueFactory(cellData ->{
-            if (cellData.getValue() instanceof AutoBackupTask autoBackupTask) {
-                if (autoBackupTask.isEncripted()) {
+            if (cellData.getValue() instanceof BackupTask backupTask) {
+                if (backupTask.isEncrypted()) {
                     return new SimpleStringProperty("✓");
                 } else {
                     return new SimpleStringProperty("✘");

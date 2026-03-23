@@ -49,4 +49,11 @@ public class ManualSyncTask extends TaskModel{
     public List<String> getRootFilteredFolders_Right() {
         return rootFilteredFolders_Right;
     }
+
+    public void setLeftPath(String leftPath) {
+        this.leftPath = leftPath;
+    }
+    public void setRightPath(String rightPath) {
+        this.rightPath = rightPath;
+    }
 }

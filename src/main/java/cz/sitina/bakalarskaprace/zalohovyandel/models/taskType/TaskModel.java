@@ -26,8 +26,8 @@ public abstract class TaskModel {
     private long id; // máme jako daatum a čas vytvoření v milisekundách
     private TaskTypes taskType;
     private String name;
-    private String leftPath;
-    private String rightPath;
+    protected String leftPath;
+    protected String rightPath;
     private String description;
     private String status;
     private LocalDate creationDate;
@@ -45,6 +45,7 @@ public abstract class TaskModel {
     protected TaskModel() {
     }
 
+    // pro nové úlohy
     public TaskModel( TaskTypes taskType,
                      String name,
                      String leftPath,
@@ -164,14 +165,9 @@ public abstract class TaskModel {
     }
 
     //setry
+
     public void setName(String name) {
         this.name = name;
-    }
-    public void setLeftPath(String leftPath) {
-        this.leftPath = leftPath;
-    }
-    public void setRightPath(String rightPath) {
-        this.rightPath = rightPath;
     }
     public void setDescription(String description) {
         this.description = description;

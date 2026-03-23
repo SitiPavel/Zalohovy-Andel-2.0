@@ -79,6 +79,7 @@ public class IconManagerUtility {
 
     //**********************************/
     // task kategorie
+    /*
     private final Image autoBackupIcon =
             new Image(getClass().getResourceAsStream(path_iconsSmall + "autoBackup_TableIcon_n_n.png"));
     private final Image autoBackupIcon_Com =
@@ -87,8 +88,11 @@ public class IconManagerUtility {
             new Image(getClass().getResourceAsStream(path_iconsSmall + "autoBackup_TableIcon_S_n.png"));
     private final Image autoBackupIcon_EncCom =
             new Image(getClass().getResourceAsStream(path_iconsSmall + "autoBackup_TableIcon_S_K.png"));
+            */
     private final Image manualSync_TabbleIcon =
             new Image(getClass().getResourceAsStream(path_iconsSmall + "manualSync_TabbleIcon.png"));
+    private final Image backup_TabbleIcon =
+            new Image(getClass().getResourceAsStream(path_iconsSmall + "backup_TabbleIcon.png"));
 
 
     //**********************************/
@@ -273,21 +277,7 @@ public class IconManagerUtility {
         return entryIcon;
     }
 
-    public Image getAutoBackupIcon() {
-        return autoBackupIcon;
-    }
 
-    public Image getAutoBackupIcon_Com() {
-        return autoBackupIcon_Com;
-    }
-
-    public Image getAutoBackupIcon_Enc() {
-        return autoBackupIcon_Enc;
-    }
-
-    public Image getAutoBackupIcon_EncCom() {
-        return autoBackupIcon_EncCom;
-    }
 
     public Image getManualSync_TabbleIcon() {
         return manualSync_TabbleIcon;
@@ -419,5 +409,9 @@ public class IconManagerUtility {
 
     public Image getError() {
         return error;
+    }
+
+    public Image getBackup_TabbleIcon() {
+        return backup_TabbleIcon;
     }
 }

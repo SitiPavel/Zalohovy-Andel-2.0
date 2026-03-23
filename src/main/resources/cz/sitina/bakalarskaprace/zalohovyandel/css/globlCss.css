@@ -82,6 +82,23 @@
     -fx-text-fill: -fx-color-mark2;
 }
 
+.formRequiredMark_Red {
+    -fx-font-size: 15px;
+    -fx-font-weight: bolt;
+    -fx-text-fill: -fx-color-mark2;
+}
+
+.descriptionText {
+    -fx-font-size: 13 px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-textLight;
+    -fx-background-color: -fx-color-primary2;
+    -fx-background-radius: 15;
+}
+.blueText {
+    -fx-text-fill: -fx-color-mark3;
+}
+
 
 
 /*  ===========================================
@@ -94,6 +111,14 @@
 
 .borderModify_Radius15{
     -fx-border-radius: 15;
+}
+
+.conteinerModify_Radius10{
+    -fx-background-radius: 10;
+}
+
+.borderModify_Radius10{
+    -fx-border-radius: 10;
 }
 
 /*ozančení rohů: 1010/levíHorní, PravíHOrní, pravýDolní, levýDolní    */
@@ -109,8 +134,23 @@
     -fx-border-radius: 0 0 10 10;
 }
 
+.borderBackgroundModify_Only0110_Radius10{
+    -fx-border-radius:   0 10 10 0;
+    -fx-background-radius:  0 10 10 0;
+
+}
+.borderBackgroundModify_Only1001_Radius10{
+    -fx-border-radius:  10 0 0 10 ;
+    -fx-background-radius:  10 0 0 10;
+
+}
+
 .mainConteinerStyle {
     -fx-background-color: -fx-color-lightBackground;
+}
+
+.liteDarkConteiner {
+    -fx-background-color: -fx-color-darkBackground;
 }
 
 .bottomBar {
@@ -120,9 +160,7 @@
 .menuConteiner {
     -fx-background-color: -fx-color-primary2;
 }
-.liteDarkConteiner {
-    -fx-background-color: -fx-color-darkBackground;
-}
+
 
 .menu-bar .label { /*Prvky v menu */
     -fx-text-fill: -fx-color-textLight;

@@ -30,12 +30,15 @@
 }
 .borderModifi_primary1 {
     -fx-border-color: -fx-color-primary1;
-
 }
 
 .borderModify_primary2 {
     -fx-border-color: -fx-color-primary2;
 
+}
+
+.shadow_1 {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 15, 0, 2, 2);
 }
 
 /* ======================
@@ -55,6 +58,19 @@
     -fx-background-color: -fx-color-lightBackground;
 }
 
+.button_Primary1_Radius1001 {
+    -fx-background-color: -fx-color-primary1;
+    -fx-background-radius: 10 0 0 10;
+    -fx-border-color: -fx-color-primary2;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-border-radius: 10 0 0 10;
+    -fx-background-insets: 1;
+}
+.button_Primary1_Radius1001:pressed {
+    -fx-background-color: -fx-color-lightBackground;
+}
+
 .button_NonBackground{
     -fx-border-color: -fx-color-primary2;
     -fx-border-width: 3;
@@ -68,12 +84,29 @@
     -fx-background-color: -fx-color-lightBackground;
 }
 
+.button_NonBackground_Radius1001{
+    -fx-border-color: -fx-color-primary2;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-background-insets: 1;
+    -fx-cursor: hand;
+    -fx-border-radius: 10 0 0 10;
+    -fx-background-radius: 10 0 0 10;
+}
+.button_NonBackground_Radius1001:pressed {
+    -fx-background-color: -fx-color-lightBackground;
+}
+
 .buttonModify_backgroundRed {
     -fx-background-color: -fx-color-mark2;
 }
 
 .buttonModify_backgroundBrown {
     -fx-background-color: -fx-color-folder5;
+}
+
+.buttonModify_backgroundBlue {
+    -fx-background-color: -fx-color-mark3;
 }
 
 
@@ -96,6 +129,91 @@
 .radioButtonStyl1:selected .dot {
     -fx-background-color: -fx-color-textDark;
 }
+
+/*  ===========================================
+            Text Field Styli
+    =========================================== */
+
+.textField_Styl1 {
+    -fx-background-color: -fx-color-primary2;
+    -fx-prompt-text-fill: -fx-color-lightBackground;
+    -fx-text-fill: -fx-color-textLight;
+    -fx-border-color: -fx-color-primary1;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-background-insets: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 15, 0, 2, 2);
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+}
+
+.textField_Styl1_noRadius {
+    -fx-background-color: -fx-color-primary2;
+    -fx-prompt-text-fill: -fx-color-lightBackground;
+    -fx-text-fill: -fx-color-textLight;
+    -fx-border-color: -fx-color-primary1;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-background-insets: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 15, 0, 2, 2);
+
+}
+
+.textField_Styl1_Blue_noRadius {
+    -fx-background-color: -fx-color-primary2;
+    -fx-prompt-text-fill: -fx-color-lightBackground;
+    -fx-text-fill: -fx-color-textLight;
+    -fx-border-color: -fx-color-mark3;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-background-insets: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 15, 0, 2, 2);
+
+}
+/* ----------------------------
+        Text Area Styly
+------------------------------*/
+/* 1. HLAVNÍ OBAL A RÁMEČEK TEXTAREA */
+.textArea_Styl1 {
+    -fx-border-color: -fx-color-primary1;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-border-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 15, 0, 2, 2);
+
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+
+    /* Zde se definuje barva prompt textu a normálního textu */
+    -fx-prompt-text-fill: -fx-color-lightBackground;
+    -fx-text-fill: -fx-color-textLight;
+
+    /* Zneviditelníme vnější pozadí, abychom viděli zakulacený rámeček */
+    -fx-background-color: transparent;
+
+    /* Vypnutí výchozí JavaFX modré záře po kliknutí */
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* 2. VNITŘNÍ POZADÍ (Kritické pro TextArea - zde se mění barva plochy) */
+.textArea_Styl1 .content {
+    -fx-background-color: -fx-color-primary2;
+    -fx-background-radius: 12px;
+
+}
+
+/* Průhlednost vrstvy pod textem */
+.textArea_Styl1 .viewport {
+    -fx-background-color: transparent;
+}
+
+/* 3. VZHLED PO KLIKNUTÍ (FOCUSED) */
+.textArea_Styl1:focused {
+    -fx-border-color: -fx-color-mark6; /* Změna barvy rámečku */
+}
+
+
 
 /* ----------------------------
         progres bar
