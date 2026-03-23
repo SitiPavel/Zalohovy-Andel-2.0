@@ -323,9 +323,9 @@ public class ManualSyncController implements TaskController {
     }
 
     public void readAndSetStatistic() {
-        ComparedDataAndStatisticsForCompereOverview statistics = new ComparedDataAndStatisticsForCompereOverview();
-        TreeTableUtility.readStatisticForOperationBackupSize(masterRoot, statistics);
-        loadCompateDataAfterChange(statistics ,tfLeftFolderPath.getText(), tfRightFolderPath.getText());
+        if (statisticsAndComparedData == null) {return;}
+        TreeTableUtility.readStatisticForOperationBackupSize(masterRoot, statisticsAndComparedData);
+        loadCompateDataAfterChange(statisticsAndComparedData ,tfLeftFolderPath.getText(), tfRightFolderPath.getText());
 
     }
 
@@ -402,7 +402,7 @@ public class ManualSyncController implements TaskController {
             Stage progresStage = WindowManager.openRunningWindow(loader, "Průběh porovnání", 420, 240);
 
             // do comparisonTask nám vrátí data v objektu ComparedDataAndStatisticsForCompereOverview
-            Task<ComparedDataAndStatisticsForCompereOverview> comparisonTask = new Task<>() {
+            Task<ComparedDataAndStatisticsForCompereOverview> comparationTask = new Task<>() {
                 @Override
                 protected ComparedDataAndStatisticsForCompereOverview call() throws Exception {
 
@@ -431,13 +431,13 @@ public class ManualSyncController implements TaskController {
                 }
             };
 
-            progressWindowController.startComparisonWithProgressWindow(comparisonTask);
+            progressWindowController.startComparisonWithProgressWindow(comparationTask);
 
             // nastaví co se stane po dokončení
-            comparisonTask.setOnSucceeded(e -> {
+            comparationTask.setOnSucceeded(e -> {
                 progresStage.close();
 
-                ComparedDataAndStatisticsForCompereOverview resultData = comparisonTask.getValue();
+                ComparedDataAndStatisticsForCompereOverview resultData = comparationTask.getValue();
 
                 if (resultData != null) {
                     loadFinishedDataToGui(resultData, tfLeftFolderPath.getText(), tfRightFolderPath.getText());
@@ -445,16 +445,25 @@ public class ManualSyncController implements TaskController {
             });
 
             // co se stane při chybě
-            comparisonTask.setOnFailed(e -> {
+            comparationTask.setOnFailed(e -> {
                 progresStage.close();
-                ErrorUtility.getInstance("Kritická chyba", "Chyba během procesu porovnání." ,e.toString());
-                System.out.println(e.toString());
+
+                // Získáme reálnou chybu, kterou služba vyhodila
+                Throwable exception = comparationTask.getException();
+
+                String massage = (exception !=null) ? exception.getMessage() : "Neznámá chyba";
+
+                ErrorUtility.getInstance("Kritická chyba", "Chyba během procesu porovnání." ,massage);
+                //Do konzole
+                if (exception == null) {
+                    exception.printStackTrace();
+                }
             });
 
             // co se stane při zrušení
-            comparisonTask.setOnCancelled(e -> progresStage.close());
+            comparationTask.setOnCancelled(e -> progresStage.close());
 
-            Thread thread = new Thread(comparisonTask);
+            Thread thread = new Thread(comparationTask);
             thread.setDaemon(true);
             thread.start();
 
@@ -663,7 +672,7 @@ public class ManualSyncController implements TaskController {
             isLeftOperationSizeSmalerThenLeftFolder = false;
         }
 
-        if (utility.isSazeSmalerThenFreeSpace(  rightFolder,
+        if (utility.isSazeSmalerThenFreeSpace(rightFolder,
                 statisticsAndComparedData.getDataTransportSize_right())) {
             imgPieChar_Right.setImage(imageManager.getPieChartYellow_ToRight()) ;
             isRightOperationSizeSmalerThenRightFolder =true;
@@ -732,6 +741,8 @@ public class ManualSyncController implements TaskController {
     // nastavý listenery pro textová pole a pokud je nová hodnota jiná než v originalu tak zaznamená změnu
     private void setupDirtyTrackers() {
         tfLeftFolderPath.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (masterRoot != null) {resetWindow();}
+
             if (originalManualTask == null) return;
             if (!newVal.equals(originalManualTask.getLeftPath())) {
                 markAsDirty();
@@ -739,12 +750,23 @@ public class ManualSyncController implements TaskController {
             editableManualTask.setLeftPath(newVal);
         });
         tfRightFolderPath.textProperty().addListener((obs, oldVal, newVal) ->{
+            if (masterRoot != null) {resetWindow();}
             if (originalManualTask == null) return;
             if (!newVal.equals(originalManualTask.getRightPath())) {
                 markAsDirty();
             }
             editableManualTask.setRightPath(newVal);
         });
+    }
+
+    // nastaví ukazatele strom na nulu
+    private void resetWindow() {
+        // vynulování ukazatelů
+        statisticsAndComparedData = new ComparedDataAndStatisticsForCompereOverview();
+        loadFinishedDataToGui(statisticsAndComparedData, "", "");
+        //vynulování stromu
+        masterRoot.getChildren().clear();
+        filesTreeTable.setRoot(masterRoot);
     }
 
     // nastaví proměnou označující změnu v TaskModelu

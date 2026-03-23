@@ -2,6 +2,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ComparedDataAndStatisticsForCompereOverview {
@@ -18,7 +19,7 @@ public class ComparedDataAndStatisticsForCompereOverview {
     private long dataTransportSize_left = 0;
     private long dataTransportSize_right = 0;
 
-    private List<ComparedItemOperItemRowModel> comparedFilesList;
+    private List<ComparedItemOperItemRowModel> comparedFilesList = new ArrayList<ComparedItemOperItemRowModel>();
 
     public ComparedDataAndStatisticsForCompereOverview() {
     }

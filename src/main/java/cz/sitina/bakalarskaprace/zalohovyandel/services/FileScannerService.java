@@ -78,9 +78,7 @@ public class FileScannerService {
 
 
         if (!isRightFolderPath(rootPath)) {
-            ErrorUtility.getInstance("Chyba",
-                    "Zadaná cesta neexistuje!",
-                    "Cesta: " + rootDirectory);
+            throw new IllegalArgumentException("Zadaná cesta neexistuje! \nCesta: " + rootDirectory);
         }
 
         Set<Path> ignoredPaths = new HashSet<>();
@@ -155,11 +153,10 @@ public class FileScannerService {
             });
 
 
-            return filesMap;
         } catch (IOException e) {
-            ErrorUtility.getInstance("Kritická chyba skenování",
-                    "Chyba během procesu skenovaní" + rootPath.toString(),
-                    "Zkontrolujte zda má počítač přístup k zadané složce. \n" + e.toString());
+            throw new IllegalArgumentException(
+                    "Chyba během procesu skenovaní" + rootPath.toString()+
+                    "Zkontrolujte zda má počítač přístup k zadané složce: \n" + e.toString());
         }
         return filesMap;
 
