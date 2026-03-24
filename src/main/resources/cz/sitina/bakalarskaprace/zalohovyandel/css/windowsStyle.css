@@ -147,6 +147,10 @@
     -fx-background-radius: 15;
 }
 
+.textField_Styl1:focused {
+    -fx-border-color: -fx-color-mark6; /* Změna barvy rámečku */
+}
+
 .textField_Styl1_noRadius {
     -fx-background-color: -fx-color-primary2;
     -fx-prompt-text-fill: -fx-color-lightBackground;
@@ -157,6 +161,10 @@
     -fx-background-insets: 2;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 15, 0, 2, 2);
 
+}
+
+.textField_Styl1_noRadius:focused {
+    -fx-border-color: -fx-color-mark6; /* Změna barvy rámečku */
 }
 
 .textField_Styl1_Blue_noRadius {
@@ -170,6 +178,10 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 15, 0, 2, 2);
 
 }
+
+.textField_Styl1_Blue_noRadius:focused {
+    -fx-border-color: -fx-color-mark6; /* Změna barvy rámečku */
+}
 /* ----------------------------
         Text Area Styly
 ------------------------------*/
@@ -180,6 +192,7 @@
     -fx-border-width: 2;
     -fx-border-radius: 15;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 15, 0, 2, 2);
+    -fx-padding: 0;
 
     -fx-font-size: 13px;
     -fx-font-weight: bold;

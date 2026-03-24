@@ -1,19 +1,20 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.models.taskType;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes;
 
 import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes.BACKUP;
 
 public class BackupTask extends TaskModel {
-    private final boolean isEncrypted = false;
-    private final boolean isCompressed = false;
+    private boolean isEncrypted = false;
+    private boolean isCompressed = false;
 
     public BackupTask() {
         super();
     }
 
     public BackupTask( String name, String leftPath, String rightPath, String description) {
-        super(BACKUP, name, leftPath, rightPath, description);
+        super(BACKUP, name, leftPath, rightPath, description, CompareStrategy.BACKUP_TO_RIGHT);
     }
 
     public BackupTask(BackupTask source) {
@@ -45,5 +46,15 @@ public class BackupTask extends TaskModel {
             return "True";
         }
         return "False";
+    }
+
+    // setry
+
+    public void setEncrypted(boolean encrypted) {
+        isEncrypted = encrypted;
+    }
+
+    public void setCompressed(boolean compressed) {
+        isCompressed = compressed;
     }
 }

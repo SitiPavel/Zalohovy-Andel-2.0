@@ -84,7 +84,6 @@
 
 .formRequiredMark_Red {
     -fx-font-size: 15px;
-    -fx-font-weight: bolt;
     -fx-text-fill: -fx-color-mark2;
 }
 

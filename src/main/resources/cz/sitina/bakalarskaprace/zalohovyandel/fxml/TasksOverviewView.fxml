@@ -16,9 +16,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.TaskOverviewController">
+<AnchorPane prefHeight="500.0" prefWidth="1081.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.TaskOverviewController">
    <children>
-      <GridPane layoutX="300.0" layoutY="30.0" prefHeight="125.0" prefWidth="1081.0" styleClass="toolBox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane layoutX="300.0" layoutY="30.0" prefHeight="80.0" prefWidth="1081.0" styleClass="toolBox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" minWidth="260.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.0" minWidth="125.0" prefWidth="125.0" />
@@ -27,7 +27,7 @@
           <ColumnConstraints hgrow="ALWAYS" minWidth="260.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="125.0" minHeight="125.0" prefHeight="125.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="80.0" minHeight="80.0" prefHeight="80.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <VBox prefHeight="125.0" prefWidth="108.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
@@ -35,7 +35,7 @@
                   <HBox alignment="CENTER" prefHeight="59.0" prefWidth="120.0" styleClass="layout_justifyContent">
                      <children>
                         <Label styleClass="coloredBoltHeader0" text="Nová úloha &gt;&gt; " />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createManualSync" prefHeight="50.0" prefWidth="50.0">
                            <styleClass>
                               <String fx:value="toolBarButton" />
                               <String fx:value="modificator_snychronizationButton" />
@@ -51,7 +51,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createBackup" prefHeight="50.0" prefWidth="50.0">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -77,7 +77,7 @@
             </VBox>
          </children>
       </GridPane>
-      <GridPane layoutY="155.0" styleClass="mainConteinerStyle" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0">
+      <GridPane layoutY="155.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="mainConteinerStyle" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" minWidth="385.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="70.0" minWidth="63.0" prefWidth="70.0" />
@@ -89,7 +89,7 @@
           <RowConstraints maxHeight="-Infinity" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TableView fx:id="taskTable" styleClass="TaskTable" GridPane.columnSpan="3" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">
+            <TableView fx:id="taskTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" styleClass="TaskTable" GridPane.columnSpan="3" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">
               <columns>
                   <TableColumn fx:id="taskColEntry" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Detaily" />
                 <TableColumn fx:id="taskColName" minWidth="200.0" prefWidth="-1.0" text="Název úlohy" />

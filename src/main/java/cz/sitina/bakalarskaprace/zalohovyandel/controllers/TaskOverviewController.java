@@ -1,17 +1,27 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateBackupTaskController;
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateManualSyncController;
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateTaskController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import java.io.IOException;
+
+import static cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager.loadFXML;
 
 public class TaskOverviewController {
 
@@ -181,6 +191,47 @@ public class TaskOverviewController {
                 new SimpleStringProperty(cellData.getValue().getDescription()));
     }
 
+
+    /**===========================
+     *        TLAČÍTKA
+     * ==========================*/
+    @FXML
+    public void createManualSync(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = loadFXML("TaskManualSyncCreateWindow.fxml");
+            CreateManualSyncController controller = fxmlLoader.getController();
+            controller.setTaskRepository(taskRepository);
+            controller.setIsAddedTask(() -> taskTable.refresh());
+
+            WindowManager.openNewWindowAutoSized(fxmlLoader, "Nová manuální synchronizace");
+        } catch (IOException e) {
+            ErrorUtility.showError_WindowLoading(e);
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void createBackup(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = loadFXML("TaskBackupCreateWindow.fxml");
+            CreateBackupTaskController controller = fxmlLoader.getController();
+            controller.setTaskRepository(taskRepository);
+            controller.setIsAddedTask(() -> taskTable.refresh());
+
+            WindowManager.openNewWindowAutoSized(fxmlLoader, "Nová záloha");
+        } catch (IOException e) {
+            ErrorUtility.showError_WindowLoading(e);
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+    }
+
+
+    ///  setry
     public void setTaskRepository(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
 

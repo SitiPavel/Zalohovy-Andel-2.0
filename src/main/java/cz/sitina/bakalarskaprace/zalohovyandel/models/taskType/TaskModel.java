@@ -19,7 +19,8 @@ import java.util.Set;
         property = "taskClassType"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = ManualSyncTask.class, name = "MANUAL_SYNC_TASK")
+        @JsonSubTypes.Type(value = ManualSyncTask.class, name = "MANUAL_SYNC_TASK"),
+        @JsonSubTypes.Type(value = BackupTask.class, name = "BACKUP_TASK")
 })
 
 public abstract class TaskModel {
@@ -38,7 +39,7 @@ public abstract class TaskModel {
 
 
     /// uležená data pro porovnání
-    private CompareStrategy compareStrategy = CompareStrategy.BIDIRECTIONAL_SYNC;
+    private CompareStrategy compareStrategy;
     private boolean isContentHash = false;
 
     // prázdný konstruktor pro json
@@ -61,6 +62,28 @@ public abstract class TaskModel {
         this.description = description;
         this.creationDate = LocalDate.now();
         this.guiOperationFilters = new GuiOperationFilters_TaskData();
+        this.compareStrategy = CompareStrategy.BIDIRECTIONAL_SYNC;
+        this.jurnalInfoList = new ArrayList<>();
+
+    }
+    // pro nové úlohy
+    public TaskModel( TaskTypes taskType,
+                      String name,
+                      String leftPath,
+                      String rightPath,
+                      String description,
+                      CompareStrategy compareStrategy) {
+
+        this.id = System.currentTimeMillis();
+        this.taskType = taskType;
+
+        this.name = name;
+        this.leftPath = leftPath;
+        this.rightPath = rightPath;
+        this.description = description;
+        this.creationDate = LocalDate.now();
+        this.guiOperationFilters = new GuiOperationFilters_TaskData();
+        this.compareStrategy = compareStrategy;
         this.jurnalInfoList = new ArrayList<>();
 
     }

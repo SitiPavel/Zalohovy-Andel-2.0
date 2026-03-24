@@ -24,6 +24,15 @@ public class ErrorUtility {
         alert.showAndWait();
     }
 
+    public static void showError_form(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Chyba formuláře");
+        alert.setHeaderText("Některé z polí nejsou vyplněny podle očekávání!");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
     public static void showError_pointlessCompareOperation(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Chyba operace");

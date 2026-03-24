@@ -61,6 +61,7 @@ public class JsonDataManagerService {
             ErrorUtility.getInstance("Chyba načítaní dat",
                     "Nepodařilo se načíst uložená data",
                     e.getMessage());
+            e.printStackTrace();
             return new ArrayList<>();
         }
     }
@@ -113,6 +114,7 @@ public class JsonDataManagerService {
             ErrorUtility.getInstance("Chyba ukládání dat",
                     "Nepodařilo se uložit data",
                     e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -158,6 +160,7 @@ public class JsonDataManagerService {
             ErrorUtility.getInstance("Chyba zálohy",
                     "Nepodařilo se vytvořit zálohu úloh",
                     e.getMessage());
+            e.printStackTrace();
         }
 
     }
