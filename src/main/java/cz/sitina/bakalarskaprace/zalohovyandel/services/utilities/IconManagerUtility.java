@@ -91,8 +91,8 @@ public class IconManagerUtility {
             */
     private final Image manualSync_TabbleIcon =
             new Image(getClass().getResourceAsStream(path_iconsSmall + "manualSync_TabbleIcon.png"));
-    private final Image backup_TabbleIcon =
-            new Image(getClass().getResourceAsStream(path_iconsSmall + "backup_TabbleIcon.png"));
+    private final Image backupTask_TableIcon =
+            new Image(getClass().getResourceAsStream(path_iconsSmall + "backupTask_TableIcon.png"));
 
 
     //**********************************/
@@ -411,7 +411,7 @@ public class IconManagerUtility {
         return error;
     }
 
-    public Image getBackup_TabbleIcon() {
-        return backup_TabbleIcon;
+    public Image getBackup_TableIcon() {
+        return backupTask_TableIcon;
     }
 }

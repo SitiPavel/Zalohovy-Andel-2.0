@@ -247,10 +247,16 @@
 .modificator_save{
     -fx-border-color: -fx-color-primary1;
 }
+
+.modificator_backupTask{
+    -fx-border-color: -fx-color-backup;
+}
+
 .modificator-offButton {
     -fx-border-color: -fx-color-darkBackground;
     -fx-background-color: -fx-color-primary2;
 }
+
 .modificator-hiden{
     -fx-border-color: -fx-color-Transparent;
     -fx-background-color: -fx-color-Transparent;

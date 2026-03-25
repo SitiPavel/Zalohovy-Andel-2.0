@@ -5,6 +5,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPa
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
@@ -31,7 +32,7 @@ public class Main extends Application {
 
 
         /// načítá data při zapnutí aplikace
-//        createFirstData(taskRepository); //Pro vytvoření dat
+        //createFirstData(taskRepository); //Pro vytvoření dat
        /**/
        for (TaskModel task: jsonManager.loadAllTasks()){
 
@@ -99,11 +100,11 @@ public class Main extends Application {
                 "popis úlohy ")
         );
 
-        ManualSyncTask task11 = new ManualSyncTask("testování",
+        BackupTask task11 = new BackupTask("testování",
                 "D:\\testBakalarky\\Test05",
                 "D:\\testBakalarky\\Test04",
                 "Slouží k testování přenosu ");
-        task11.setCompareStrategy(CompareStrategy.MIRRORING_to_RIGHT);
+        task11.setCompareStrategy(CompareStrategy.BACKUP_TO_RIGHT);
 
         taskRepository.add(task11);
 

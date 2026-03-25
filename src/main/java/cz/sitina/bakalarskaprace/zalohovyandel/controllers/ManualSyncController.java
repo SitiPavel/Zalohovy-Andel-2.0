@@ -60,7 +60,7 @@ public class ManualSyncController implements TaskController {
 
     private final FileScannerService fileScannerService = new FileScannerService();
     private TreeTableBuilderService treeTableBuilder = new TreeTableBuilderService();
-    private final IconManagerUtility imageManager = new IconManagerUtility();
+    private final IconManagerUtility iconManager = new IconManagerUtility();
     private final PopupDialogService popupDialogService = new PopupDialogService();
 
 
@@ -83,7 +83,7 @@ public class ManualSyncController implements TaskController {
     private boolean isRightOperationSizeSmalerThenRightFolder;
 
     //Tásk objekt a uložení
-    TaskRepository taskRepository;
+    private TaskRepository taskRepository;
     private ManualSyncTask originalManualTask;
     private ManualSyncTask editableManualTask ;
 
@@ -337,6 +337,7 @@ public class ManualSyncController implements TaskController {
         this.originalManualTask.updateTaskModel(editableManualTask);
         isDirtyFlag.set(false);
     }
+
 
 
     ///===================
@@ -665,19 +666,19 @@ public class ManualSyncController implements TaskController {
         // nastavení levého koláčového grafu
         if (utility.isSazeSmalerThenFreeSpace(  leftFolder,
                 statisticsAndComparedData.getDataTransportSize_left())) {
-            imgPieChar_Left.setImage(imageManager.getPieChartYellow_ToLeft());
+            imgPieChar_Left.setImage(iconManager.getPieChartYellow_ToLeft());
             isLeftOperationSizeSmalerThenLeftFolder =true;
         } else {
-            imgPieChar_Left.setImage(imageManager.getPieChartRed_ToLeft());
+            imgPieChar_Left.setImage(iconManager.getPieChartRed_ToLeft());
             isLeftOperationSizeSmalerThenLeftFolder = false;
         }
 
         if (utility.isSazeSmalerThenFreeSpace(rightFolder,
                 statisticsAndComparedData.getDataTransportSize_right())) {
-            imgPieChar_Right.setImage(imageManager.getPieChartYellow_ToRight()) ;
+            imgPieChar_Right.setImage(iconManager.getPieChartYellow_ToRight()) ;
             isRightOperationSizeSmalerThenRightFolder =true;
         } else {
-            imgPieChar_Right.setImage(imageManager.getPieChartRed_ToRight());
+            imgPieChar_Right.setImage(iconManager.getPieChartRed_ToRight());
             isRightOperationSizeSmalerThenRightFolder = false;
         }
 
@@ -699,31 +700,31 @@ public class ManualSyncController implements TaskController {
     private void setFastFiltersImg() {
         GuiOperationFilters_TaskData taskFilters = editableManualTask.getGuiOperationFilters();
         imgAddItem_Left.setImage(
-                taskFilters.isActive_ADD_LEFT() ? imageManager.getIcon_addItem_Left() : imageManager.getIcon_addItem_Left_OFF()
+                taskFilters.isActive_ADD_LEFT() ? iconManager.getIcon_addItem_Left() : iconManager.getIcon_addItem_Left_OFF()
         );
         imgModified_left.setImage(
-                taskFilters.isActive_UPDATE_LEFT() ? imageManager.getIcon_modified_left()  : imageManager.getIcon_modified_left_OFF()
+                taskFilters.isActive_UPDATE_LEFT() ? iconManager.getIcon_modified_left()  : iconManager.getIcon_modified_left_OFF()
         );
         imgDelete_left.setImage(
-                taskFilters.isActive_DELETE_LEFT() ? imageManager.getIcon_delete_left() : imageManager.getIcon_delete_left_OFF()
+                taskFilters.isActive_DELETE_LEFT() ? iconManager.getIcon_delete_left() : iconManager.getIcon_delete_left_OFF()
         );
         imgBlock.setImage(
-                taskFilters.isActive_IGNORE() ? imageManager.getIcon_block() : imageManager.getIcon_block_OFF()
+                taskFilters.isActive_IGNORE() ? iconManager.getIcon_block() : iconManager.getIcon_block_OFF()
         );
         imgEqual.setImage(
-                taskFilters.isActive_EQUALS() ? imageManager.getIcon_equal() : imageManager.getIcon_equal_OFF()
+                taskFilters.isActive_EQUALS() ? iconManager.getIcon_equal() : iconManager.getIcon_equal_OFF()
         );
         imgUnknown.setImage(
-                taskFilters.isActive_UNKNOWN() ? imageManager.getIcon_unknown() : imageManager.getIcon_unknown_OFF()
+                taskFilters.isActive_UNKNOWN() ? iconManager.getIcon_unknown() : iconManager.getIcon_unknown_OFF()
         );
         imgDelete_right.setImage(
-                taskFilters.isActive_DELETE_RIGHT() ? imageManager.getIcon_delete_right() : imageManager.getIcon_delete_right_OFF()
+                taskFilters.isActive_DELETE_RIGHT() ? iconManager.getIcon_delete_right() : iconManager.getIcon_delete_right_OFF()
         );
         imgModified_right.setImage(
-                taskFilters.isActive_UPDATE_RIGHT() ? imageManager.getIcon_modified_right() : imageManager.getIcon_modified_right_OFF()
+                taskFilters.isActive_UPDATE_RIGHT() ? iconManager.getIcon_modified_right() : iconManager.getIcon_modified_right_OFF()
         );
         imgAddItem_right.setImage(
-                taskFilters.isActive_ADD_RIGHT() ? imageManager.getIcon_addItem_right() : imageManager.getIcon_addItem_right_OFF()
+                taskFilters.isActive_ADD_RIGHT() ? iconManager.getIcon_addItem_right() : iconManager.getIcon_addItem_right_OFF()
         );
     }
 
@@ -801,30 +802,30 @@ public class ManualSyncController implements TaskController {
             case "btnAddItem_Left":
                 if (filters.isActive_ADD_LEFT()) {
                     filters.setActive_ADD_LEFT(false);
-                    imgAddItem_Left.setImage( imageManager.getIcon_addItem_Left_OFF());
+                    imgAddItem_Left.setImage( iconManager.getIcon_addItem_Left_OFF());
                 } else {
                     filters.setActive_ADD_LEFT(true);
-                    imgAddItem_Left.setImage( imageManager.getIcon_addItem_Left());
+                    imgAddItem_Left.setImage( iconManager.getIcon_addItem_Left());
                 }
                 break;
 
             case "btnModified_left":
                 if (filters.isActive_UPDATE_LEFT()) {
                     filters.setActive_UPDATE_LEFT(false);
-                    imgModified_left.setImage( imageManager.getIcon_modified_left_OFF());
+                    imgModified_left.setImage( iconManager.getIcon_modified_left_OFF());
                 } else {
                     filters.setActive_UPDATE_LEFT(true);
-                    imgModified_left.setImage( imageManager.getIcon_modified_left());
+                    imgModified_left.setImage( iconManager.getIcon_modified_left());
                 }
                 break;
 
             case "btnDelete_left":
                 if (filters.isActive_DELETE_LEFT()) {
                     filters.setActive_DELETE_LEFT(false);
-                    imgDelete_left.setImage( imageManager.getIcon_delete_left_OFF());
+                    imgDelete_left.setImage( iconManager.getIcon_delete_left_OFF());
                 } else {
                     filters.setActive_DELETE_LEFT(true);
-                    imgDelete_left.setImage( imageManager.getIcon_delete_left());
+                    imgDelete_left.setImage( iconManager.getIcon_delete_left());
                 }
                 break;
 
@@ -832,30 +833,30 @@ public class ManualSyncController implements TaskController {
             case "btnBlock":
                 if (filters.isActive_IGNORE()) {
                     filters.setActive_IGNORE(false);
-                    imgBlock.setImage( imageManager.getIcon_block_OFF());
+                    imgBlock.setImage( iconManager.getIcon_block_OFF());
                 } else {
                     filters.setActive_IGNORE(true);
-                    imgBlock.setImage( imageManager.getIcon_block());
+                    imgBlock.setImage( iconManager.getIcon_block());
                 }
                 break;
 
             case "btnEqual":
                 if (filters.isActive_EQUALS()) {
                     filters.setActive_EQUALS(false);
-                    imgEqual.setImage( imageManager.getIcon_equal_OFF());
+                    imgEqual.setImage( iconManager.getIcon_equal_OFF());
                 } else {
                     filters.setActive_EQUALS(true);
-                    imgEqual.setImage( imageManager.getIcon_equal());
+                    imgEqual.setImage( iconManager.getIcon_equal());
                 }
                 break;
 
             case "btnUnknown":
                 if (filters.isActive_UNKNOWN()) {
                     filters.setActive_UNKNOWN(false);
-                    imgUnknown.setImage( imageManager.getIcon_unknown_OFF());
+                    imgUnknown.setImage( iconManager.getIcon_unknown_OFF());
                 } else {
                     filters.setActive_UNKNOWN(true);
-                    imgUnknown.setImage( imageManager.getIcon_unknown());
+                    imgUnknown.setImage( iconManager.getIcon_unknown());
                 }
                 break;
 
@@ -863,38 +864,39 @@ public class ManualSyncController implements TaskController {
             case "btnDelete_right":
                 if (filters.isActive_DELETE_RIGHT()) {
                     filters.setActive_DELETE_RIGHT(false);
-                    imgDelete_right.setImage( imageManager.getIcon_delete_right_OFF());
+                    imgDelete_right.setImage( iconManager.getIcon_delete_right_OFF());
                 } else {
                     filters.setActive_DELETE_RIGHT(true);
-                    imgDelete_right.setImage( imageManager.getIcon_delete_right());
+                    imgDelete_right.setImage( iconManager.getIcon_delete_right());
                 }
                 break;
 
             case "btnModified_right":
                 if (filters.isActive_UPDATE_RIGHT()) {
                     filters.setActive_UPDATE_RIGHT(false);
-                    imgModified_right.setImage( imageManager.getIcon_modified_right_OFF());
+                    imgModified_right.setImage( iconManager.getIcon_modified_right_OFF());
                 } else {
                     filters.setActive_UPDATE_RIGHT(true);
-                    imgModified_right.setImage( imageManager.getIcon_modified_right());
+                    imgModified_right.setImage( iconManager.getIcon_modified_right());
                 }
                 break;
 
             case "btnAddItem_right":
                 if (filters.isActive_ADD_RIGHT()) {
                     filters.setActive_ADD_RIGHT(false);
-                    imgAddItem_right.setImage( imageManager.getIcon_addItem_right_OFF());
+                    imgAddItem_right.setImage( iconManager.getIcon_addItem_right_OFF());
                 } else {
                     filters.setActive_ADD_RIGHT(true);
-                    imgAddItem_right.setImage( imageManager.getIcon_addItem_right());
+                    imgAddItem_right.setImage( iconManager.getIcon_addItem_right());
                 }
                 break;
         }
     }
 
-    public void setTaskModel(TaskModel tak) {
-        this.originalManualTask = (ManualSyncTask) tak;
-        this.editableManualTask  = new ManualSyncTask((ManualSyncTask) tak);
+    public void setTaskModel(TaskModel task) {
+        ManualSyncTask manualSyncTask = (ManualSyncTask) task;
+        this.originalManualTask =  manualSyncTask;
+        this.editableManualTask  = new ManualSyncTask(manualSyncTask);
         // nastaví správný obrázek k rychlím filtrům
         setFastFiltersImg();
     };

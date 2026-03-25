@@ -70,9 +70,14 @@ public class TaskOverviewController {
 
                 btn.setOnAction(event -> {
                     TaskModel taskModel = getTableView().getItems().get(getIndex());
+
                     if (taskModel instanceof ManualSyncTask mst) {
                         appFrameController.showCompareOverview(mst);
-                    } else {
+
+                    } else if (taskModel instanceof BackupTask bt) {
+                        appFrameController.showBackupOverview(bt);
+                    }
+                    else {
                         ErrorUtility.getInstance("Kritická chyba",
                                 "Neznámý typ úlohy",
                                 "Aplikace nezná vybraný typ úlohy!");
@@ -111,7 +116,7 @@ public class TaskOverviewController {
                 iconToDisplay = iconManager.getManualSync_TabbleIcon();
 
             } else if (task instanceof BackupTask backupTask) {
-                iconToDisplay = iconManager.getBackup_TabbleIcon();
+                iconToDisplay = iconManager.getBackup_TableIcon();
 
                 /*
                 if (autoBackupTask.isCompressed() &&

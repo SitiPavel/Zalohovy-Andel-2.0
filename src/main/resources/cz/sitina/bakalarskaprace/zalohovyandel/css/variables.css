@@ -36,6 +36,8 @@
 
 
     /* barva značek */
+    -fx-color-backup: #ff5100;
+
 
     -fx-color-detail-1: #7ee72eff;
     -fx-color-detail-2: #1134e7ff;

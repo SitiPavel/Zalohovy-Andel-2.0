@@ -9,6 +9,11 @@
     -fx-border-width: 1 0 0 0;
 }
 
+.topBorder_3 {
+    -fx-border-style: solid;
+    -fx-border-width: 3 0 0 0;
+}
+
 .downBorder_2 {
     -fx-border-style: solid;
     -fx-border-width: 0 0 2 0;
@@ -34,12 +39,29 @@
 
 .borderModify_primary2 {
     -fx-border-color: -fx-color-primary2;
+}
 
+.borderModify_backupTask {
+    -fx-border-color: -fx-color-backup;
 }
 
 .shadow_1 {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 15, 0, 2, 2);
 }
+
+/* ======================
+        Labels styles
+ ====================== */
+.noRedefineLabel_noRadius {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-textDark;
+    -fx-background-color: -fx-color-mark3;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-border-color: -fx-color-textDark;
+}
+
 
 /* ======================
         button styles

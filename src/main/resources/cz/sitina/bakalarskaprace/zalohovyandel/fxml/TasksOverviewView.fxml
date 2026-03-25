@@ -61,7 +61,7 @@
                            </graphic>
                            <styleClass>
                               <String fx:value="toolBarButton" />
-                              <String fx:value="modificator_autobackupButton" />
+                              <String fx:value="modificator_backupTask" />
                            </styleClass>
                            <HBox.margin>
                               <Insets />
@@ -133,7 +133,7 @@
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../images/iconsSmall/backup_TabbleIcon.png" />
+                                    <Image url="@../images/iconsSmall/backupTask_TableIcon.png" />
                                  </image>
                               </ImageView>
                            </graphic>

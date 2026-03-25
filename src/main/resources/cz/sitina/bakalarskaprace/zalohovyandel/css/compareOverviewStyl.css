@@ -67,6 +67,17 @@
 }
 
 /*----tabulka----*/
+
+.fileItemTable.fileItemTable_TopLine_Backup {
+    -fx-border-color: -fx-color-backup;
+
+}
+
+.fileItemTable.fileItemTable_TopLine_ManualSync {
+    -fx-border-color: -fx-color-mark2;
+
+}
+
 .fileItemTable {}
 
 .fileItemTable.tree-table-view { /*celá tabulka*/
@@ -74,7 +85,6 @@
     -fx-padding: 0;
     -fx-table-cell-border-color: -fx-color-primary2;
 
-    -fx-border-color: -fx-color-mark2;
     -fx-border-style: solid;
     -fx-border-width: 3 0 0 0;
 }

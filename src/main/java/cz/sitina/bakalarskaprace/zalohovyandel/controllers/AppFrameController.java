@@ -1,6 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
@@ -41,6 +42,13 @@ public class AppFrameController {
         }
     }
 
+    @FXML
+    public void showBackupOverview(TaskModel taskModel) {
+        if (checkAndSaveUnsavedChanges()) {
+            loadView("backupOverviewView.fxml", taskModel);
+        }
+    }
+
 
     // načítání jednotlivích obrazovek
     private void loadView(String fxml, TaskModel taskModel) {
@@ -55,7 +63,38 @@ public class AppFrameController {
             if (subController instanceof TaskOverviewController toc) {
                 toc.setTaskRepository(taskRepository);
                 toc.setAppFrameController(this);
-            } else if (subController instanceof ManualSyncController coc) {
+            } else {
+                if (taskModel != null) {
+                    // zobrazení správné obrazovky pro úlohu
+                    if (subController instanceof ManualSyncController coc) {
+                        ManualSyncTask mst = (ManualSyncTask) taskModel;
+                        coc.setTaskRepository(taskRepository);
+                        coc.setTaskModel(mst);
+                        coc.setAppFrameController(this);
+                        coc.loadView();
+                    } else if (subController instanceof BackupTaskController BTC) {
+                        BackupTask bt = (BackupTask) taskModel;
+                        BTC.setTaskRepository(taskRepository);
+                        BTC.setTaskModel(bt);
+                        BTC.setAppFrameController(this);
+                        BTC.loadView();
+                    }
+
+
+                } else  {
+                    ErrorUtility.getInstance("Kritická chyba",
+                            "Neznámá úloha",
+                            "Nepodařilo se najít vybranou Úlohu!"
+                    );
+                }
+            }
+
+            /*  ✪======V======V======V=======V========*/
+            if (subController instanceof TaskOverviewController toc) {
+                toc.setTaskRepository(taskRepository);
+                toc.setAppFrameController(this);
+            }
+            else if (subController instanceof ManualSyncController coc) {
                 if (taskModel != null) {
                     ManualSyncTask mst = (ManualSyncTask) taskModel;
                     coc.setTaskRepository(taskRepository);
@@ -67,9 +106,10 @@ public class AppFrameController {
                     ErrorUtility.getInstance("Kritická chyba",
                             "Neznámá úloha",
                             "Nepodařilo se najít vybranou Úlohu!"
-                            );
+                    );
                 }
             }
+            /*  =======^=======^=======^=======^=======*/
 
             // uložíme spuštěný controller
             if (subController instanceof TaskController) {
