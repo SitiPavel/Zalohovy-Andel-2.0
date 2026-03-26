@@ -55,9 +55,9 @@
                         <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="150.0" VBox.vgrow="ALWAYS">
                            <styleClass>
                               <String fx:value="allBorder_2" />
-                              <String fx:value="borderModify_Only0111_Radius15" />
                               <String fx:value="borderModify_primary2" />
                               <String fx:value="backgroundModify_transparent" />
+                              <String fx:value="scrollPainScrollBar_Styl1" />
                            </styleClass>
                            <content>
                               <VBox fx:id="childConteiner" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="150.0" minWidth="200.0">

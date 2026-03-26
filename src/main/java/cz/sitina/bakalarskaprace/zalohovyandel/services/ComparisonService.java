@@ -4,6 +4,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowMod
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonStrategies.*;
@@ -94,7 +95,9 @@ public class ComparisonService {
                         operation = mirroringToLeftStrategy.compare(leftItem, rightItem);
                     case null, default -> operation = UNKNOWN;
                 }
-            } else {
+            } else if (taskModel instanceof BackupTask BC) {
+                operation = mirroringToRightStrategy.compare(leftItem,rightItem);
+            }else {
                 operation = UNKNOWN;
             }
             /* ✪ */

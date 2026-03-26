@@ -534,7 +534,7 @@
 
 /* Prázdné místo, pokud sloupce nevyplní celou šířku tabulky */
 .fileItemTableWindowStyl1 .filler {
-    -fx-background-color: -fx-color-primary1;
+    -fx-background-color: -fx-color-primary2;
 }
 
 /* 3. Řádky */

@@ -9,12 +9,11 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndSt
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilters_TaskData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.*;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.BackupCompareServices.BackupCompareService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.DatabaseManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableBuilderService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFilterService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFolderOperationMakerService;
@@ -37,6 +36,8 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,9 +51,9 @@ public class BackupTaskController implements TaskController {
     private JsonDataManagerService jsonManager = new JsonDataManagerService();
     private final PopupDialogService popupDialogService = new PopupDialogService();
     private Utility utility = new Utility();
+    private FileScannerService fileScannerService = new FileScannerService();
+    private ComparisonService comparisonService = new ComparisonService();
 
-
-    private BackupCompareService backupCompareService = new BackupCompareService();
 
     private TreeTableGuiModify treeTableGuiModify = new TreeTableGuiModify();
     private TreeTableBuilderService treeBuilder = new TreeTableBuilderService();
@@ -286,12 +287,106 @@ public class BackupTaskController implements TaskController {
 
     @FXML // porovnání souborů
     private void startComparingFiles(ActionEvent event) {
-        ComparedDataAndStatisticsForCompereOverview comparedDataAndStatistics =
-                backupCompareService.executeBackupCompare(editableBackupTask);
+        try {
+            FXMLLoader loader = loadFXML("compareProgresWindow.fxml");
+            CompareProgresController progressWindowController = loader.getController();
+            Stage progresStage = WindowManager.openRunningWindow(loader, "Průběh porovnání", 420, 240);
 
 
-        loadFinishedDataToGui(comparedDataAndStatistics, lbSourceFolderPath.getText(), lbSourceFolderPath.getText());
+            Task<ComparedDataAndStatisticsForCompereOverview> comparationTask = new Task<>() {
+                @Override
+                protected ComparedDataAndStatisticsForCompereOverview call() throws Exception {
 
+                    Platform.runLater(() -> {
+                        progressWindowController.setLbHeader("Skenuji zdrojové soubory...");
+                    });
+
+                    Map<String, FileItemModel> sourceMap = fileScannerService.scanFolder(
+                                                                    editableBackupTask.getLeftPath(),
+                                                                    editableBackupTask.getRootFilteredFolders_Source());
+
+                    // Zrušení uživatelem?
+                    if (isCancelled()) return null;
+
+                    ///  načítání dat z databáze do Map<>
+                    Platform.runLater(() -> {
+                        progressWindowController.setLbHeader("Načítám index historie záloh...");
+                    });
+
+                    Map<String, FileItemModel> databaseMap;
+                    Path rootDirectory = Paths.get(editableBackupTask.getRootBackupPath());
+                    try {
+                        // Vytvoří složku a všechny nadřazené složky, pokud neexistují. Když existuje tak metoda nic neudělá
+                        java.nio.file.Files.createDirectories(rootDirectory);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.out.println("Nepodařilo se vytvořit složku");
+                    }
+                    String dbPath = rootDirectory.resolve("index.db").toString();
+
+                    try (DatabaseManager databaseManager = new DatabaseManager(dbPath)) {
+                        databaseMap = databaseManager.loadLatestIndexToMemory();
+                    }
+
+                    // Zrušení uživatelem?
+                    if (isCancelled()) return null;
+
+                    Platform.runLater(() -> {
+                        progressWindowController.setLbHeader("Probíhá kontrola a porovnávání zálohy.");
+                    });
+
+                    // Tady se volá porovnání souborů
+                    return comparisonService.compareFolders(
+                            sourceMap,
+                            databaseMap,
+                            editableBackupTask,
+                            (current, total) -> {
+                                updateProgress(current, total);
+                                updateMessage(String.valueOf(current));
+                                updateTitle(String.valueOf(total));
+                            },
+                            this::isCancelled
+                    );
+                }
+            };
+
+            progressWindowController.startComparisonWithProgressWindow(comparationTask);
+
+            // 3. Co se stane po úspěšném dokončení
+            comparationTask.setOnSucceeded(e -> {
+                progresStage.close();
+                ComparedDataAndStatisticsForCompereOverview resultData = comparationTask.getValue();
+
+                if (resultData != null) {
+                    loadFinishedDataToGui(
+                            resultData,
+                            lbSourceFolderPath.getText(),
+                            editableBackupTask.getRootBackupPath());
+                }
+            });
+
+            comparationTask.setOnFailed(e -> {
+                progresStage.close();
+                Throwable exception = comparationTask.getException();
+                String message = (exception != null) ? exception.getMessage() : "Neznámá chyba";
+                ErrorUtility.getInstance("Kritická chyba", "Chyba během procesu porovnání zálohy.", message);
+
+                if (exception == null) {
+                    exception.printStackTrace(); // Tisk do konzole pro debug
+                }
+            });
+
+            comparationTask.setOnCancelled(e -> progresStage.close());
+
+            Thread thread = new Thread(comparationTask);
+            thread.setDaemon(true); // Daemon vlákno se ukončí, když se vypne hlavní okno aplikace
+            thread.start();
+
+        } catch (IOException e) {
+            ErrorUtility.showError_WindowLoading();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML //

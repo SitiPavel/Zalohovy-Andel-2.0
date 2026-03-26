@@ -413,17 +413,23 @@ public class ManualSyncController implements TaskController {
                 @Override
                 protected ComparedDataAndStatisticsForCompereOverview call() throws Exception {
 
+
+                    Platform.runLater(()->{
+                        progressWindowController.setLbHeader("Probíhá skenování souborů levé strany.");});
                     Map<String, FileItemModel> mapLeft = fileScannerService.scanFolder(
                                                                 editableManualTask.getLeftPath(),
                                                                 editableManualTask.getRootFilteredFolders_Left());
+
+
+                    Platform.runLater(()->{
+                        progressWindowController.setLbHeader("Probíhá skenování souborů pravé strany.");});
                     Map<String, FileItemModel> mapRight = fileScannerService.scanFolder(
                                                                 editableManualTask.getRightPath(),
                                                                 editableManualTask.getRootFilteredFolders_Right());
 
-                    Platform.runLater(()->{
-                        progressWindowController.setLbHeader("Probíhá porovnání souborů.");
-                    });
 
+                    Platform.runLater(()->{
+                        progressWindowController.setLbHeader("Probíhá porovnání souborů.");});
                     return comparisonService.compareFolders(
                             mapLeft,
                             mapRight,

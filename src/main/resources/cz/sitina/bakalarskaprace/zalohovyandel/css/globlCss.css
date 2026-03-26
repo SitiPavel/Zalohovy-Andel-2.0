@@ -344,20 +344,24 @@
 }
 
 
-/*
-  změna posuvníků pro tabulku TreeTableView nebo TableView
-*/
+/*==========================================
+        změna posuvníků TreeTableView a TableView ScrollPain
+========================================*/
 
-/* 1. Hlavní kontejner a šířka posuvníků pro obě tabulky */
+/* 1. Základní posuvník (šířka a pozadí) */
 .TaskTable.table-view .scroll-bar:vertical,
-.fileItemTable.tree-table-view .scroll-bar:vertical {
+.fileItemTable.tree-table-view .scroll-bar:vertical,
+.fileItemTableWindowStyl1 .scroll-bar:vertical,
+.scrollPainScrollBar_Styl1 .scroll-bar:vertical {
     -fx-background-color: transparent;
     -fx-pref-width: 12px;
 }
 
 /* 2. Dráha (Track) */
 .TaskTable.table-view .scroll-bar:vertical .track,
-.fileItemTable.tree-table-view .scroll-bar:vertical .track {
+.fileItemTable.tree-table-view .scroll-bar:vertical .track,
+.fileItemTableWindowStyl1 .scroll-bar:vertical .track,
+.scrollPainScrollBar_Styl1 .scroll-bar:vertical .track {
     -fx-background-color: -fx-color-primary2;
     -fx-border-color: transparent;
     -fx-background-radius: 0;
@@ -365,19 +369,25 @@
 
 /* 3. Jezdec (Thumb) */
 .TaskTable.table-view .scroll-bar:vertical .thumb,
-.fileItemTable.tree-table-view .scroll-bar:vertical .thumb {
+.fileItemTable.tree-table-view .scroll-bar:vertical .thumb,
+.fileItemTableWindowStyl1 .scroll-bar:vertical .thumb,
+.scrollPainScrollBar_Styl1 .scroll-bar:vertical .thumb {
     -fx-background-color: -fx-color-primary1;
     -fx-background-radius: 6px;
 }
 
 /* Hover a Pressed efekty pro jezdce */
 .TaskTable.table-view .scroll-bar:vertical .thumb:hover,
-.fileItemTable.tree-table-view .scroll-bar:vertical .thumb:hover {
+.fileItemTable.tree-table-view .scroll-bar:vertical .thumb:hover,
+.fileItemTableWindowStyl1 .scroll-bar:vertical .thumb:hover,
+.scrollPainScrollBar_Styl1 .scroll-bar:vertical .thumb:hover {
     -fx-background-color: -fx-color-mark2;
 }
 
 .TaskTable.table-view .scroll-bar:vertical .thumb:pressed,
-.fileItemTable.tree-table-view .scroll-bar:vertical .thumb:pressed {
+.fileItemTable.tree-table-view .scroll-bar:vertical .thumb:pressed,
+.fileItemTableWindowStyl1 .scroll-bar:vertical .thumb:pressed,
+.scrollPainScrollBar_Styl1 .scroll-bar:vertical .thumb:pressed {
     -fx-background-color: -fx-color-textLight;
 }
 
@@ -385,7 +395,11 @@
 .TaskTable.table-view .scroll-bar:vertical .increment-button,
 .TaskTable.table-view .scroll-bar:vertical .decrement-button,
 .fileItemTable.tree-table-view .scroll-bar:vertical .increment-button,
-.fileItemTable.tree-table-view .scroll-bar:vertical .decrement-button {
+.fileItemTable.tree-table-view .scroll-bar:vertical .decrement-button,
+.fileItemTableWindowStyl1 .scroll-bar:vertical .increment-button,
+.fileItemTableWindowStyl1 .scroll-bar:vertical .decrement-button,
+.scrollPainScrollBar_Styl1 .scroll-bar:vertical .increment-button,
+.scrollPainScrollBar_Styl1 .scroll-bar:vertical .decrement-button {
     -fx-background-color: transparent;
     -fx-pref-height: 0px;
     -fx-padding: 0;
@@ -394,15 +408,21 @@
 .TaskTable.table-view .scroll-bar:vertical .increment-arrow,
 .TaskTable.table-view .scroll-bar:vertical .decrement-arrow,
 .fileItemTable.tree-table-view .scroll-bar:vertical .increment-arrow,
-.fileItemTable.tree-table-view .scroll-bar:vertical .decrement-arrow {
+.fileItemTable.tree-table-view .scroll-bar:vertical .decrement-arrow,
+.fileItemTableWindowStyl1 .scroll-bar:vertical .increment-arrow,
+.fileItemTableWindowStyl1 .scroll-bar:vertical .decrement-arrow,
+.scrollPainScrollBar_Styl1 .scroll-bar:vertical .increment-arrow,
+.scrollPainScrollBar_Styl1 .scroll-bar:vertical .decrement-arrow {
     -fx-shape: " ";
     -fx-padding: 0;
 }
 
-/* 5. Začištění průsečíku posuvníků (Kritické pro tabulky) */
+/* 5. Začištění průsečíku posuvníků (roh, kde se potkává vertikální a horizontální) */
 .TaskTable.table-view .corner,
-.fileItemTable.tree-table-view .corner {
-    -fx-background-color: -fx-color-primary2; /* Nebo transparent, podle pozadí tvé aplikace */
+.fileItemTable.tree-table-view .corner,
+.fileItemTableWindowStyl1 .corner,
+.scrollPainScrollBar_Styl1 .corner {
+    -fx-background-color: -fx-color-primary2;
 }
 
 

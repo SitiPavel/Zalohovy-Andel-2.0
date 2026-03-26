@@ -1,4 +1,4 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.services.BackupCompareServices;
+package cz.sitina.bakalarskaprace.zalohovyandel.services;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
@@ -6,6 +6,8 @@ import java.nio.file.Path;
 
 import java.nio.file.Paths;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseManager implements AutoCloseable {
     private Connection conn;
@@ -105,6 +107,33 @@ public class DatabaseManager implements AutoCloseable {
             pstmt.setString(5, item.getLocation());
             pstmt.executeUpdate();
         }
+    }
+
+    // najde ty nejaktuálnější data a ty nyčte do paměti
+    public Map<String, FileItemModel> loadLatestIndexToMemory() throws SQLException {
+        Map<String, FileItemModel> map = new HashMap<>();
+
+        String sql = "SELECT relativePath, absolutPath, fileSize, lastModified " +
+                "FROM backup_catalog " +
+                "WHERE id IN (SELECT MAX(id) FROM backup_catalog GROUP BY relativePath)";
+
+        try (java.sql.Statement stmt = conn.createStatement();
+             java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                FileItemModel item = new FileItemModel();
+
+                String relCestaStr = rs.getString("relativePath");
+                item.setRelativePath(Paths.get(relCestaStr));
+                item.setFileAbsolutePath(Paths.get(rs.getString("absolutPath")));
+                item.fileSizeProperty().set(rs.getLong("fileSize"));
+                item.lastModifiedProperty().set(rs.getLong("lastModified"));
+                item.fileNameProperty().set(item.getRelativePath().getFileName().toString());
+
+                map.put(relCestaStr, item);
+            }
+
+        }
+        return map;
     }
 
 
