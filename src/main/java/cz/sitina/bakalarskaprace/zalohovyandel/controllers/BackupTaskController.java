@@ -1,5 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.BlockedFoldersFilesOverviewController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.CompareProgresController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.RootFolderFilterController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
@@ -263,7 +264,10 @@ public class BackupTaskController implements TaskController {
             controller.setEditFilteredFolders(editableBackupTask.getRootFilteredFolders_Source());
             controller.setOriginFilteredFolders(originBackupTask.getRootFilteredFolders_Source());
             controller.setRootPath(editableBackupTask.getLeftPath());
-            controller.setIsChanged(() -> markAsDirty());
+            controller.setIsChanged(() -> {
+                markAsDirty();
+                resetWindow();
+            });
 
 
             WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
@@ -310,6 +314,21 @@ public class BackupTaskController implements TaskController {
 
     @FXML
     private void showBlockList(ActionEvent event) {
+        try {
+            FXMLLoader loader = loadFXML("BlockedFoldersFilesOverviewWindow.fxml");
+            BlockedFoldersFilesOverviewController controller = loader.getController();
+            controller.setTaskModel(editableBackupTask);
+            controller.setIsBlockSetChanged(() -> {
+                markAsDirty();
+            });
+
+            WindowManager.openNewWindow(loader, "Seznam blokovaných souborů a složek", 750, 500);
+        }  catch (Exception e) {
+            ErrorUtility.getInstance("Kritická chyba",
+                    "Nastala chyba okna",
+                    "");
+            e.printStackTrace();
+        }
 
     }
 
@@ -399,7 +418,14 @@ public class BackupTaskController implements TaskController {
         ));
     }
 
-
+    private void resetWindow() {
+        // vynulování ukazatelů
+        statisticsAndComparedData = new ComparedDataAndStatisticsForCompereOverview();
+        loadFinishedDataToGui(statisticsAndComparedData, "", "");
+        //vynulování stromu
+        masterRoot.getChildren().clear();
+        filesTreeTable.setRoot(masterRoot);
+    }
 
     // nastaví podle true/false obrázek odpovídajcí vypnutému nebo zapnutému filtru
     private void setFastFiltersImg() {

@@ -362,7 +362,10 @@ public class ManualSyncController implements TaskController {
             controller.setEditFilteredFolders(editableManualTask.getRootFilteredFolders_Left());
             controller.setOriginFilteredFolders(originalManualTask.getRootFilteredFolders_Left());
             controller.setRootPath(editableManualTask.getLeftPath());
-            controller.setIsChanged(() -> markAsDirty());
+            controller.setIsChanged(() -> {
+                markAsDirty();
+                resetWindow();
+            });
 
 
             WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
@@ -573,7 +576,10 @@ public class ManualSyncController implements TaskController {
             controller.setEditFilteredFolders(editableManualTask.getRootFilteredFolders_Right());
             controller.setOriginFilteredFolders(originalManualTask.getRootFilteredFolders_Right());
             controller.setRootPath(editableManualTask.getRightPath());
-            controller.setIsChanged(() -> markAsDirty());
+            controller.setIsChanged(() -> {
+                markAsDirty();
+                resetWindow();
+            });
 
             WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
 

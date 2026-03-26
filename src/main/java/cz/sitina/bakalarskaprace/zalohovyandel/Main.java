@@ -105,6 +105,8 @@ public class Main extends Application {
                 "D:\\testBakalarky\\TestBackup01",
                 "test historie ");
         task11.setCompareStrategy(CompareStrategy.BACKUP_TO_RIGHT);
+        task11.getBlockSet().add("skola\\semestr2\\PRIPO_základy elektroniky.pptx");
+        task11.getBlockSet().add("_gsdata_");
 
         taskRepository.add(task11);
 

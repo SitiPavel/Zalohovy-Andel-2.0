@@ -63,8 +63,14 @@ public class BackupCompareService {
                 FileItemModel fileItemModel_Destination;
                 CompareOperations operation;
 
+
+                Path relativePathObject = fileItemModel_source.getRelativePath();
+                // zjisštění zda je v seznamu blokovaných = nutno porovnat cesty aby nebyly naopak lomítka / a \
+                Boolean isBlocked = backupTask.getBlockSet().stream()
+                        .anyMatch(blockedStr -> relativePathObject.startsWith(Path.of(blockedStr)));
+
                 // pokud je v blokovaných tak ignoruj
-                if (backupTask.getBlockSet().contains(fileItemModel_source.getRelativePath())) {
+                if (isBlocked) {
                     operation = CompareOperations.IGNORE;
                     fileItemModel_Destination = new FileItemModel();
                 } else {
