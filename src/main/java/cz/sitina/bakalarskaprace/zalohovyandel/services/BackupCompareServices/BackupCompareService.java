@@ -84,7 +84,11 @@ public class BackupCompareService {
                     if (isChanged) { //je jiný, najdi operaci
                         fileItemModel_Destination =
                                 databaseManager.getLatestItemFromDatabase(fileItemModel_source.getRelativePath());
+
                         operation = oneWayToRightStrategy.compare(fileItemModel_source, fileItemModel_Destination);
+                        if (fileItemModel_Destination == null) {
+                            fileItemModel_Destination = new FileItemModel();
+                        }
 
                     } else { // je stejný tak EQUALS
                         operation = CompareOperations.EQUALS;

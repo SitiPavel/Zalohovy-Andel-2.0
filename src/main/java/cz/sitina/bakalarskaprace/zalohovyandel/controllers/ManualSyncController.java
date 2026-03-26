@@ -261,7 +261,7 @@ public class ManualSyncController implements TaskController {
                     ComparedItemOperItemRowModel rowItem = cell.getTreeTableRow().getItem();
 
                     if (rowItem != null) {
-                        popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(),
+                        popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(),false,
                                 ()-> readAndSetStatistic());
                     }
 
@@ -323,7 +323,10 @@ public class ManualSyncController implements TaskController {
     }
 
     public void readAndSetStatistic() {
-        if (statisticsAndComparedData == null) {return;}
+        if (statisticsAndComparedData == null) {
+            return;
+        }
+        statisticsAndComparedData.resetCounters();
         TreeTableUtility.readStatisticForOperationBackupSize(masterRoot, statisticsAndComparedData);
         loadCompateDataAfterChange(statisticsAndComparedData ,tfLeftFolderPath.getText(), tfRightFolderPath.getText());
 

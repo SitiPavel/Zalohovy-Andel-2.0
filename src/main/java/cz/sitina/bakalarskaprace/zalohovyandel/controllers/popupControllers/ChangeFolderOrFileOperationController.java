@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations.*;
@@ -24,6 +25,8 @@ public class ChangeFolderOrFileOperationController {
     private Boolean isFolder= false;
     private ComparedItemOperItemRowModel rowItem;
     private TreeItem<ComparedItemOperItemRowModel> treeItem;
+
+    @FXML private VBox leftButtonPanel;
 
     @FXML private Button btnSetOperAddLeft;
     @FXML private Button btnSetOperAddRight;
@@ -126,7 +129,73 @@ public class ChangeFolderOrFileOperationController {
         }
     }
 
+    private void disableInvalidButtons() {
+        Button[] allButtons = {
+                btnSetOperAddLeft, btnSetOperAddRight,
+                btnSetOperUpdateLeft, btnSetOperUpdateRight,
+                btnSetOperDeleteLeft, btnSetOperDeleteBoth, btnSetOperDeleteRight,
+                btnSetOperBlock, btnSetOperEqals, btnSetOperUnknow
+        };
 
+        for (Button btn : allButtons) {
+            // Přeskočíme tlačítka, která už mohla být skryta kvůli isBackupTask
+            if (btn == null || !btn.isVisible()) {
+                continue;
+            }
+
+            // Zjistíme, jakou operaci toto konkrétní tlačítko reprezentuje
+            CompareOperations operationForButton;
+            if (isFolder) {
+                CompareOperations folderOper = getOperationByBtnID_Folder(btn.getId());
+                operationForButton = TreeTableUtility.getBaseOperation(folderOper);
+            } else {
+                operationForButton = getOperationByBtnID_File(btn.getId());
+            }
+
+            // Pokud metodu nelze spárovat s tlačítkem (nemělo by nastat), přeskočíme
+            if (operationForButton == null) continue;
+
+            // ZAVOLÁME TVOU METODU PRO KONTROLU LOGIKY
+            boolean canBeUsed = TreeTableUtility.cenBeOperationUsed(operationForButton, rowItem);
+
+            // Pokud operace nedává smysl, tlačítko deaktivujeme (zprůhlední se a nepůjde kliknout)
+            if (!canBeUsed) {
+                btn.setDisable(true);
+            }
+        }
+    }
+
+
+
+
+    public void setComparedItemOperItemRowModel(TreeItem<ComparedItemOperItemRowModel> treeItem, boolean isBackupTask) {
+        this.rowItem = treeItem.getValue();
+        this.treeItem = treeItem;
+
+        if (isBackupTask) {
+            leftButtonPanel.setVisible(false);
+            leftButtonPanel.setManaged(false);
+
+            btnSetOperDeleteBoth.setVisible(false);
+            btnSetOperDeleteBoth.setManaged(false);
+
+            btnSetOperDeleteRight.setVisible(false);
+            btnSetOperDeleteRight.setManaged(false);
+        }
+
+        // nastavení aktivní operace do GUI
+        Button activeButton = getActiveButton(rowItem.getOperation());
+        if (treeItem.getValue().getOperation() != FOLDER &&
+                treeItem.getValue().getOperation() !=FOLDER_UNEVEN ) {
+            activeButton.getStyleClass().add("modificator_save");
+        }
+
+        disableInvalidButtons();
+    }
+
+    public void setFolder(Boolean folder) {
+        isFolder = folder;
+    }
 
     public CompareOperations getOperationByBtnID_File(String btnId) {
         return switch (btnId) {
@@ -158,23 +227,6 @@ public class ChangeFolderOrFileOperationController {
             case "btnSetOperUnknow" -> FOLDER_UNKNOWN;
             default -> null;
         };
-    }
-
-    ///  pomocné metody
-    public void setFolder(Boolean folder) {
-        isFolder = folder;
-    }
-
-    public void setComparedItemOperItemRowModel(TreeItem<ComparedItemOperItemRowModel> treeItem) {
-        this.rowItem = treeItem.getValue();
-        this.treeItem = treeItem;
-        // nastavení aktivní operace do GUI
-        Button activeButton = getActiveButton(rowItem.getOperation());
-        if (treeItem.getValue().getOperation() != FOLDER &&
-                treeItem.getValue().getOperation() !=FOLDER_UNEVEN ) {
-            activeButton.getStyleClass().add("modificator_save");
-        }
-
     }
 
     private Button getActiveButton(CompareOperations oper)  {

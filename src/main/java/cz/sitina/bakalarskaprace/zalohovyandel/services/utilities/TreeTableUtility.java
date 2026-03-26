@@ -22,16 +22,19 @@ public class TreeTableUtility {
 
         // oba dva existují    1 <-> 1
         if (existLeft && existRight) {
+            if(oper == CompareOperations.ADD_LEFT ||
+                    oper == CompareOperations.ADD_RIGHT) {
+                return false;
+            }
             return true;
         }
 
         // existuje jen v pravo  0 -> 1
         else if (!existLeft && existRight) {
-            if ( oper.equals(ADD_LEFT) ||
-                    oper.equals(DELETE_RIGHT) ||
-                    oper.equals(IGNORE) ||
-                    oper.equals(EQUALS) ||
-                    oper.equals(UNKNOWN)) {
+            if (oper == CompareOperations.ADD_LEFT ||
+                    oper == CompareOperations.DELETE_RIGHT ||
+                    oper == CompareOperations.IGNORE ||
+                    oper == CompareOperations.UNKNOWN) {
                 return true;
             }
             return false;
@@ -39,11 +42,10 @@ public class TreeTableUtility {
         }
         // existuje jen v levo  1 <- 0
         else if (existLeft && !existRight) {
-            if (oper.equals(ADD_RIGHT) ||
-                    oper.equals(DELETE_LEFT) ||
-                    oper.equals(IGNORE) ||
-                    oper.equals(EQUALS) ||
-                    oper.equals(UNKNOWN)) {
+            if (oper == CompareOperations.ADD_RIGHT ||
+                    oper == CompareOperations.DELETE_LEFT ||
+                    oper == CompareOperations.IGNORE ||
+                    oper == CompareOperations.UNKNOWN) {
                 return true;
             }
             return false;
@@ -53,6 +55,7 @@ public class TreeTableUtility {
             return false;
         }
     }
+
     public static CompareOperations convertBasicOnFolderOperation(CompareOperations operation) {
         return switch (operation) {
             case EQUALS -> FOLDER_EQUALS;

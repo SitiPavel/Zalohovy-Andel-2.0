@@ -24,6 +24,20 @@ public class ComparedDataAndStatisticsForCompereOverview {
     public ComparedDataAndStatisticsForCompereOverview() {
     }
 
+    public void resetCounters() {
+        leftAddCount = 0;
+        leftUpdateCount = 0;
+        leftDeleteCount = 0;
+        ignoreCount = 0;
+        equalsCount = 0;
+        unknownCount = 0;
+        rightDeleteCount = 0;
+        rightUpdateCount = 0;
+        rightAddCount = 0;
+        dataTransportSize_left = 0;
+        dataTransportSize_right = 0;
+    }
+
     public boolean isDataMoveOperations() {
         return (leftAddCount > 0 ||
                 leftUpdateCount > 0 ||

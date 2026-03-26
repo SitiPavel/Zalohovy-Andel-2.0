@@ -13,17 +13,15 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.BackupCompareServices.BackupCompareService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableBuilderService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFilterService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFolderOperationMakerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableGuiModify;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.TreeTableUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -50,6 +48,7 @@ public class BackupTaskController implements TaskController {
     // třídy poskytující služby
     private IconManagerUtility iconManager = new IconManagerUtility();
     private JsonDataManagerService jsonManager = new JsonDataManagerService();
+    private final PopupDialogService popupDialogService = new PopupDialogService();
     private Utility utility = new Utility();
 
 
@@ -224,13 +223,13 @@ public class BackupTaskController implements TaskController {
                     }
                 }
             };
-            /*
+
             cell.setOnMouseClicked(event -> {
                 if (!cell.isEmpty() && event.getButton() == javafx.scene.input.MouseButton.SECONDARY) {
                     ComparedItemOperItemRowModel rowItem = cell.getTreeTableRow().getItem();
 
                     if (rowItem != null) {
-                        popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(),
+                        popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(), true,
                                 ()-> readAndSetStatistic());
                     }
 
@@ -239,7 +238,7 @@ public class BackupTaskController implements TaskController {
                 }
 
             });
-            */
+
             return cell;
         });
 
@@ -355,6 +354,17 @@ public class BackupTaskController implements TaskController {
         filesTreeTable.setRoot(filteredRoot);
     }
 
+    /// =======================
+    /// Další metody
+
+    public void readAndSetStatistic() {
+        if (statisticsAndComparedData == null) {
+            return;
+        }
+        statisticsAndComparedData.resetCounters();
+        TreeTableUtility.readStatisticForOperationBackupSize(masterRoot, statisticsAndComparedData);
+        loadComputeDataAfterChange(statisticsAndComparedData, lbDestinationFolderPath.getText());
+    }
 
     private void loadFinishedDataToGui(ComparedDataAndStatisticsForCompereOverview data, String sourceFolder,
                                        String destinationFolder) {
@@ -426,6 +436,7 @@ public class BackupTaskController implements TaskController {
         masterRoot.getChildren().clear();
         filesTreeTable.setRoot(masterRoot);
     }
+
 
     // nastaví podle true/false obrázek odpovídajcí vypnutému nebo zapnutému filtru
     private void setFastFiltersImg() {
