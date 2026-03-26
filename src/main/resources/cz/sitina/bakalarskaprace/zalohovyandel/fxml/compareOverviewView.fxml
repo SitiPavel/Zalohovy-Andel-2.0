@@ -364,19 +364,6 @@
                   <HBox alignment="CENTER_RIGHT" prefHeight="66.0" prefWidth="80.0" VBox.vgrow="NEVER">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../images/icons/filtering.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <styleClass>
-                              <String fx:value="toolBarButton" />
-                              <String fx:value="modificator_jurnalButton" />
-                           </styleClass>
-                        </Button>
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="8.0" right="8.0" top="5.0" />

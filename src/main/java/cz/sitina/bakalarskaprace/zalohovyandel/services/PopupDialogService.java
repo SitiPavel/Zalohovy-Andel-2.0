@@ -1,7 +1,5 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.services;
 
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.popupControllers.ChangeFileOperationController;
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.popupControllers.ChangeFolderOperationController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.popupControllers.ChangeFolderOrFileOperationController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
@@ -9,11 +7,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import java.io.IOException;
 
 public class PopupDialogService {
 
