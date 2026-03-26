@@ -1,6 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.CompareProgresController;
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.RootFolderFilterController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
@@ -16,6 +17,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableBuilderService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFilterService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFolderOperationMakerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableGuiModify;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
@@ -29,12 +31,15 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager.loadFXML;
@@ -59,6 +64,9 @@ public class BackupTaskController implements TaskController {
     private BackupTask editableBackupTask;
     private AppFrameController appFrameController;
     private TreeItem<ComparedItemOperItemRowModel> masterRoot;
+    private List<ComparedItemOperItemRowModel> resultComparedList = new ArrayList<>();
+    private ComparedDataAndStatisticsForCompereOverview statisticsAndComparedData;
+
 
 
     private BooleanProperty isDirtyFlag = new SimpleBooleanProperty(false);
@@ -237,6 +245,8 @@ public class BackupTaskController implements TaskController {
         // nastavení generování Obarvených řádků podle operace
         treeTableGuiModify.rowFormatingByOperation(filesTreeTable);
 
+        setIsDirtyFlagListener();
+
     }
 
 
@@ -245,6 +255,24 @@ public class BackupTaskController implements TaskController {
     /// definování akcí tlačítek
     @FXML
         private void sourceRootFilter(ActionEvent event) {
+        try {
+            FXMLLoader loader = WindowManager.loadFXML("RootFolderFilterWindow.fxml");
+            RootFolderFilterController controller = loader.getController();
+            controller.setOriginalPath(originBackupTask.getLeftPath());
+            controller.setEditedPath(editableBackupTask.getLeftPath());
+            controller.setEditFilteredFolders(editableBackupTask.getRootFilteredFolders_Source());
+            controller.setOriginFilteredFolders(originBackupTask.getRootFilteredFolders_Source());
+            controller.setRootPath(editableBackupTask.getLeftPath());
+            controller.setIsChanged(() -> markAsDirty());
+
+
+            WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
+
+        } catch (IOException e) {
+            ErrorUtility.showError_WindowLoading();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -258,13 +286,8 @@ public class BackupTaskController implements TaskController {
         ComparedDataAndStatisticsForCompereOverview comparedDataAndStatistics =
                 backupCompareService.executeBackupCompare(editableBackupTask);
 
-        treeBuilder.buildTreeTableItemOperItem(masterRoot, comparedDataAndStatistics.getComparedFilesList());
 
         loadFinishedDataToGui(comparedDataAndStatistics, lbSourceFolderPath.getText(), lbSourceFolderPath.getText());
-
-
-
-
 
     }
 
@@ -296,14 +319,27 @@ public class BackupTaskController implements TaskController {
     }
 
     @FXML void setFastFilter(ActionEvent event) {
+        Node source = (Node) event.getSource();
 
+        setImageByBtnID(source.getId(), editableBackupTask.getGuiOperationFilters());
+        markAsDirty();
+
+        applyCurrentFiltersToTable();
     }
 
+    private void applyCurrentFiltersToTable() {
+        // kdyby nebylo co filtrovate
+        if (masterRoot == null || editableBackupTask == null) return;
 
+        TreeItem<ComparedItemOperItemRowModel> filteredRoot =
+                TreeTableFilterService.createFiltredTree(masterRoot, editableBackupTask.getGuiOperationFilters());
+        filesTreeTable.setRoot(filteredRoot);
+    }
 
 
     private void loadFinishedDataToGui(ComparedDataAndStatisticsForCompereOverview data, String sourceFolder,
                                        String destinationFolder) {
+        this.statisticsAndComparedData = data;
 
         // nastavení statistik o disku v GUI
         DiskSpaceStatisticData leftFolderStatistic = utility.getDiskSpaceStatistics(sourceFolder);
@@ -318,14 +354,29 @@ public class BackupTaskController implements TaskController {
         pbRightUsedSpace.setProgress((double) rightFolderStatistic.getUsedSpace() /rightFolderStatistic.getTotalSpace());
 
 
-        loadCompateDataAfterChange(data, destinationFolder);
+        loadComputeDataAfterChange(statisticsAndComparedData, destinationFolder);
+
+        resultComparedList = data.getComparedFilesList();
+        masterRoot = new TreeItem<>(new ComparedItemOperItemRowModel(
+                new FileItemModel("/"),
+                CompareOperations.FOLDER_UNEVEN,
+                new FileItemModel("/"))
+        );
+
+        masterRoot.setExpanded(true);
+
+        treeBuilder.buildTreeTableItemOperItem(masterRoot, data.getComparedFilesList());
+
 
         // nastavíme operace pro složky
         TreeTableFolderOperationMakerService.getFolderOperation(masterRoot);
 
+        applyCurrentFiltersToTable();
+
     }
 
-    private void loadCompateDataAfterChange(ComparedDataAndStatisticsForCompereOverview data, String destinationFolder) {
+    private void loadComputeDataAfterChange(ComparedDataAndStatisticsForCompereOverview data,
+                                            String destinationFolder) {
         lbRightAddCount.setText(String.valueOf(data.getRightAddCount()));
         lbRightUpdateCount.setText(String.valueOf(data.getRightUpdateCount()));
         lbEqualsCount.setText(String.valueOf(data.getEqualsCount()));
@@ -372,15 +423,90 @@ public class BackupTaskController implements TaskController {
 
     }
 
+    // nastaví proměnou označující změnu v TaskModelu
+    private void markAsDirty() {
+        if (!isDirtyFlag.get()) {
+            isDirtyFlag.set(true);
+            System.out.println("nastaveno true");
+        }
+    }
 
+    private void setIsDirtyFlagListener() {
+        isDirtyFlag.addListener((obs, oldVal, newVal) -> {
+            String newClass = "modificator_save";
+            if (newVal) {
+                if (!btnSaveTask.getStyleClass().contains("modificator_save")){
+                    btnSaveTask.getStyleClass().add("modificator_save");
+                }
+            } else {
+                btnSaveTask.getStyleClass().remove("modificator_save");
+            }
+        });
+    }
 
     public boolean isUnsavedChanges() {
         return isDirtyFlag.get();
     }
 
     public void saveChanges() {
-        this.originBackupTask.updateTaskModel(editableBackupTask);
+        this.originBackupTask.updateBackupTask( editableBackupTask);
         isDirtyFlag.set(false);
+    }
+
+    private void setImageByBtnID(String id, GuiOperationFilters_TaskData filters) {
+        switch (id) {
+            // --- STŘED ---
+            case "btnBlock":
+                if (filters.isActive_IGNORE()) {
+                    filters.setActive_IGNORE(false);
+                    imgBlock.setImage( iconManager.getIcon_block_OFF());
+                } else {
+                    filters.setActive_IGNORE(true);
+                    imgBlock.setImage( iconManager.getIcon_block());
+                }
+                break;
+
+            case "btnEqual":
+                if (filters.isActive_EQUALS()) {
+                    filters.setActive_EQUALS(false);
+                    imgEqual.setImage( iconManager.getIcon_equal_OFF());
+                } else {
+                    filters.setActive_EQUALS(true);
+                    imgEqual.setImage( iconManager.getIcon_equal());
+                }
+                break;
+
+            case "btnUnknown":
+                if (filters.isActive_UNKNOWN()) {
+                    filters.setActive_UNKNOWN(false);
+                    imgUnknown.setImage( iconManager.getIcon_unknown_OFF());
+                } else {
+                    filters.setActive_UNKNOWN(true);
+                    imgUnknown.setImage( iconManager.getIcon_unknown());
+                }
+                break;
+
+
+            case "btnModified_right":
+                if (filters.isActive_UPDATE_RIGHT()) {
+                    filters.setActive_UPDATE_RIGHT(false);
+                    imgModified_right.setImage( iconManager.getIcon_modified_right_OFF());
+                } else {
+                    filters.setActive_UPDATE_RIGHT(true);
+                    imgModified_right.setImage( iconManager.getIcon_modified_right());
+                }
+                break;
+
+            case "btnAddItem_right":
+                if (filters.isActive_ADD_RIGHT()) {
+                    filters.setActive_ADD_RIGHT(false);
+                    imgAddItem_right.setImage( iconManager.getIcon_addItem_right_OFF());
+                } else {
+                    filters.setActive_ADD_RIGHT(true);
+                    imgAddItem_right.setImage( iconManager.getIcon_addItem_right());
+                }
+                break;
+        }
     }
 
     // setry
@@ -397,6 +523,12 @@ public class BackupTaskController implements TaskController {
 
         this.originBackupTask = backupTask;
         this.editableBackupTask = new BackupTask(backupTask);
+
+
+        Tooltip ttSourcePath = utility.createToolTip_300ms(lbSourceFolderPath.getText());
+        lbSourceFolderPath.setTooltip(ttSourcePath);
+        Tooltip ttDestinationPath = utility.createToolTip_300ms(lbDestinationFolderPath.getText());
+        lbDestinationFolderPath.setTooltip(ttDestinationPath);
 
         setFastFiltersImg();
     }

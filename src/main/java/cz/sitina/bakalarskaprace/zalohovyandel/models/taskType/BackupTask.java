@@ -27,15 +27,16 @@ public class BackupTask extends TaskModel {
 
     public BackupTask(BackupTask source) {
         super(source);
-        rootBackupPath = source.rootBackupPath;
-        rootFilteredFolders_Source = new ArrayList<>(source.rootFilteredFolders_Source);
+        this.rootBackupPath = source.rootBackupPath;
+        this.rootFilteredFolders_Source = new ArrayList<>(source.rootFilteredFolders_Source);
     }
 
 
 
-    public void updateTask(BackupTask task) {
+    public void updateBackupTask(BackupTask task) {
         super.updateTaskModel(task);
-
+        this.rootBackupPath = task.rootBackupPath;
+        this.rootFilteredFolders_Source = new ArrayList<>(task.rootFilteredFolders_Source);
     }
 
 

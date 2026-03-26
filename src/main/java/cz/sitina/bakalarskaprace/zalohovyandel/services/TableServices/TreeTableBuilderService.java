@@ -107,8 +107,6 @@ public class TreeTableBuilderService {
                         }
 
 
-
-
                         // 3. Vytvoříme TreeItem a propojíme s rodičem
                         TreeItem<ComparedItemOperItemRowModel> newFolderNode = new TreeItem<>(folderRow);
                         newFolderNode.setExpanded(true); // Otevřít složku

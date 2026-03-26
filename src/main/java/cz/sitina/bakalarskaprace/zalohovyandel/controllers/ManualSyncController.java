@@ -79,8 +79,8 @@ public class ManualSyncController implements TaskController {
 
     private final ManualCompareSettingsController compareSetting = new ManualCompareSettingsController();
     private CompareStrategy strategyForRecapitulate;
-    private boolean isLeftOperationSizeSmalerThenLeftFolder;
-    private boolean isRightOperationSizeSmalerThenRightFolder;
+    private boolean isLeftOperationSizeSmallerThenLeftFolder;
+    private boolean isRightOperationSizeSmallerThenRightFolder;
 
     //Tásk objekt a uložení
     private TaskRepository taskRepository;
@@ -513,7 +513,7 @@ public class ManualSyncController implements TaskController {
         }
         if (statisticsAndComparedData.isDataMoveOperations()) {
             // kontrola jestli se záloha vejde do disku
-            if (!isRightOperationSizeSmalerThenRightFolder || !isLeftOperationSizeSmalerThenLeftFolder) {
+            if (!isRightOperationSizeSmallerThenRightFolder || !isLeftOperationSizeSmallerThenLeftFolder) {
                 ErrorUtility.getInstance("Chyba disku",
                         "Synchronizace nebo záloha je příliž velká!",
                         "Velikost operací do levého nebo pravého uložiště je příliž velká!");
@@ -667,19 +667,19 @@ public class ManualSyncController implements TaskController {
         if (utility.isSazeSmalerThenFreeSpace(  leftFolder,
                 statisticsAndComparedData.getDataTransportSize_left())) {
             imgPieChar_Left.setImage(iconManager.getPieChartYellow_ToLeft());
-            isLeftOperationSizeSmalerThenLeftFolder =true;
+            isLeftOperationSizeSmallerThenLeftFolder =true;
         } else {
             imgPieChar_Left.setImage(iconManager.getPieChartRed_ToLeft());
-            isLeftOperationSizeSmalerThenLeftFolder = false;
+            isLeftOperationSizeSmallerThenLeftFolder = false;
         }
 
         if (utility.isSazeSmalerThenFreeSpace(rightFolder,
                 statisticsAndComparedData.getDataTransportSize_right())) {
             imgPieChar_Right.setImage(iconManager.getPieChartYellow_ToRight()) ;
-            isRightOperationSizeSmalerThenRightFolder =true;
+            isRightOperationSizeSmallerThenRightFolder =true;
         } else {
             imgPieChar_Right.setImage(iconManager.getPieChartRed_ToRight());
-            isRightOperationSizeSmalerThenRightFolder = false;
+            isRightOperationSizeSmallerThenRightFolder = false;
         }
 
         // nastavení textů do koláču
@@ -734,9 +734,9 @@ public class ManualSyncController implements TaskController {
         // kdyby nebylo co filtrovate
         if (masterRoot == null || editableManualTask == null) return;
 
-        TreeItem<ComparedItemOperItemRowModel> filtredRoot =
+        TreeItem<ComparedItemOperItemRowModel> filteredRoot =
                 TreeTableFilterService.createFiltredTree(masterRoot, editableManualTask.getGuiOperationFilters());
-        filesTreeTable.setRoot(filtredRoot);
+        filesTreeTable.setRoot(filteredRoot);
     }
 
     // nastavý listenery pro textová pole a pokud je nová hodnota jiná než v originalu tak zaznamená změnu
@@ -774,7 +774,6 @@ public class ManualSyncController implements TaskController {
     private void markAsDirty() {
         if (!isDirtyFlag.get()) {
             isDirtyFlag.set(true);
-            System.out.println("nastaveno true");
         }
     }
 
