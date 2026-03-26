@@ -16,11 +16,11 @@ public class ErrorUtility {
     }
 
 
-    public static void showError_WindowLoading(IOException e) {
+    public static void showError_WindowLoading() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Kritická chyba při načítání okna");
         alert.setHeaderText("Nepodařilo se načíst obsah okna.");
-        alert.setContentText(e.getMessage());
+        alert.setContentText("Chybí potřebné soubory uživatelského rozhraní.");
         alert.showAndWait();
     }
 
@@ -37,6 +37,14 @@ public class ErrorUtility {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Chyba operace");
         alert.setHeaderText("Vznikla nesmyslná operace!");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void showError_databaseError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Kritická chyba");
+        alert.setHeaderText("Nastala chyba při práci s databází!");
         alert.setContentText(message);
         alert.showAndWait();
     }

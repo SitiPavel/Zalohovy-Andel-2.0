@@ -11,13 +11,13 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class FileItemModel {
-    private final StringProperty fileName = new SimpleStringProperty("");
     private Path fileAbsolutePath;
+    private Path relativePath;
+    private final StringProperty fileName = new SimpleStringProperty("");
     private final LongProperty lastModified = new SimpleLongProperty(0);
     private final LongProperty fileSize = new SimpleLongProperty(0);
-    private Path relativePath;
-    private final Utility utility = new Utility();
 
+    private final Utility utility = new Utility();
 
     public FileItemModel(){
     }
@@ -28,15 +28,15 @@ public class FileItemModel {
                          long lastModified, long fileSize, Path relativePath) {
         this.fileName.set(fileName);
         this.fileAbsolutePath = fileAbsolutePath;
+        this.relativePath = relativePath;
         this.lastModified.set(lastModified);
         this.fileSize.set(fileSize);
-        this.relativePath = relativePath;
     }
     public FileItemModel(String fileName, Path fileAbsolutePath, Path relativePath) {
         this.fileName.set(fileName);
         this.fileAbsolutePath = fileAbsolutePath;
-        this.fileSize.set(-1);
         this.relativePath = relativePath;
+        this.fileSize.set(-1);
     }
 
     ///metoda převede číselný formát v milisekundách od nějakého roku 1970 do klasického datumu

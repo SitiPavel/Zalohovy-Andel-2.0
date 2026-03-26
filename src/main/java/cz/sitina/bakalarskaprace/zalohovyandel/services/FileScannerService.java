@@ -77,7 +77,7 @@ public class FileScannerService {
         Path rootPath = Path.of(rootDirectory);
 
 
-        if (!isRightFolderPath(rootPath)) {
+        if (!isExistsFolderPath(rootPath)) {
             throw new IllegalArgumentException("Zadaná cesta neexistuje! \nCesta: " + rootDirectory);
         }
 
@@ -156,7 +156,7 @@ public class FileScannerService {
         } catch (IOException e) {
             throw new IllegalArgumentException(
                     "Chyba během procesu skenovaní" + rootPath.toString()+
-                    "Zkontrolujte zda má počítač přístup k zadané složce: \n" + e.toString());
+                    "Zkontrolujte zda má počítač přístup k zadané složce: \n");
         }
         return filesMap;
 
@@ -165,7 +165,7 @@ public class FileScannerService {
     // najde použe složky v zadané cestě
     public List<String> loadDirectSubfolders(Path rootPath) {
 
-        if (!isRightFolderPath(rootPath)) {
+        if (!isExistsFolderPath(rootPath)) {
             ErrorUtility.getInstance("Chyba cesty",
                     "Zadaná cesta neexistuje nebo není složka",
                     "Cesta: " + rootPath.toString());
@@ -195,7 +195,7 @@ public class FileScannerService {
     }
 
     /// kontroluje zda cesta existuje a jestli je to složka
-    public Boolean isRightFolderPath(Path path) {
+    public Boolean isExistsFolderPath(Path path) {
         if (!Files.exists(path) || !Files.isDirectory(path)) {
             return false;
         } else {

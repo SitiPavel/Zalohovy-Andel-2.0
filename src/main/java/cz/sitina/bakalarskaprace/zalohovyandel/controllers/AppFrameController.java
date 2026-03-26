@@ -89,31 +89,11 @@ public class AppFrameController {
                 }
             }
 
-            /*  ✪======V======V======V=======V========*/
-            if (subController instanceof TaskOverviewController toc) {
-                toc.setTaskRepository(taskRepository);
-                toc.setAppFrameController(this);
-            }
-            else if (subController instanceof ManualSyncController coc) {
-                if (taskModel != null) {
-                    ManualSyncTask mst = (ManualSyncTask) taskModel;
-                    coc.setTaskRepository(taskRepository);
-                    coc.setTaskModel(mst);
-                    coc.setAppFrameController(this);
-                    coc.loadView();
-
-                } else  {
-                    ErrorUtility.getInstance("Kritická chyba",
-                            "Neznámá úloha",
-                            "Nepodařilo se najít vybranou Úlohu!"
-                    );
-                }
-            }
-            /*  =======^=======^=======^=======^=======*/
-
             // uložíme spuštěný controller
             if (subController instanceof TaskController) {
                 this.curentController = (TaskController) subController;
+            } else if (subController instanceof BackupTaskController) {
+                this.curentController = (BackupTaskController) subController;
             } else {
                 this.curentController = null;
             }
@@ -134,7 +114,7 @@ public class AppFrameController {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Nepodařilo se načíst pohled: " + fxml);
-            ErrorUtility.showError_WindowLoading(e);
+            ErrorUtility.showError_WindowLoading();
         }
 
     }

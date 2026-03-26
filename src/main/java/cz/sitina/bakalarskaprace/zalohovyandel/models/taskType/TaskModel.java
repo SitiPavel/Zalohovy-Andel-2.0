@@ -24,18 +24,18 @@ import java.util.Set;
 })
 
 public abstract class TaskModel {
-    private long id; // máme jako daatum a čas vytvoření v milisekundách
-    private TaskTypes taskType;
-    private String name;
+    protected long id; // máme jako daatum a čas vytvoření v milisekundách
+    protected TaskTypes taskType;
+    protected String name;
     protected String leftPath;
     protected String rightPath;
-    private String description;
-    private String status;
-    private LocalDate creationDate;
-    private Set<String> blockList = new LinkedHashSet<>();
-    private List<JournalItemDataPack> jurnalInfoList;
+    protected String description;
+    protected String status;
+    protected LocalDate creationDate;
+    protected Set<String> blockList = new LinkedHashSet<>();
+    protected List<JournalItemDataPack> jurnalInfoList;
 
-    private GuiOperationFilters_TaskData guiOperationFilters;
+    protected GuiOperationFilters_TaskData guiOperationFilters;
 
 
     /// uležená data pro porovnání

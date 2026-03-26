@@ -210,7 +210,7 @@ public class TaskOverviewController {
 
             WindowManager.openNewWindowAutoSized(fxmlLoader, "Nová manuální synchronizace");
         } catch (IOException e) {
-            ErrorUtility.showError_WindowLoading(e);
+            ErrorUtility.showError_WindowLoading();
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -227,7 +227,7 @@ public class TaskOverviewController {
 
             WindowManager.openNewWindowAutoSized(fxmlLoader, "Nová záloha");
         } catch (IOException e) {
-            ErrorUtility.showError_WindowLoading(e);
+            ErrorUtility.showError_WindowLoading();
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();

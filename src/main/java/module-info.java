@@ -9,6 +9,7 @@ module cz.sitina.bakalarskaprace.zalohovyandel {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.datatype.jsr310;
     requires java.desktop;
+    requires java.sql;
 
     opens cz.sitina.bakalarskaprace.zalohovyandel.models to com.fasterxml.jackson.databind;
     opens cz.sitina.bakalarskaprace.zalohovyandel.models.taskType to com.fasterxml.jackson.databind;

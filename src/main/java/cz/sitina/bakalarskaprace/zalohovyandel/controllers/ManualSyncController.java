@@ -368,7 +368,7 @@ public class ManualSyncController implements TaskController {
             WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
 
         } catch (IOException e) {
-            ErrorUtility.showError_WindowLoading(e);
+            ErrorUtility.showError_WindowLoading();
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -390,7 +390,7 @@ public class ManualSyncController implements TaskController {
                     470);
 
         } catch (IOException e) {
-            ErrorUtility.showError_WindowLoading(e);
+            ErrorUtility.showError_WindowLoading();
         }
     }
 
@@ -469,7 +469,7 @@ public class ManualSyncController implements TaskController {
             thread.start();
 
         } catch (IOException e) {
-            ErrorUtility.showError_WindowLoading(e);
+            ErrorUtility.showError_WindowLoading();
         }
     }
 
@@ -537,7 +537,7 @@ public class ManualSyncController implements TaskController {
 
             } catch (IOException e) {
                 System.out.println(e.toString());
-                ErrorUtility.showError_WindowLoading(e);
+                ErrorUtility.showError_WindowLoading();
             }
         } else {
             ErrorUtility.getInstance("Chyba",
@@ -559,7 +559,7 @@ public class ManualSyncController implements TaskController {
 
 
         } catch (IOException e) {
-            ErrorUtility.showError_WindowLoading(e);
+            ErrorUtility.showError_WindowLoading();
         }
     }
 
@@ -578,7 +578,7 @@ public class ManualSyncController implements TaskController {
             WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
 
         } catch (IOException e) {
-            ErrorUtility.showError_WindowLoading(e);
+            ErrorUtility.showError_WindowLoading();
         }catch (Exception e) {
             e.printStackTrace();
         }

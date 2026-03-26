@@ -56,7 +56,7 @@ public class JournalController {
                     itemController.setThisTitlePane(lvJournalContainer);
 
                 } catch (IOException e) {
-                    ErrorUtility.showError_WindowLoading(e);
+                    ErrorUtility.showError_WindowLoading();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -32,7 +32,7 @@ public class Main extends Application {
 
 
         /// načítá data při zapnutí aplikace
-        //createFirstData(taskRepository); //Pro vytvoření dat
+//        createFirstData(taskRepository); //Pro vytvoření dat
        /**/
        for (TaskModel task: jsonManager.loadAllTasks()){
 
@@ -100,10 +100,10 @@ public class Main extends Application {
                 "popis úlohy ")
         );
 
-        BackupTask task11 = new BackupTask("testování",
+        BackupTask task11 = new BackupTask("Pro testování zálohy s hystorií",
                 "D:\\testBakalarky\\Test05",
-                "D:\\testBakalarky\\Test04",
-                "Slouží k testování přenosu ");
+                "D:\\testBakalarky\\TestBackup01",
+                "test historie ");
         task11.setCompareStrategy(CompareStrategy.BACKUP_TO_RIGHT);
 
         taskRepository.add(task11);

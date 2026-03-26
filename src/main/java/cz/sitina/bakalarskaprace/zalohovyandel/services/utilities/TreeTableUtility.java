@@ -106,7 +106,7 @@ public class TreeTableUtility {
         }
     }
 
-    // do existujícího objektu jen upraví data
+    // do existujícího objektu Data jen upraví počty operaci a upraví velikost zálohy na daný disk
     public static void countFiltersAndSizePie(ComparedItemOperItemRowModel rowItem,
                                                 ComparedDataAndStatisticsForCompereOverview dataModel) {
         switch (rowItem.getOperation()) {
