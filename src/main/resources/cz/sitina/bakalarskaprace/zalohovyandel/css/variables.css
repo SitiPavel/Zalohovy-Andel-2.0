@@ -7,6 +7,7 @@
     -fx-color-Transparent: rgba(255, 0, 249, 0);
     -fx-colorFilter-Dark-25: rgba(0, 0, 0, 0.25);
     -fx-colorFilter-Dark-50: rgba(0, 0, 0, 0.50);
+    -fx-colorFilter-Lite-25: rgba(231, 181, 63, 0.35);
 
 
     -fx-color-mark1: #56E73F;                      /* barva značek */

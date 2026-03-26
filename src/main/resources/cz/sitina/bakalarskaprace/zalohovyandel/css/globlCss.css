@@ -334,13 +334,75 @@
     -fx-background-color: -fx-colorFilter-Dark-25;
 }
 .TaskTable .table-row-cell:selected {  /*mění řádek vybraného*/
-    -fx-background-color: -fx-color-primary2;
-    -fx-border-width: 1 0 1 0;
+    -fx-background-color: -fx-colorFilter-Dark-50;
+    -fx-border-width: 2 0 2 0;
     -fx-border-style: solid;
     -fx-border-color: -fx-color-primary1;
 }
 .TaskTable .table-row-cell:selected .table-cell { /*mění text vybraného*/
-    -fx-text-fill: -fx-color-primary1;
+    -fx-text-fill: -fx-color-textDark;
+}
+
+
+/*
+  změna posuvníků pro tabulku TreeTableView nebo TableView
+*/
+
+/* 1. Hlavní kontejner a šířka posuvníků pro obě tabulky */
+.TaskTable.table-view .scroll-bar:vertical,
+.fileItemTable.tree-table-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12px;
+}
+
+/* 2. Dráha (Track) */
+.TaskTable.table-view .scroll-bar:vertical .track,
+.fileItemTable.tree-table-view .scroll-bar:vertical .track {
+    -fx-background-color: -fx-color-primary2;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+}
+
+/* 3. Jezdec (Thumb) */
+.TaskTable.table-view .scroll-bar:vertical .thumb,
+.fileItemTable.tree-table-view .scroll-bar:vertical .thumb {
+    -fx-background-color: -fx-color-primary1;
+    -fx-background-radius: 6px;
+}
+
+/* Hover a Pressed efekty pro jezdce */
+.TaskTable.table-view .scroll-bar:vertical .thumb:hover,
+.fileItemTable.tree-table-view .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: -fx-color-mark2;
+}
+
+.TaskTable.table-view .scroll-bar:vertical .thumb:pressed,
+.fileItemTable.tree-table-view .scroll-bar:vertical .thumb:pressed {
+    -fx-background-color: -fx-color-textLight;
+}
+
+/* 4. Skrytí tlačítek (šipek) nahoře a dole */
+.TaskTable.table-view .scroll-bar:vertical .increment-button,
+.TaskTable.table-view .scroll-bar:vertical .decrement-button,
+.fileItemTable.tree-table-view .scroll-bar:vertical .increment-button,
+.fileItemTable.tree-table-view .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-pref-height: 0px;
+    -fx-padding: 0;
+}
+
+.TaskTable.table-view .scroll-bar:vertical .increment-arrow,
+.TaskTable.table-view .scroll-bar:vertical .decrement-arrow,
+.fileItemTable.tree-table-view .scroll-bar:vertical .increment-arrow,
+.fileItemTable.tree-table-view .scroll-bar:vertical .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}
+
+/* 5. Začištění průsečíku posuvníků (Kritické pro tabulky) */
+.TaskTable.table-view .corner,
+.fileItemTable.tree-table-view .corner {
+    -fx-background-color: -fx-color-primary2; /* Nebo transparent, podle pozadí tvé aplikace */
 }
 
 

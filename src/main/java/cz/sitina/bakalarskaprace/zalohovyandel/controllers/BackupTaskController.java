@@ -4,6 +4,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.Com
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.DiskSpaceStatisticData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilters_TaskData;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
@@ -14,6 +15,8 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.BackupCompareServices.Ba
 import cz.sitina.bakalarskaprace.zalohovyandel.services.ComparisonService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableBuilderService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFolderOperationMakerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableGuiModify;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
@@ -42,10 +45,12 @@ public class BackupTaskController implements TaskController {
     private IconManagerUtility iconManager = new IconManagerUtility();
     private JsonDataManagerService jsonManager = new JsonDataManagerService();
     private Utility utility = new Utility();
-    private TreeTableGuiModify treeTableGuiModify = new TreeTableGuiModify();
-    private ComparisonService comparisonService = new ComparisonService();
-    private FileScannerService fileScannerService = new FileScannerService();
+
+
     private BackupCompareService backupCompareService = new BackupCompareService();
+
+    private TreeTableGuiModify treeTableGuiModify = new TreeTableGuiModify();
+    private TreeTableBuilderService treeBuilder = new TreeTableBuilderService();
 
 
     // objekty
@@ -53,9 +58,11 @@ public class BackupTaskController implements TaskController {
     private BackupTask originBackupTask;
     private BackupTask editableBackupTask;
     private AppFrameController appFrameController;
+    private TreeItem<ComparedItemOperItemRowModel> masterRoot;
+
 
     private BooleanProperty isDirtyFlag = new SimpleBooleanProperty(false);
-    private CompareStrategy compareStrategy;
+    private boolean isSourceOperationSizeSmallerThenDestinationFolder;
 
     // Nastavení sloupců v TreeTableView  a samotná tabulka
     @FXML private TreeTableView<ComparedItemOperItemRowModel> filesTreeTable;
@@ -128,6 +135,9 @@ public class BackupTaskController implements TaskController {
                 cellData.getValue().getValue().operationProperty());
 
 
+        Label tablePlaceholder = new Label("Není porovnaná zdrojová složka s cílovou, nutno porovnat!");
+        tablePlaceholder.getStyleClass().add("DarkBoltHeader1");
+        filesTreeTable.setPlaceholder(tablePlaceholder);
 
         /// NASTAVENÍ SLOUPCŮ
         // Stylování sloupců
@@ -138,6 +148,16 @@ public class BackupTaskController implements TaskController {
 
         // nastaví jako hlavní zavírací strom sloupec leftColName
         filesTreeTable.setTreeColumn(leftColName);
+
+        // nastavení ROOT
+        filesTreeTable.setShowRoot(false);
+        masterRoot = new TreeItem<>(new ComparedItemOperItemRowModel(
+                new FileItemModel("/"),
+                CompareOperations.FOLDER_UNEVEN,
+                new FileItemModel("/")) );
+        filesTreeTable.setRoot(masterRoot);
+        masterRoot.setExpanded(true);
+
 
         // nastavení levého sloupce názvů
         leftColName.setCellFactory(cellData ->
@@ -214,6 +234,8 @@ public class BackupTaskController implements TaskController {
             return cell;
         });
 
+        // nastavení generování Obarvených řádků podle operace
+        treeTableGuiModify.rowFormatingByOperation(filesTreeTable);
 
     }
 
@@ -233,8 +255,16 @@ public class BackupTaskController implements TaskController {
 
     @FXML // porovnání souborů
     private void startComparingFiles(ActionEvent event) {
-        ComparedDataAndStatisticsForCompereOverview coparedDataAndStatistics =
+        ComparedDataAndStatisticsForCompereOverview comparedDataAndStatistics =
                 backupCompareService.executeBackupCompare(editableBackupTask);
+
+        treeBuilder.buildTreeTableItemOperItem(masterRoot, comparedDataAndStatistics.getComparedFilesList());
+
+        loadFinishedDataToGui(comparedDataAndStatistics, lbSourceFolderPath.getText(), lbSourceFolderPath.getText());
+
+
+
+
 
     }
 
@@ -271,6 +301,52 @@ public class BackupTaskController implements TaskController {
 
 
 
+
+    private void loadFinishedDataToGui(ComparedDataAndStatisticsForCompereOverview data, String sourceFolder,
+                                       String destinationFolder) {
+
+        // nastavení statistik o disku v GUI
+        DiskSpaceStatisticData leftFolderStatistic = utility.getDiskSpaceStatistics(sourceFolder);
+        lbLeftUsedSpace.setText(utility.getFormatedSize(leftFolderStatistic.getUsedSpace()));
+        lbLeftTotalSpace.setText(utility.getFormatedSize(leftFolderStatistic.getTotalSpace()));
+        lbLeftFreeSpace.setText(utility.getFormatedSize(leftFolderStatistic.getFreeSpace()));
+        pbLeftUsedSpace.setProgress((double) leftFolderStatistic.getUsedSpace() /leftFolderStatistic.getTotalSpace());
+        DiskSpaceStatisticData rightFolderStatistic = utility.getDiskSpaceStatistics(destinationFolder);
+        lbRightUsedSpace.setText(utility.getFormatedSize(rightFolderStatistic.getUsedSpace()));
+        lbRightTotalSpace.setText(utility.getFormatedSize(rightFolderStatistic.getTotalSpace()));
+        lbRightFreeSpace.setText(utility.getFormatedSize(rightFolderStatistic.getFreeSpace()));
+        pbRightUsedSpace.setProgress((double) rightFolderStatistic.getUsedSpace() /rightFolderStatistic.getTotalSpace());
+
+
+        loadCompateDataAfterChange(data, destinationFolder);
+
+        // nastavíme operace pro složky
+        TreeTableFolderOperationMakerService.getFolderOperation(masterRoot);
+
+    }
+
+    private void loadCompateDataAfterChange(ComparedDataAndStatisticsForCompereOverview data, String destinationFolder) {
+        lbRightAddCount.setText(String.valueOf(data.getRightAddCount()));
+        lbRightUpdateCount.setText(String.valueOf(data.getRightUpdateCount()));
+        lbEqualsCount.setText(String.valueOf(data.getEqualsCount()));
+        lbIgnoreCount.setText(String.valueOf(data.getIgnoreCount()));
+        lbUnknownCount.setText(String.valueOf(data.getUnknownCount()));
+
+        if (utility.isSazeSmalerThenFreeSpace(destinationFolder,
+                data.getDataTransportSize_right())) {
+            imgPieChar_Right.setImage(iconManager.getPieChartYellow_ToRight()) ;
+            isSourceOperationSizeSmallerThenDestinationFolder =true;
+        } else {
+            imgPieChar_Right.setImage(iconManager.getPieChartRed_ToRight());
+            isSourceOperationSizeSmallerThenDestinationFolder = false;
+        }
+
+        lbPieChar_Right.setText(String.valueOf(
+                utility.getFormatedSize(
+                        data.getDataTransportSize_right()
+                )
+        ));
+    }
 
 
 
@@ -312,7 +388,7 @@ public class BackupTaskController implements TaskController {
     public void loadView() {
         lbSourceFolderPath.setText(originBackupTask.getLeftPath());
         lbDestinationFolderPath.setText(originBackupTask.getRightPath());
-        lbDestinationFolderPathContent.setText(originBackupTask.getLeftPath());
+        lbDestinationFolderPathContent.setText(originBackupTask.getRightPath());
     }
 
 

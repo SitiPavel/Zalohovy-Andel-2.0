@@ -108,7 +108,7 @@
 }
 
 .fileItemTable .filler { /*prázdné místo pokud buňky nevyplní celý řádek */
-    -fx-background-color: -fx-color-primary1;
+    -fx-background-color: -fx-color-primary2;
 }
 
 .fileItemTable .tree-table-row-cell { /*Celý řádek položky*/
@@ -142,14 +142,14 @@
     vybraný
  ------------*/
 .fileItemTable .tree-table-row-cell:selected {
-    -fx-background-color: -fx-color-primary2; /* Klasická modrá barva výběru */
+    -fx-background-color: -fx-colorFilter-Lite-25; /* Klasická modrá barva výběru */
     -fx-control-inner-background: -fx-color-primary2;
-    -fx-border-color: -fx-color-textLight;
-    -fx-border-width: 1 0 1 0;
+    -fx-border-color: -fx-color-textDark;
+    -fx-border-width: 2 0 2 0;
     -fx-border-style: solid;
 }
 .fileItemTable .tree-table-row-cell:selected .text {
-    -fx-fill: -fx-color-primary1;
+    -fx-fill: -fx-color-textDark;
 }
 
 /* ------------

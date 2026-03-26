@@ -398,7 +398,7 @@
           <RowConstraints maxHeight="-Infinity" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TreeTableView fx:id="filesTreeTable" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0" styleClass="fileItemTable" GridPane.columnSpan="3" GridPane.rowSpan="2">
+            <TreeTableView fx:id="filesTreeTable" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowSpan="2">
               <columns>
                 <TreeTableColumn fx:id="leftColName" editable="false" minWidth="150.0" prefWidth="-1.0" sortable="false" text="Název souboru" />
                   <TreeTableColumn fx:id="leftColLastModify" editable="false" maxWidth="80.0" minWidth="80.0" resizable="false" sortable="false" text="Úprava" />
@@ -414,6 +414,10 @@
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
+               <styleClass>
+                  <String fx:value="fileItemTable" />
+                  <String fx:value="fileItemTable_TopLine_ManualSync" />
+               </styleClass>
             </TreeTableView>
             <HBox alignment="CENTER" prefHeight="240.0" prefWidth="70.0" styleClass="bottomBar" GridPane.columnSpan="3" GridPane.rowIndex="2">
                <children>

@@ -41,10 +41,10 @@ public class TreeTableBuilderService {
 
             // musíne dostat cestu z nenullového objektu a zaznamenat kde je nenulová cesta
             if (row.getLeftItem().getRelativePath() != null &&
-                    row.getRightItem().getRelativePath() == null) {
+                    row.getRightItem() ==null || row.getRightItem().getRelativePath() == null) {
                 whereIsntNullPath = 01;
                 notNullItem = row.getLeftItem();
-            } else if (row.getLeftItem().getRelativePath() == null &&
+            } else if (row.getLeftItem() == null ||row.getLeftItem().getRelativePath() == null &&
                     row.getRightItem().getRelativePath() != null) {
                 whereIsntNullPath = 10;
                 notNullItem = row.getRightItem();
