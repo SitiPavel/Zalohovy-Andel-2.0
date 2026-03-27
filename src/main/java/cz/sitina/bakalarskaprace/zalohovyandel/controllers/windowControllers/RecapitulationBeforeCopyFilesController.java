@@ -3,6 +3,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
@@ -73,9 +74,9 @@ public class RecapitulationBeforeCopyFilesController  {
             //načítáme okno
             FXMLLoader loader = WindowManager.loadFXML("copyProcessWindow.fxml");
             CopyProcessController copyProcessController = loader.getController();
-            copyProcessController.startProcess(originTask, editedTask, list);
+            copyProcessController.startProcess((BackupTask) originTask,(BackupTask)  editedTask, list);
 
-            String title = (editedTask instanceof ManualSyncTask) ? "Synchronizace souborů" : "Záloha souborů";
+            String title = "Synchronizace souborů";
             Stage copyProcessStage = WindowManager.openRunningWindow(loader, title, 750, 400);
 
             copyProcessStage.setOnCloseRequest(e -> copyProcessController.cancelAction());
@@ -87,6 +88,7 @@ public class RecapitulationBeforeCopyFilesController  {
             ErrorUtility.showError_WindowLoading();
 
         }
+
     }
 
     public void setText_SizeToLeft(String text) {

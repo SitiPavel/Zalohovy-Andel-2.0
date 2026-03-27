@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DatabaseManager implements AutoCloseable {
@@ -146,6 +147,40 @@ public class DatabaseManager implements AutoCloseable {
             }
         }
         return true;
+    }
+
+    public void insertNewItemsBatch(List<BackupDatabaseDTO> items) throws SQLException {
+        String sql = "INSERT INTO backup_catalog (relativePath, absolutPath, fileSize, lastModified, location) "
+                + "VALUES (?, ?, ?, ?, ?)";
+
+        // 1. Zrušíme automatické zapisování na disk po každém dotazu (Auto-commit)
+        conn.setAutoCommit(false);
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            for (BackupDatabaseDTO item : items) {
+                pstmt.setString(1, item.getRelativePath());
+                pstmt.setString(2, item.getAbsolutPath());
+                pstmt.setLong(3, item.getSize());
+                pstmt.setLong(4, item.getLastModified());
+                pstmt.setString(5, item.getLocation());
+
+                // Přidá dotaz do paměťové fronty
+                pstmt.addBatch();
+            }
+            // 2. Pošle celou frontu do databáze najednou
+            pstmt.executeBatch();
+
+            // 3. Fyzický zápis na disk (jen jednou pro všechny soubory!)
+            conn.commit();
+
+        } catch (SQLException e) {
+            // Pokud spadne byť jen jeden soubor, zrušíme celou frontu
+            conn.rollback();
+            throw e;
+        } finally {
+            // Vrátíme databázi do původního stavu
+            conn.setAutoCommit(true);
+        }
     }
 
     // Spočítá kolik balíčků eviduje databáze

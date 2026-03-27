@@ -4,12 +4,17 @@ import cz.sitina.bakalarskaprace.zalohovyandel.controllers.BackupProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtiliy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +31,7 @@ public class BackupRecapitulationBeforeCopyFilesController {
     private boolean isStrategyModified = false;
     private List<ComparedItemOperItemRowModel> comparedFilesList = new ArrayList<>();
 
+    private BackupTask originalBackupTask;
     private BackupTask editableBackupTask;
 
     @FXML
@@ -42,9 +48,28 @@ public class BackupRecapitulationBeforeCopyFilesController {
 
     @FXML
     public void startCopyFiles(ActionEvent event) {
+        Stage currentStage = (Stage) modifiedIndicator.getScene().getWindow();
+        currentStage.close();
 
-        backupProcessService.executeBackupProcess(comparedFilesList, editableBackupTask);
-        WindowManager.findByActionAndClose(event);
+        try {
+            FXMLLoader loader = WindowManager.loadFXML("copyProcessWindow.fxml");
+            CopyProcessController controller = loader.getController();
+            controller.startProcess(originalBackupTask, editableBackupTask, comparedFilesList);
+
+            String title =  "Záloha souborů";
+            Stage copyProcessStage = WindowManager.openRunningWindow(loader, title, 750, 400);
+
+            copyProcessStage.setOnCloseRequest(e -> controller.cancelAction());
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ErrorUtility.showError_WindowLoading();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public void setComparedAndStatisticsData(ComparedDataAndStatisticsForCompereOverview comparedAndStatisticsData) {
@@ -61,5 +86,9 @@ public class BackupRecapitulationBeforeCopyFilesController {
 
     public void setComparedFilesList(List<ComparedItemOperItemRowModel> comparedFilesList) {
         this.comparedFilesList = comparedFilesList;
+    }
+
+    public void setOriginalBackupTask(BackupTask originalBackupTask) {
+        this.originalBackupTask = originalBackupTask;
     }
 }

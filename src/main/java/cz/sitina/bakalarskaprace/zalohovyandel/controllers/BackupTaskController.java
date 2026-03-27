@@ -429,6 +429,7 @@ public class BackupTaskController implements TaskController {
                 FXMLLoader loader = loadFXML("backupRecapitulationBeforeCopyFiles.fxml");
                 BackupRecapitulationBeforeCopyFilesController controller = loader.getController();
                 controller.setComparedAndStatisticsData(statisticsAndComparedData);
+                controller.setOriginalBackupTask(originBackupTask);
                 controller.setEditableBackupTask(editableBackupTask);
                 controller.setComparedFilesList(statisticsAndComparedData.getComparedFilesList());
 

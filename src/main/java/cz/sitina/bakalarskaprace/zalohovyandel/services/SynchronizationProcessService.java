@@ -16,7 +16,7 @@ import java.nio.file.attribute.DosFileAttributes;
 import java.util.List;
 
 public class SynchronizationProcessService {
-    int processedFileCount = 0;
+    private int processedFileCount = 0;
 
     public interface ProgressCallback {
         void onProgress(long bytesProcessed, long totalBytes, String currentFile,
@@ -50,7 +50,7 @@ public class SynchronizationProcessService {
             FileItemModel leftItem = row.getLeftItem();
             FileItemModel rightItem = row.getRightItem();
 
-            String currentFileName = (leftItem.getRelativePath() != null && !leftItem.getRelativePath().toString().isEmpty())
+            String currentFileRelativePath = (leftItem.getRelativePath() != null && !leftItem.getRelativePath().toString().isEmpty())
                     ? leftItem.getRelativePath().toString() : rightItem.getRelativePath().toString();
 
             long fileSize = 0;
@@ -64,8 +64,8 @@ public class SynchronizationProcessService {
 
                         copyFileWithProgress(source, target,
                                 globalProcessedBytes, totalBytes,
-                                currentFileName, callback,
-                                isCancelled, source.toString());
+                                currentFileRelativePath, callback,
+                                isCancelled);
                         processedFileCount++;
                     }
                     case ADD_RIGHT, UPDATE_RIGHT -> {
@@ -75,28 +75,28 @@ public class SynchronizationProcessService {
 
                         copyFileWithProgress(source, target,
                                 globalProcessedBytes, totalBytes,
-                                currentFileName, callback,
-                                isCancelled, source.toString());
+                                currentFileRelativePath, callback,
+                                isCancelled);
                         processedFileCount++;
                     }
                     case DELETE_LEFT -> {
                         Files.deleteIfExists(leftItem.getFileAbsolutePath());
                         processedFileCount++;
                         callback.onProgress(globalProcessedBytes, totalBytes
-                                , currentFileName, processedFileCount);
+                                , currentFileRelativePath, processedFileCount);
                     }
                     case DELETE_RIGHT -> {
                         Files.deleteIfExists(rightItem.getFileAbsolutePath());
                         processedFileCount++;
                         callback.onProgress(globalProcessedBytes, totalBytes,
-                                currentFileName, processedFileCount);
+                                currentFileRelativePath, processedFileCount);
                     }
                     case DELETE_BOTH -> {
                         Files.deleteIfExists(leftItem.getFileAbsolutePath());
                         Files.deleteIfExists(rightItem.getFileAbsolutePath());
                         processedFileCount++;
                         callback.onProgress(globalProcessedBytes, totalBytes,
-                                currentFileName, processedFileCount);
+                                currentFileRelativePath, processedFileCount);
                     }
                 }
                 if (operations.name().contains("ADD") || operations.name().contains("UPDATE")) {
@@ -105,7 +105,7 @@ public class SynchronizationProcessService {
 
             } catch (IOException e) {
                 System.out.println("Chyba chyba při zpracování souboru "
-                        + currentFileName + " : " + e.getMessage());
+                        + currentFileRelativePath + " : " + e.getMessage());
                 success = false;
             }
 
@@ -130,9 +130,8 @@ public class SynchronizationProcessService {
 
     private void copyFileWithProgress(Path source, Path target,
                                       long alreadyProcessedGlobal, long totalBytes,
-                                      String fileName, ProgressCallback callback,
-                                      java.util.function.Supplier<Boolean> isCancelled,
-                                      String currentAbsolutFilePath) throws IOException {
+                                      String currentFileRelativePath, ProgressCallback callback,
+                                      java.util.function.Supplier<Boolean> isCancelled) throws IOException {
 
         // pokud složka neexistuje
         if (target.getParent() != null) {
@@ -161,12 +160,12 @@ public class SynchronizationProcessService {
                 // pokud bychom hlásili každý blok mohlo byt to zahltit aplikaci
                 if ( (bytesCopiedForThisFile - lastReportedBites)  >= 1024*1024) {
                     callback.onProgress(alreadyProcessedGlobal + bytesCopiedForThisFile,
-                            totalBytes, fileName, processedFileCount);
+                            totalBytes, currentFileRelativePath, processedFileCount);
                     lastReportedBites = bytesCopiedForThisFile;
                 }
             }
             callback.onProgress(alreadyProcessedGlobal + bytesCopiedForThisFile,
-                    totalBytes, fileName, processedFileCount);
+                    totalBytes, currentFileRelativePath, processedFileCount);
         }//Soubor je přenesen a uzavřen
 
         /*
@@ -184,7 +183,7 @@ public class SynchronizationProcessService {
             );
 
         } catch (IOException e) {
-            System.err.println("Nepodařilo se nastavit časová razítka pro: " + fileName +
+            System.err.println("Nepodařilo se nastavit časová razítka pro: " + currentFileRelativePath +
                     "\n"+ e.getMessage());
         }
 
@@ -199,7 +198,7 @@ public class SynchronizationProcessService {
         } catch (UnsupportedOperationException e) {
             // Ignorujeme, pokud systém nepodporuje DOS atributy (např. Linux/Mac)
         } catch (Exception e) {
-            System.err.println("Nepodařilo se nastavit DOS atributy pro: " + fileName +
+            System.err.println("Nepodařilo se nastavit DOS atributy pro: " + currentFileRelativePath +
                     "\n" + e.getMessage());
         }
 
