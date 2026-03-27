@@ -6,7 +6,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.SyncBackupProcessService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.SynchronizationProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -27,10 +27,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.nio.file.Path;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,7 +56,7 @@ public class CopyProcessController {
     @FXML private HBox containerProcessed;
     @FXML private HBox containerError;
 
-    private SyncBackupProcessService syncBackupProcessService = new SyncBackupProcessService();
+    private SynchronizationProcessService synchronizationProcessService = new SynchronizationProcessService();
     private JsonDataManagerService jsonService = new JsonDataManagerService();
 
     private TaskModel originTaskModel;
@@ -134,10 +132,10 @@ public class CopyProcessController {
             protected Void call() throws Exception {
 
 
-                syncBackupProcessService.executeCopyFiles(
+                synchronizationProcessService.executeCopyFiles(
                         editedTaskModel,
                         list,
-                        new SyncBackupProcessService.ProgressCallback() {
+                        new SynchronizationProcessService.ProgressCallback() {
                             private long lastTime = startTime;
                             private long lastBytes = 0;
                             private int lastProcessedFileCount = 0;

@@ -15,7 +15,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.DosFileAttributes;
 import java.util.List;
 
-public class SyncBackupProcessService {
+public class SynchronizationProcessService {
     int processedFileCount = 0;
 
     public interface ProgressCallback {

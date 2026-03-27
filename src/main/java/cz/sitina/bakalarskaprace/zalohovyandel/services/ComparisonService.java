@@ -96,7 +96,7 @@ public class ComparisonService {
                     case null, default -> operation = UNKNOWN;
                 }
             } else if (taskModel instanceof BackupTask BC) {
-                operation = mirroringToRightStrategy.compare(leftItem,rightItem);
+                operation = oneWayToRightStrategy.compare(leftItem,rightItem);
             }else {
                 operation = UNKNOWN;
             }

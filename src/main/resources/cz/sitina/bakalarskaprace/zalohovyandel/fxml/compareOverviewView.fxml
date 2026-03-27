@@ -408,7 +408,7 @@
             </TreeTableView>
             <HBox alignment="CENTER" prefHeight="240.0" prefWidth="70.0" styleClass="bottomBar" GridPane.columnSpan="3" GridPane.rowIndex="2">
                <children>
-                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                  <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="47.0">
                      <children>
                         <Button fx:id="btnAddItem_Left" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
@@ -422,13 +422,13 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Label fx:id="lbLeftAddCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbLeftAddCount" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="17.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
                      <HBox.margin>
-                        <Insets right="10.0" />
+                        <Insets right="5.0" />
                      </HBox.margin>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                  <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="47.0">
                      <children>
                         <Button fx:id="btnModified_left" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
@@ -442,13 +442,13 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Label fx:id="lbLeftUpdateCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbLeftUpdateCount" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="17.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                  <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="47.0">
                      <children>
                         <Button fx:id="btnDelete_left" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
@@ -462,13 +462,13 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Label fx:id="lbLeftDeleteCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbLeftDeleteCount" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="17.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                  <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="47.0">
                      <children>
                         <Button fx:id="btnBlock" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
@@ -482,13 +482,13 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Label fx:id="lbIgnoreCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbIgnoreCount" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="17.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                  <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="47.0">
                      <children>
                         <Button fx:id="btnEqual" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
@@ -502,13 +502,13 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Label fx:id="lbEqualsCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbEqualsCount" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="17.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                  <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="47.0">
                      <children>
                         <Button fx:id="btnUnknown" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
@@ -522,13 +522,13 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Label fx:id="lbUnknownCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbUnknownCount" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="17.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                  <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="47.0">
                      <children>
                         <Button fx:id="btnDelete_right" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
@@ -542,13 +542,13 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Label fx:id="lbRightDeleteCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbRightDeleteCount" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="17.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                  <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="47.0">
                      <children>
                         <Button fx:id="btnModified_right" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
@@ -562,13 +562,13 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Label fx:id="lbRightUpdateCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbRightUpdateCount" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="17.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
+                  <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="47.0">
                      <children>
                         <Button fx:id="btnAddItem_right" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
@@ -582,8 +582,11 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Label fx:id="lbRightAddCount" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lbRightAddCount" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="17.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
                   </VBox>
                </children>
                <padding>

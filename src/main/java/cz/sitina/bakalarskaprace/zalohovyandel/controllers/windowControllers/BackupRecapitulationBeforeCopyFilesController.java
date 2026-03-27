@@ -1,11 +1,17 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.BackupProcessService;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtiliy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BackupRecapitulationBeforeCopyFilesController {
 
@@ -16,14 +22,14 @@ public class BackupRecapitulationBeforeCopyFilesController {
     @FXML private Label sizeToRight;
 
     private ComparedDataAndStatisticsForCompereOverview comparedAndStatisticsData;
+    private BackupProcessService backupProcessService = new BackupProcessService();
     private boolean isStrategyModified = false;
+    private List<ComparedItemOperItemRowModel> comparedFilesList = new ArrayList<>();
 
-    private BackupTask originalBackupTask;
     private BackupTask editableBackupTask;
 
     @FXML
     private void initialize() {
-
     }
 
     public void setGui() {
@@ -37,6 +43,8 @@ public class BackupRecapitulationBeforeCopyFilesController {
     @FXML
     public void startCopyFiles(ActionEvent event) {
 
+        backupProcessService.executeBackupProcess(comparedFilesList, editableBackupTask);
+        WindowManager.findByActionAndClose(event);
     }
 
     public void setComparedAndStatisticsData(ComparedDataAndStatisticsForCompereOverview comparedAndStatisticsData) {
@@ -47,11 +55,11 @@ public class BackupRecapitulationBeforeCopyFilesController {
         isStrategyModified = strategyModified;
     }
 
-    public void setOriginalBackupTask(BackupTask originalBackupTask) {
-        this.originalBackupTask = originalBackupTask;
-    }
-
     public void setEditableBackupTask(BackupTask editableBackupTask) {
         this.editableBackupTask = editableBackupTask;
+    }
+
+    public void setComparedFilesList(List<ComparedItemOperItemRowModel> comparedFilesList) {
+        this.comparedFilesList = comparedFilesList;
     }
 }

@@ -70,7 +70,7 @@ public class FileScannerService {
             ));
 
 
-    public Map<String, FileItemModel> scanFolder(String rootDirectory, List<String> filtredFiles) {
+    public Map<String, FileItemModel> scanFolder(String rootDirectory, List<String> filteredFiles, boolean backslash) {
 
 
         HashMap<String, FileItemModel> filesMap = new HashMap<>();
@@ -82,8 +82,8 @@ public class FileScannerService {
         }
 
         Set<Path> ignoredPaths = new HashSet<>();
-        if (!filtredFiles.isEmpty() ) {
-            for (String folder : filtredFiles) {
+        if (!filteredFiles.isEmpty() ) {
+            for (String folder : filteredFiles) {
                 ignoredPaths.add(Paths.get(folder));
             }
         }
@@ -120,7 +120,6 @@ public class FileScannerService {
 
                     try {
                         String relativePath = rootPath.relativize(file).toString();
-                        relativePath = relativePath.replace("\\", "/");
 
 
                         FileItemModel newItem = new FileItemModel();

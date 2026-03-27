@@ -13,6 +13,7 @@ public class BackupTask extends TaskModel {
 
     private List<String> rootFilteredFolders_Source;
     private String rootBackupPath;
+    private String backupDatabasePath;
 
     public BackupTask() {
         super();
@@ -23,20 +24,23 @@ public class BackupTask extends TaskModel {
 
         rootFilteredFolders_Source = new ArrayList<>();
         rootBackupPath = rightPath +"\\Backup_" + name  +"_"+ id ;
+        backupDatabasePath = rootBackupPath +"\\index.db" ;
     }
 
     public BackupTask(BackupTask source) {
         super(source);
-        this.rootBackupPath = source.rootBackupPath;
         this.rootFilteredFolders_Source = new ArrayList<>(source.rootFilteredFolders_Source);
+        this.rootBackupPath = source.rootBackupPath;
+        this.backupDatabasePath = source.backupDatabasePath;
     }
 
 
 
     public void updateBackupTask(BackupTask task) {
         super.updateTaskModel(task);
-        this.rootBackupPath = task.rootBackupPath;
         this.rootFilteredFolders_Source = new ArrayList<>(task.rootFilteredFolders_Source);
+        this.rootBackupPath = task.rootBackupPath;
+        this.backupDatabasePath = task.backupDatabasePath;
     }
 
 
@@ -78,5 +82,9 @@ public class BackupTask extends TaskModel {
 
     public void setCompressed(boolean compressed) {
         isCompressed = compressed;
+    }
+
+    public String getBackupDatabasePath() {
+        return backupDatabasePath;
     }
 }

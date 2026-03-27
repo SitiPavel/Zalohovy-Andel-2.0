@@ -95,7 +95,7 @@ public class DatabaseManager implements AutoCloseable {
     }
 
     // Metoda se volá AŽ POTÉ, co je fyzický balíček vytvořen a uložen
-    public void insertNewDataPack(BackupDatabaseDTO item) throws SQLException {
+    public void insertNewItem(BackupDatabaseDTO item) throws SQLException {
         String sql = "INSERT INTO backup_catalog (relativePath, absolutPath, fileSize, lastModified, location) "
                 + "VALUES (?, ?, ?, ?, ?)";
 
@@ -134,6 +134,32 @@ public class DatabaseManager implements AutoCloseable {
 
         }
         return map;
+    }
+
+    // zjistí jestli obsahuje nějaké záznamy
+    public boolean isDatabaseEmpty() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM backup_catalog";
+        try(java.sql.Statement stmt = conn.createStatement();
+            java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt(1) == 0; // Pokud je počet řádků 0, vrátí true když víc tak false
+            }
+        }
+        return true;
+    }
+
+    // Spočítá kolik balíčků eviduje databáze
+    public int getPackageCount() throws SQLException {
+        // Spočítá počet UNIKÁTNÍCH názvů balíčků v historii
+        String sql = "SELECT COUNT(DISTINCT location) FROM backup_catalog";
+
+        try (java.sql.Statement stmt = conn.createStatement();
+             java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0; // Pokud nastane nečekaná chyba, vrátí 0
     }
 
 

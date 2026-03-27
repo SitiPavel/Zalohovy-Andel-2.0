@@ -415,21 +415,23 @@ public class ManualSyncController implements TaskController {
 
 
                     Platform.runLater(()->{
-                        progressWindowController.setLbHeader("Probíhá skenování souborů levé strany.");});
+                        progressWindowController.setLbHeader("Skenuji soubory levé strany... 1/3");});
                     Map<String, FileItemModel> mapLeft = fileScannerService.scanFolder(
                                                                 editableManualTask.getLeftPath(),
-                                                                editableManualTask.getRootFilteredFolders_Left());
+                                                                editableManualTask.getRootFilteredFolders_Left(),
+                                                        false);
 
 
                     Platform.runLater(()->{
-                        progressWindowController.setLbHeader("Probíhá skenování souborů pravé strany.");});
+                        progressWindowController.setLbHeader("Skenuji soubory pravé strany... 2/3");});
                     Map<String, FileItemModel> mapRight = fileScannerService.scanFolder(
                                                                 editableManualTask.getRightPath(),
-                                                                editableManualTask.getRootFilteredFolders_Right());
+                                                                editableManualTask.getRootFilteredFolders_Right(),
+                                                                false);
 
 
                     Platform.runLater(()->{
-                        progressWindowController.setLbHeader("Probíhá porovnání souborů.");});
+                        progressWindowController.setLbHeader("Probíhá porovnání souborů... 3/3");});
                     return comparisonService.compareFolders(
                             mapLeft,
                             mapRight,

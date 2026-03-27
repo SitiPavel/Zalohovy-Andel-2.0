@@ -39,7 +39,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -299,19 +301,20 @@ public class BackupTaskController implements TaskController {
                 protected ComparedDataAndStatisticsForCompereOverview call() throws Exception {
 
                     Platform.runLater(() -> {
-                        progressWindowController.setLbHeader("Skenuji zdrojové soubory...");
+                        progressWindowController.setLbHeader("Skenuji zdrojové soubory... 1/3");
                     });
 
                     Map<String, FileItemModel> sourceMap = fileScannerService.scanFolder(
-                                                                    editableBackupTask.getLeftPath(),
-                                                                    editableBackupTask.getRootFilteredFolders_Source());
+                                                                  editableBackupTask.getLeftPath(),
+                                                                  editableBackupTask.getRootFilteredFolders_Source(),
+                                                         false);
 
                     // Zrušení uživatelem?
                     if (isCancelled()) return null;
 
                     ///  načítání dat z databáze do Map<>
                     Platform.runLater(() -> {
-                        progressWindowController.setLbHeader("Načítám index historie záloh...");
+                        progressWindowController.setLbHeader("Skenuji histori záloh... 2/3");
                     });
 
                     Map<String, FileItemModel> databaseMap;
@@ -323,7 +326,7 @@ public class BackupTaskController implements TaskController {
                         e.printStackTrace();
                         System.out.println("Nepodařilo se vytvořit složku");
                     }
-                    String dbPath = rootDirectory.resolve("index.db").toString();
+                    String dbPath = editableBackupTask.getBackupDatabasePath();
 
                     try (DatabaseManager databaseManager = new DatabaseManager(dbPath)) {
                         databaseMap = databaseManager.loadLatestIndexToMemory();
@@ -333,7 +336,7 @@ public class BackupTaskController implements TaskController {
                     if (isCancelled()) return null;
 
                     Platform.runLater(() -> {
-                        progressWindowController.setLbHeader("Probíhá kontrola a porovnávání zálohy.");
+                        progressWindowController.setLbHeader("Probíhá porovnání souborů... 3/3");
                     });
 
                     // Tady se volá porovnání souborů
@@ -427,7 +430,7 @@ public class BackupTaskController implements TaskController {
                 BackupRecapitulationBeforeCopyFilesController controller = loader.getController();
                 controller.setComparedAndStatisticsData(statisticsAndComparedData);
                 controller.setEditableBackupTask(editableBackupTask);
-                controller.setOriginalBackupTask(originBackupTask);
+                controller.setComparedFilesList(statisticsAndComparedData.getComparedFilesList());
 
                 controller.setGui();
 
