@@ -1,5 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.BackupRecapitulationBeforeCopyFilesController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.BlockedFoldersFilesOverviewController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.CompareProgresController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.RootFolderFilterController;
@@ -403,7 +404,47 @@ public class BackupTaskController implements TaskController {
 
     @FXML
     private void startRecapitulationForCopy(ActionEvent event) {
+        // zjistíme zda není porovnáno
+        if (masterRoot == null || masterRoot.getChildren() == null || masterRoot.getChildren().isEmpty()) {
+            ErrorUtility.getInstance("Chyba seznamu porovnání",
+                    "Není vytvořen seznam s konkrétními kroky pro porovnání souborů!",
+                    "Nutno levou a pravou složku nejdříve porovnat a až potom synchronizovat!");
+            return;
+        }
+        // zda obsahuje seznam položky, které vyžadují manipulaci
+        if (statisticsAndComparedData.isDataMoveOperations()) {
 
+            // zjistíme zda se vejde
+            if (!isSourceOperationSizeSmallerThenDestinationFolder) {
+                ErrorUtility.getInstance("Chyba disku",
+                        "Synchronizace nebo záloha je příliž velká!",
+                        "Velikost operací do levého nebo pravého uložiště je příliž velká!");
+                return;
+            }
+
+            try {
+                FXMLLoader loader = loadFXML("backupRecapitulationBeforeCopyFiles.fxml");
+                BackupRecapitulationBeforeCopyFilesController controller = loader.getController();
+                controller.setComparedAndStatisticsData(statisticsAndComparedData);
+                controller.setEditableBackupTask(editableBackupTask);
+                controller.setOriginalBackupTask(originBackupTask);
+
+                controller.setGui();
+
+                WindowManager.openNewWindowAutoSized(loader, "Rekapitulace");
+
+            } catch (IOException e) {
+                ErrorUtility.showError_WindowLoading();
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            ErrorUtility.getInstance("Chyba",
+                    "V porovnání nejsou položky, vyžadují manipulaci",
+                    "Aby mohla být synchronizace/záloha spuštěna musí obsahovat alespoň jednu z těchto operací: " +
+                            "PŘIDAT, UPRAVIT, SMAZAT na libovolnou stranu");
+        }
     }
 
     @FXML
