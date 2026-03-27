@@ -6,6 +6,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.SynchronizationProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtiliy;
@@ -13,6 +14,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUti
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -72,14 +74,17 @@ public class RecapitulationBeforeCopyFilesController  {
             currentStage.close();
 
             //načítáme okno
-            FXMLLoader loader = WindowManager.loadFXML("copyProcessWindow.fxml");
-            CopyProcessController copyProcessController = loader.getController();
-            copyProcessController.startProcess((BackupTask) originTask,(BackupTask)  editedTask, list);
+            FXMLLoader loader = new FXMLLoader(getClass()
+                    .getResource("/cz/sitina/bakalarskaprace/zalohovyandel/fxml/windows/copyProcessWindow.fxml"));
+            CopyProcessController controller = new CopyProcessController();
+            loader.setController(controller);
+            loader.load(); // Toto zavolá metodu inicialize a nastaví controler podle FXML
+            controller.startProcess( originTask, editedTask, list);
 
             String title = "Synchronizace souborů";
             Stage copyProcessStage = WindowManager.openRunningWindow(loader, title, 750, 400);
 
-            copyProcessStage.setOnCloseRequest(e -> copyProcessController.cancelAction());
+            copyProcessStage.setOnCloseRequest(e -> controller.cancelAction());
 
 
 

@@ -14,6 +14,7 @@ import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.DosFileAttributes;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SynchronizationProcessService {
     private int processedFileCount = 0;
@@ -30,7 +31,19 @@ public class SynchronizationProcessService {
             ProgressCallback callback,
             java.util.function.Supplier<Boolean> isCancelled) {
 
-        long totalBytes = itemsToProcess.stream()
+        List<ComparedItemOperItemRowModel> filesToBackup = itemsToProcess.stream()
+                .filter(row ->
+                                row.getOperation() == CompareOperations.ADD_RIGHT ||
+                                row.getOperation() == CompareOperations.UPDATE_RIGHT||
+                                row.getOperation() == CompareOperations.DELETE_RIGHT||
+                                row.getOperation() == CompareOperations.DELETE_BOTH ||
+                                row.getOperation() == CompareOperations.DELETE_LEFT||
+                                row.getOperation() == CompareOperations.ADD_LEFT||
+                                row.getOperation() == CompareOperations.UPDATE_LEFT
+                )
+                .collect(Collectors.toList());
+
+        long totalBytes = filesToBackup.stream()
                 .mapToLong(item -> getBytesToTransfer(item))
                 .sum();
 
@@ -43,7 +56,7 @@ public class SynchronizationProcessService {
         callback.onProgress(globalProcessedBytes, totalBytes, "Start...", processedFileCount);
         boolean success = true;
 
-        for (ComparedItemOperItemRowModel row : itemsToProcess) {
+        for (ComparedItemOperItemRowModel row : filesToBackup) {
             if (isCancelled.get()) {break;}
 
             CompareOperations operations = row.getOperation();

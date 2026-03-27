@@ -37,8 +37,10 @@ import java.util.Set;
 
 
 public class CopyProcessController {
+
     @FXML private Label lbHeader;
     @FXML private Label lbFileInProcess;
+
     @FXML private Label lbExpectedTime;
     @FXML private Label lbTime;
     @FXML private Label lbProcessedCount;
@@ -56,29 +58,32 @@ public class CopyProcessController {
     @FXML private HBox containerProcessed;
     @FXML private HBox containerError;
 
-    // Servisy
-    private final BackupProcessService backupProcessService = new BackupProcessService();
-    private final JsonDataManagerService jsonService = new JsonDataManagerService();
-    private final Utility utility = new Utility();
+    private SynchronizationProcessService synchronizationProcessService = new SynchronizationProcessService();
+    private JsonDataManagerService jsonService = new JsonDataManagerService();
+    private BackupProcessService backupProcessService = new BackupProcessService();
 
-    private BackupTask originTaskModel;
-    private BackupTask editedTaskModel;
-
+    private TaskModel originTaskModel;
+    private TaskModel editedTaskModel;
     private XYChart.Series<Number, Number> speedSeries;
-    private Task<Void> backupProcessTask;
+    private Task<Void> syncBackupProcessTask;
     private long startTime;
     private Timeline uiTimeline;
+    private Utility utility = new Utility();
+
 
     private int fileCount = 0;
     private int errorCount = 0;
-    private int totalFilesToProcess = 0;
+    private boolean isChartConfigured;
+    int totalFilesToProcess = 0;
 
     /// žurnál info
-    private final LocalDateTime dateTimeOfStart = LocalDateTime.now();
-    private final Set<String> failPathList = new HashSet<>();
+    private LocalDateTime dateTimeOfStart = LocalDateTime.now();
+    private int successCount;
+    private Set<String> failPathList = new HashSet<>();
 
-    @FXML
+
     public void initialize() {
+        // nastavení default celého grafu
         speedSeries = new XYChart.Series<>();
         lineChartSpeedGraph.getData().add(speedSeries);
         lineChartSpeedGraph.setAnimated(false);
@@ -87,131 +92,226 @@ public class CopyProcessController {
         xAxis.setAutoRanging(false);
         xAxis.setLowerBound(0);
         xAxis.setUpperBound(100);
+        // nastavení kroku po 10 %
         xAxis.setTickUnit(10);
 
         Tooltip.install(containerExpectedTime, utility.createToolTip_300ms("Odhadovaný čas"));
-        Tooltip.install(containerTime, utility.createToolTip_300ms("Uplynulý čas"));
+        Tooltip.install(containerTime, utility.createToolTip_300ms("Uplynulý čas "));
         Tooltip.install(containerFiles, utility.createToolTip_300ms("Hotové soubory"));
-        Tooltip.install(containerProcessed, utility.createToolTip_300ms("Zálohované soubory"));
+        Tooltip.install(containerProcessed, utility.createToolTip_300ms("Hotové soubory vyžadující operaci"));
         Tooltip.install(containerError, utility.createToolTip_300ms("Soubory s chybou"));
     }
 
-    public void startProcess(BackupTask originTaskModel, BackupTask editedTaskModel, List<ComparedItemOperItemRowModel> list) {
+    public void startProcess(
+            TaskModel originTaskModel,
+            TaskModel editedTaskModel,
+            List<ComparedItemOperItemRowModel> list
+    ) {
         this.originTaskModel = originTaskModel;
         this.editedTaskModel = editedTaskModel;
-        this.totalFilesToProcess = list.size();
+        isChartConfigured =false;
+
+        // Získáme celkový počet souborů
+        totalFilesToProcess = list.size();
 
         speedSeries.getData().clear();
         speedSeries.getData().add(new XYChart.Data<>(0, 0));
         startTime = System.currentTimeMillis();
 
-        lbHeader.setText("Probíhá zálohování");
+        // nastavení nadpisu
+        if (editedTaskModel instanceof ManualSyncTask) {
+            lbHeader.setText("Probíhá synchronizace");
+        } else {
+            lbHeader.setText("Probíhá zálohování");
+        }
 
-        backupProcessTask = new Task<>() {
+        syncBackupProcessTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
 
-                backupProcessService.executeBackupProcess(
-                        list,
-                        editedTaskModel,
-                        new BackupProcessService.ProgressCallback() {
-                            private long lastTime = startTime;
-                            private long lastBytes = 0;
+                // ---- VÝHYBKA PRO SYNCHRONIZACI ----
+                if (editedTaskModel instanceof ManualSyncTask) {
+                    synchronizationProcessService.executeCopyFiles(
+                            editedTaskModel,
+                            list,
+                            new SynchronizationProcessService.ProgressCallback() {
+                                private long lastTime = startTime;
+                                private long lastBytes = 0;
+                                private int lastProcessedFileCount = 0;
 
-                            @Override
-                            public void onProgress(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount) {
-                                // Update standardního progress baru v Tasku
-                                updateProgress(bytesProcessed, totalBytes);
-                                updateMessage(currentFile);
-
-                                // Zpracování updatu grafu (s throttlingem 250ms)
-                                boolean didUpdate = handleProgressUpdate(bytesProcessed, totalBytes, currentFile, processedFileCount, lastTime, lastBytes);
-
-                                if (didUpdate) {
+                                @Override
+                                public void onProgress(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount) {
+                                    handleProgressUpdate(bytesProcessed, totalBytes, currentFile, processedFileCount,
+                                            lastTime, lastBytes, lastProcessedFileCount);
+                                    // Uložení stavů
                                     lastTime = System.currentTimeMillis();
                                     lastBytes = bytesProcessed;
-                                }
-                            }
+                                    lastProcessedFileCount = processedFileCount;
 
-                            @Override
-                            public void onItemCompleted(boolean success, ComparedItemOperItemRowModel row) {
-                                Platform.runLater(() -> {
-                                    if (success) {
-                                        fileCount++;
-                                        lbFileCount.setText(String.valueOf(fileCount));
-                                    } else {
-                                        errorCount++;
-                                        lbErrorCount.setText(String.valueOf(errorCount));
-                                        Path errorPath = row.getNotNullPath();
-                                        failPathList.add(errorPath.toString());
+                                }
+
+                                @Override
+                                public void onItemCompleted(boolean success, ComparedItemOperItemRowModel row) {
+                                    handleItemCompleted(success, row);
+                                }
+                            },
+                            this::isCancelled
+                    );
+
+                    // ---- VÝHYBKA PRO ZÁLOHU ----
+                } else if (editedTaskModel instanceof BackupTask) {
+                    BackupTask backupTask = (BackupTask) editedTaskModel;
+
+                    backupProcessService.executeBackupProcess(
+                            list,
+                            backupTask,
+                            new BackupProcessService.ProgressCallback() {
+                                private long lastTime = startTime;
+                                private long lastBytes = 0;
+                                private int lastProcessedFileCount = 0;
+
+                                @Override
+                                public void onProgress(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount) {
+                                    boolean didUpdate = handleProgressUpdate(bytesProcessed, totalBytes, currentFile,
+                                            processedFileCount,
+                                            lastTime, lastBytes, lastProcessedFileCount);
+                                    // Uložení stavů
+                                    if (didUpdate) {
+                                        lastTime = System.currentTimeMillis();
+                                        lastBytes = bytesProcessed;
+                                        lastProcessedFileCount = processedFileCount;
                                     }
-                                });
-                            }
-                        },
-                        this::isCancelled
-                );
+
+                                }
+
+                                @Override
+                                public void onItemCompleted(boolean success, ComparedItemOperItemRowModel row) {
+                                    handleItemCompleted(success, row);
+                                }
+                            },
+                            this::isCancelled
+                    );
+                }
                 return null;
             }
         };
 
-        // UI Timeline pro stopky
+        // UI Timeline
         uiTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             long elapsedMilliS = System.currentTimeMillis() - startTime;
+            // Ochrana proti zápornému času (kdyby systémový čas přeskočil)
             if (elapsedMilliS < 0) elapsedMilliS = 0;
             lbTime.setText(formatDuration(elapsedMilliS));
         }));
         uiTimeline.setCycleCount(Timeline.INDEFINITE);
         uiTimeline.play();
 
-        // Události Tasku
-        backupProcessTask.setOnSucceeded(event -> processFinished("Úspěšně dokončeno.", "✔", false, FinishProcesStatus.SUCCESS));
-        backupProcessTask.setOnCancelled(event -> processFinished("Proces byl přerušen.", "✘", false, FinishProcesStatus.INTERRUPTED));
-        backupProcessTask.setOnFailed(event -> {
-            String msg = (backupProcessTask.getException() != null) ? backupProcessTask.getException().getMessage() : "Neznámá chyba";
-            processFinished("Vyskytla se chyba.", "Chyba: " + msg, true, FinishProcesStatus.FAILURE);
+        // závěrečná informace o dokončení procesu
+        syncBackupProcessTask.setOnSucceeded(event ->
+                processFinished("Uspěšně dokončeno.", "✔", false, FinishProcesStatus.SUCCESS));
+
+        syncBackupProcessTask.setOnCancelled(event -> processFinished(
+                "Proces byl přerušen.", "✘", false, FinishProcesStatus.INTERRUPTED));
+
+        syncBackupProcessTask.setOnFailed(event ->  {
+            String msg = "Vyskytla se neznámá chyba";
+            if (syncBackupProcessTask.getException() != null){
+                msg = syncBackupProcessTask.getException().getMessage();
+            }
+            processFinished("Vyskytla se chyba.", "Chyba: " + msg, true,FinishProcesStatus.FAILURE);
         });
 
-        // Binding pozadí (ukazatel průběhu za grafem)
         chartProgressBackground.setPrefWidth(0);
         chartProgressBackground.prefWidthProperty().bind(
-                chartContainer.widthProperty().multiply(backupProcessTask.progressProperty())
+                chartContainer.widthProperty().multiply(syncBackupProcessTask.progressProperty())
         );
 
-        new Thread(backupProcessTask).start();
+
+        new Thread(syncBackupProcessTask).start();
     }
+    // Pomocná metoda pro čistý kód (počítá rychlost a updatuje grafy)
+    private boolean handleProgressUpdate(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount,
+                                         long lastTime, long lastBytes, int lastProcessedFileCount) {
+        if (!isChartConfigured) {
+            Platform.runLater(() -> {
+                if (totalBytes == 0) {
+                    lbHeader.setText("Probíhá odstraňování");
+                    speedSeries.setName("Zpracované soubory");
+                    ((NumberAxis) lineChartSpeedGraph.getYAxis()).setLabel("Rychlost (Položek/s)");
+                }
+            });
+            isChartConfigured = true;
+        }
 
-    // Metoda vracející boolean pro plynulý update grafu
-    private boolean handleProgressUpdate(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount, long lastTime, long lastBytes) {
         long now = System.currentTimeMillis();
-        boolean isFinished = (totalBytes > 0) && (bytesProcessed == totalBytes);
+        boolean isFinished = (totalBytes > 0) ? (bytesProcessed == totalBytes) : (processedFileCount == totalFilesToProcess);
 
-        Platform.runLater(() -> lbFileInProcess.setText(currentFile));
         if (now - lastTime > 250 || isFinished) {
+            Platform.runLater(() -> lbFileInProcess.setText(currentFile));
 
             double timeDelta = (now - lastTime) / 1000.0;
 
-            if (timeDelta > 0.001 && totalBytes > 0) {
-                long deltaData = bytesProcessed - lastBytes;
-                double speedPerSecond = (deltaData / 1024.0 / 1024.0) / timeDelta;
-                double percentDone = ((double) bytesProcessed / totalBytes) * 100;
+            if (timeDelta > 0.001) {
+                double speedPerSecond;
+                double percentDone;
+                double expectedTime;
 
-                long remainingBytes = totalBytes - bytesProcessed;
-                double expectedTime = (speedPerSecond > 0) ? (remainingBytes / 1024.0 / 1024.0) / speedPerSecond : 0;
+                if (totalBytes > 0) {
+                    long deltaData = bytesProcessed - lastBytes;
+                    speedPerSecond = (deltaData / 1024.0 / 1024.0) / timeDelta;
+                    percentDone = ((double) bytesProcessed / totalBytes) * 100;
+                    long remainingBytes = totalBytes - bytesProcessed;
+                    expectedTime = (speedPerSecond > 0) ? (remainingBytes / 1024.0 / 1024.0) / speedPerSecond : 0;
+                } else {
+                    long deltaData = processedFileCount - lastProcessedFileCount;
+                    speedPerSecond = deltaData / timeDelta;
+                    if (speedPerSecond > 0) {
+                        percentDone = ((double) processedFileCount / totalFilesToProcess) * 100;
+                        long remainingFiles = totalFilesToProcess - processedFileCount;
+                        expectedTime = remainingFiles / speedPerSecond;
+                    } else {
+                        percentDone = 100;
+                        expectedTime = 0;
+                    }
+                }
 
                 Platform.runLater(() -> {
                     lbProcessedCount.setText(String.valueOf(processedFileCount));
-                    speedSeries.getData().add(new XYChart.Data<>(percentDone, speedPerSecond));
-                    lbExpectedTime.setText(formatDuration((long) expectedTime * 1000));
+                    successCount = processedFileCount;
+                    updateSpeedChart(speedPerSecond, percentDone, expectedTime);
                 });
             }
+
             return true;
         }
         return false;
     }
 
+    // Pomocná metoda pro zapsání chyby nebo úspěchu souboru
+    private void handleItemCompleted(boolean success, ComparedItemOperItemRowModel row) {
+        Platform.runLater(() -> {
+            if (success) {
+                fileCount++;
+                lbFileCount.setText(String.valueOf(fileCount));
+            } else {
+                errorCount++;
+                lbErrorCount.setText(String.valueOf(errorCount));
+                Path errorPath = row.getNotNullPath();
+                failPathList.add(errorPath.toString());
+            }
+        });
+    }
+
+    private void updateSpeedChart(double speedPerSecond, double percentDone, double expectedTime) {
+
+        speedSeries.getData().add(new XYChart.Data<>(percentDone, speedPerSecond));
+        lbExpectedTime.setText(formatDuration((long) expectedTime * 1000));
+
+
+    }
     private String formatDuration(long durationMillis) {
         long s = durationMillis / 1000;
-        return String.format("%02d:%02d:%02d", s / 3600, (s % 3600) / 60, s % 60);
+        return String.format("%02d:%02d:%02d", s/3600, (s % 3600) / 60,  s % 60);
     }
 
     private void processFinished(String title, String message, boolean isError, FinishProcesStatus finishProcesStatus) {
@@ -220,33 +320,49 @@ public class CopyProcessController {
         lbHeader.setText(title);
         lbFileInProcess.setText(message);
         btnCancel.setOnAction(e -> ((Stage) btnCancel.getScene().getWindow()).close());
+        if (isError) {
+            System.out.println(message);
+        }
 
-        if (isError) System.out.println(message);
-
+        // příprava dat, vytvoření a vložení journal reportu do modelů
         long durationMillis = System.currentTimeMillis() - startTime;
         LocalTime processDuration = LocalTime.ofSecondOfDay(durationMillis / 1000);
 
-        JournalItemDataPack reportData = new JournalItemDataPack(
-                dateTimeOfStart, processDuration, editedTaskModel.getCompareStrategy(),
-                finishProcesStatus, fileCount, errorCount, failPathList,
-                editedTaskModel.getLeftPath(), editedTaskModel.getRightPath()
-        );
 
+        JournalItemDataPack reportData = new JournalItemDataPack(
+                dateTimeOfStart,
+                processDuration,
+                editedTaskModel.getCompareStrategy(),
+                finishProcesStatus,
+                fileCount,
+                errorCount,
+                failPathList,
+                editedTaskModel.getLeftPath(),
+                editedTaskModel.getRightPath()
+
+        );
         originTaskModel.getJurnalInfoList().add(reportData);
         editedTaskModel.getJurnalInfoList().add(reportData);
+
         jsonService.updateTask_saveOldSave(originTaskModel);
     }
 
     @FXML
     public void cancelByButton(ActionEvent event) {
+
         cancelAction();
     }
 
     public void cancelAction() {
-        if (backupProcessTask != null && backupProcessTask.isRunning()) {
-            backupProcessTask.cancel();
+        if (syncBackupProcessTask != null && syncBackupProcessTask.isRunning()) {
+            syncBackupProcessTask.cancel();
         } else {
             ((Stage) btnCancel.getScene().getWindow()).close();
         }
     }
+
 }
+
+
+
+

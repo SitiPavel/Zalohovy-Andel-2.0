@@ -5,12 +5,14 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowMod
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.SynchronizationProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtiliy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
@@ -52,8 +54,11 @@ public class BackupRecapitulationBeforeCopyFilesController {
         currentStage.close();
 
         try {
-            FXMLLoader loader = WindowManager.loadFXML("copyProcessWindow.fxml");
-            CopyProcessController controller = loader.getController();
+            FXMLLoader loader = new FXMLLoader(getClass()
+                    .getResource("/cz/sitina/bakalarskaprace/zalohovyandel/fxml/windows/copyProcessWindow.fxml"));
+            BackupCopyProcessController controller = new BackupCopyProcessController();
+            loader.setController(controller);
+            loader.load(); // Toto zavolá metodu inicialize a nastaví controler podle FXML
             controller.startProcess(originalBackupTask, editableBackupTask, comparedFilesList);
 
             String title =  "Záloha souborů";

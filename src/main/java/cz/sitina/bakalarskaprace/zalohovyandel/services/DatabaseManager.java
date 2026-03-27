@@ -150,38 +150,31 @@ public class DatabaseManager implements AutoCloseable {
     }
 
     public void insertNewItemsBatch(List<BackupDatabaseDTO> items) throws SQLException {
-        String sql = "INSERT INTO backup_catalog (relativePath, absolutPath, fileSize, lastModified, location) "
-                + "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO backup_catalog (absolutPath, relativePath, fileSize, lastModified, location) VALUES (?, ?, ?, ?, ?)";
 
-        // 1. Zrušíme automatické zapisování na disk po každém dotazu (Auto-commit)
+        // Vypnutí automatického ukládání (ZÁSADNÍ PRO RYCHLOST)
         conn.setAutoCommit(false);
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
             for (BackupDatabaseDTO item : items) {
-                pstmt.setString(1, item.getRelativePath());
-                pstmt.setString(2, item.getAbsolutPath());
+                pstmt.setString(1, item.getAbsolutPath());
+                pstmt.setString(2, item.getRelativePath());
                 pstmt.setLong(3, item.getSize());
                 pstmt.setLong(4, item.getLastModified());
                 pstmt.setString(5, item.getLocation());
 
-                // Přidá dotaz do paměťové fronty
-                pstmt.addBatch();
+                pstmt.addBatch(); // Přidá příkaz do paměťové fronty
             }
-            // 2. Pošle celou frontu do databáze najednou
-            pstmt.executeBatch();
-
-            // 3. Fyzický zápis na disk (jen jednou pro všechny soubory!)
-            conn.commit();
-
+            pstmt.executeBatch(); // Pošle celou frontu do databáze najednou
+            conn.commit();        // Fyzicky zapíše na disk (pouze JEDNOU!)
         } catch (SQLException e) {
-            // Pokud spadne byť jen jeden soubor, zrušíme celou frontu
-            conn.rollback();
+            conn.rollback();      // V případě chyby zruší všechny zápisy
             throw e;
         } finally {
-            // Vrátíme databázi do původního stavu
-            conn.setAutoCommit(true);
+            conn.setAutoCommit(true); // Vrácení do původního stavu
         }
     }
+
 
     // Spočítá kolik balíčků eviduje databáze
     public int getPackageCount() throws SQLException {

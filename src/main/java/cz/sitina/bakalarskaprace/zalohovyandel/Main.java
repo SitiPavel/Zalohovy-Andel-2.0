@@ -32,7 +32,7 @@ public class Main extends Application {
 
 
         /// načítá data při zapnutí aplikace
-        //createFirstData(taskRepository); //Pro vytvoření dat
+//        createFirstData(taskRepository); //Pro vytvoření dat
        /**/
        for (TaskModel task: jsonManager.loadAllTasks()){
 

@@ -6,11 +6,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.DatabaseManager;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.SynchronizationProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -121,20 +117,21 @@ public class BackupProcessService {
                         callback.onItemCompleted(false, row);
                     }
 
-                    // A TADY, AŽ SKONČÍ CYKLUS (nebo ho uživatel přeruší stornem), VŠE SE ZAPÍŠE NAJEDNOU
-                    if (!recordsToDatabase.isEmpty()) {
-                        try {
-                            databaseManager.insertNewItemsBatch(recordsToDatabase);
-                        } catch (SQLException e) {
-                            System.err.println("Kritická chyba: Nepodařilo se uložit dávku záznamů do databáze.");
-                            // V reálném nasazení by se zde musely smazat i ty fyzické soubory,
-                            // protože nejsou v DB, ale prozatím logujeme chybu.
-                        }
-                    }
+
 
                 } catch (IOException e) {
                     System.err.println("Chyba při zpracování: " + sourceAbsolutPath);
                     callback.onItemCompleted(false, row);
+                }
+            }
+            // A TADY, AŽ SKONČÍ CYKLUS (nebo ho uživatel přeruší stornem), VŠE SE ZAPÍŠE NAJEDNOU
+            if (!recordsToDatabase.isEmpty()) {
+                try {
+                    databaseManager.insertNewItemsBatch(recordsToDatabase);
+                } catch (SQLException e) {
+                    System.err.println("Kritická chyba: Nepodařilo se uložit dávku záznamů do databáze.");
+                    // V reálném nasazení by se zde musely smazat i ty fyzické soubory,
+                    // protože nejsou v DB, ale prozatím logujeme chybu.
                 }
             }
 
