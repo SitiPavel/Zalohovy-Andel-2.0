@@ -23,6 +23,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -186,6 +187,8 @@ public class ManualSyncController implements TaskController {
         Label tablePlaceholder = new Label("Není porovnaná levá s pravou složkou, nutno porovnat!");
         tablePlaceholder.getStyleClass().add("DarkBoltHeader1");
         filesTreeTable.setPlaceholder(tablePlaceholder);
+        filesTreeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
 
         /// NASTAVENÍ SLOUPCŮ
         // Stylování sloupců
@@ -258,11 +261,23 @@ public class ManualSyncController implements TaskController {
             };
             cell.setOnMouseClicked(event -> {
                 if (!cell.isEmpty() && event.getButton() == javafx.scene.input.MouseButton.SECONDARY) {
-                    ComparedItemOperItemRowModel rowItem = cell.getTreeTableRow().getItem();
+                    // získá list vybraných řádků
+                    ObservableList<TreeItem<ComparedItemOperItemRowModel>> selectedItems =
+                            filesTreeTable.getSelectionModel().getSelectedItems();
+                    // pokud je vybráno více tak změnu operace aplikuje na více
 
-                    if (rowItem != null) {
-                        popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(),false,
-                                ()-> readAndSetStatistic());
+                    if (selectedItems.size() > 1){
+                        popupDialogService.showOperationPopupWindow_group(selectedItems, false,
+                                ()->  { TreeTableFolderOperationMakerService.getFolderOperation(masterRoot);
+                                    readAndSetStatistic();
+                                });
+                    } else {
+                        ComparedItemOperItemRowModel rowItem = cell.getTreeTableRow().getItem();
+
+                        if (rowItem != null) {
+                            popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(), true,
+                                    ()-> readAndSetStatistic());
+                        }
                     }
 
                     // Zastavení dalšího probublávání události

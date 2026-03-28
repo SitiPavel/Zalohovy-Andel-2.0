@@ -1,9 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.BackupRecapitulationBeforeCopyFilesController;
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.BlockedFoldersFilesOverviewController;
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.CompareProgresController;
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.RootFolderFilterController;
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
@@ -26,10 +23,12 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -146,6 +145,7 @@ public class BackupTaskController implements TaskController {
         operationCol.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().operationProperty());
 
+        filesTreeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         Label tablePlaceholder = new Label("Není porovnaná zdrojová složka s cílovou, nutno porovnat!");
         tablePlaceholder.getStyleClass().add("DarkBoltHeader1");
@@ -230,11 +230,23 @@ public class BackupTaskController implements TaskController {
 
             cell.setOnMouseClicked(event -> {
                 if (!cell.isEmpty() && event.getButton() == javafx.scene.input.MouseButton.SECONDARY) {
-                    ComparedItemOperItemRowModel rowItem = cell.getTreeTableRow().getItem();
 
-                    if (rowItem != null) {
-                        popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(), true,
-                                ()-> readAndSetStatistic());
+                    // získá list vybraných řádků
+                    ObservableList<TreeItem<ComparedItemOperItemRowModel>> selectedItems =
+                            filesTreeTable.getSelectionModel().getSelectedItems();
+                    // pokud je vybráno více tak změnu operace aplikuje na více
+                    if (selectedItems.size() > 1){
+                        popupDialogService.showOperationPopupWindow_group(selectedItems, true,
+                                ()->  { TreeTableFolderOperationMakerService.getFolderOperation(masterRoot);
+                                        readAndSetStatistic();
+                        });
+                    } else {
+                        ComparedItemOperItemRowModel rowItem = cell.getTreeTableRow().getItem();
+
+                        if (rowItem != null) {
+                            popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(), true,
+                                    ()-> readAndSetStatistic());
+                        }
                     }
 
                     // Zastavení dalšího probublávání události
@@ -253,7 +265,7 @@ public class BackupTaskController implements TaskController {
 
     }
 
-
+    private void emptyMethod(){}
 
     /// ==============================
     /// definování akcí tlačítek
@@ -473,7 +485,18 @@ public class BackupTaskController implements TaskController {
 
     @FXML
     private void showJournal(ActionEvent event) {
+        try {
+            FXMLLoader loader = loadFXML("journalWindow.fxml");
+            JournalController controller = loader.getController();
+            controller.setEditedTask(editableBackupTask);
+            controller.setIsChanged(() -> markAsDirty());
 
+            WindowManager.openNewWindowAutoSized(loader, "Journal");
+
+
+        } catch (IOException e) {
+            ErrorUtility.showError_WindowLoading();
+        }
     }
 
     @FXML void setFastFilter(ActionEvent event) {

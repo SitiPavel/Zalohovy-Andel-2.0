@@ -6,6 +6,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFilterService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFolderOperationMakerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.PopupUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.TreeTableUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,7 +16,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations.*;
 
 public class ChangeFolderOrFileOperationController {
     // Proměnná pro uložení příkazu k přepořítání statistik z venčí
@@ -54,7 +54,7 @@ public class ChangeFolderOrFileOperationController {
     @FXML
     public void setOperByBtnId(ActionEvent event) {
         String buttonId = ((Node) event.getSource()).getId();
-        CompareOperations oper =  getOperationToSett(buttonId, isFolder);
+        CompareOperations oper =   PopupUtility.getOperationToSett(buttonId, isFolder, treeItem.getValue());
 
         if (oper != null) {
 
@@ -62,7 +62,7 @@ public class ChangeFolderOrFileOperationController {
                 // pokud uživatel nastaví stejnou operaci
                 if (oper == treeItem.getValue().getOperation()) {
                 } // true když se dokáže na všechny děti (soubory/složky) nastavit vybraná operace
-                else if (setAllChildrenOfFolder(treeItem, oper)) {
+                else if (PopupUtility.setAllChildrenOfFolder(treeItem, oper)) {
                     // má novou operaci proto je nutno nastavit všechny předky
                     TreeTableFolderOperationMakerService.updateOperationForParentFolders(treeItem);
                 } else {
@@ -90,44 +90,6 @@ public class ChangeFolderOrFileOperationController {
 
 
 
-    private boolean setAllChildrenOfFolder(TreeItem<ComparedItemOperItemRowModel> currentItem,
-                                                 CompareOperations operationToSett) {
-
-        CompareOperations basicOper = TreeTableUtility.getBaseOperation(operationToSett);
-
-        if (!TreeTableFolderOperationMakerService.validateOperationForChildrenRecursively(currentItem, basicOper)) {
-            return false;
-        }
-
-        TreeTableFolderOperationMakerService.applyOperationOnChyldrensRecursively(currentItem, basicOper);
-        return true;
-    }
-
-    // podle id tlačítka nám tjistí kterou operaci chce uživatel nastavit
-    private CompareOperations getOperationToSett(String btnId, boolean isFolder) {
-        CompareOperations operd;
-        // rozlišujeme abychom našli operaci ke složce nebo k souboru (oba mají jiný switch)
-        // a zkontrolovali zda operace může být přidělena
-        if (isFolder) {
-            operd = getOperationByBtnID_Folder(btnId);
-            // převedeme jen pro kontrolu smysluplnosti operace
-            CompareOperations basicOperation = TreeTableUtility.getBaseOperation(operd);
-            if (TreeTableUtility.cenBeOperationUsed(basicOperation,treeItem.getValue())) {
-                return operd;
-            } else {
-                return null;
-            }
-
-        } else {
-            operd = getOperationByBtnID_File(btnId);
-            if (TreeTableUtility.cenBeOperationUsed(operd,treeItem.getValue()) && operd != null ) {
-                return operd;
-            } else {
-                return null;
-            }
-
-        }
-    }
 
     private void disableInvalidButtons() {
         Button[] allButtons = {
@@ -146,10 +108,10 @@ public class ChangeFolderOrFileOperationController {
             // Zjistíme, jakou operaci toto konkrétní tlačítko reprezentuje
             CompareOperations operationForButton;
             if (isFolder) {
-                CompareOperations folderOper = getOperationByBtnID_Folder(btn.getId());
+                CompareOperations folderOper = PopupUtility.getOperationByBtnID_Folder(btn.getId());
                 operationForButton = TreeTableUtility.getBaseOperation(folderOper);
             } else {
-                operationForButton = getOperationByBtnID_File(btn.getId());
+                operationForButton =  PopupUtility.getOperationByBtnID_File(btn.getId());
             }
 
             // Pokud metodu nelze spárovat s tlačítkem (nemělo by nastat), přeskočíme
@@ -185,8 +147,8 @@ public class ChangeFolderOrFileOperationController {
 
         // nastavení aktivní operace do GUI
         Button activeButton = getActiveButton(rowItem.getOperation());
-        if (treeItem.getValue().getOperation() != FOLDER &&
-                treeItem.getValue().getOperation() !=FOLDER_UNEVEN ) {
+        if (treeItem.getValue().getOperation() != CompareOperations.FOLDER &&
+                treeItem.getValue().getOperation() != CompareOperations.FOLDER_UNEVEN ) {
             activeButton.getStyleClass().add("modificator_save");
         }
 
@@ -197,37 +159,7 @@ public class ChangeFolderOrFileOperationController {
         isFolder = folder;
     }
 
-    public CompareOperations getOperationByBtnID_File(String btnId) {
-        return switch (btnId) {
-            case "btnSetOperAddLeft" -> ADD_LEFT;
-            case "btnSetOperAddRight" -> ADD_RIGHT;
-            case "btnSetOperUpdateLeft" -> UPDATE_LEFT;
-            case "btnSetOperUpdateRight" -> UPDATE_RIGHT;
-            case "btnSetOperDeleteLeft" -> DELETE_LEFT;
-            case "btnSetOperDeleteBoth" -> DELETE_BOTH;
-            case "btnSetOperDeleteRight" -> DELETE_RIGHT;
-            case "btnSetOperBlock" -> IGNORE;
-            case "btnSetOperEqals" -> EQUALS;
-            case "btnSetOperUnknow" -> UNKNOWN;
-            default -> null;
-        };
-    }
 
-    public CompareOperations getOperationByBtnID_Folder(String btnId) {
-        return switch (btnId) {
-            case "btnSetOperAddLeft" -> FOLDER_ADD_LEFT;
-            case "btnSetOperAddRight" -> FOLDER_ADD_RIGHT;
-            case "btnSetOperUpdateLeft" -> FOLDER_UPDATE_LEFT;
-            case "btnSetOperUpdateRight" -> FOLDER_UPDATE_RIGHT;
-            case "btnSetOperDeleteLeft" -> FOLDER_DELETE_LEFT;
-            case "btnSetOperDeleteBoth" -> FOLDER_DELETE_BOTH;
-            case "btnSetOperDeleteRight" -> FOLDER_DELETE_RIGHT;
-            case "btnSetOperBlock" -> FOLDER_IGNORE;
-            case "btnSetOperEqals" -> FOLDER_EQUALS;
-            case "btnSetOperUnknow" -> FOLDER_UNKNOWN;
-            default -> null;
-        };
-    }
 
     private Button getActiveButton(CompareOperations oper)  {
         return switch (oper) {
