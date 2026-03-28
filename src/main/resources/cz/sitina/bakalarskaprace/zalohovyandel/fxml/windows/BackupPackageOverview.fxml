@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane prefHeight="450.0" prefWidth="700.0" styleClass="liteDarkConteiner" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.fxml.windows.BackupPackageOverview">
+   <stylesheets>
+      <URL value="@../../css/globlCss.css" />
+      <URL value="@../../css/compareOverviewStyl.css" />
+      <URL value="@../../css/windowsStyle.css" />
+   </stylesheets>
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+               <styleClass>
+                  <String fx:value="mainConteinerStyle" />
+                  <String fx:value="conteinerModify_Radius15" />
+               </styleClass>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+               <children>
+                  <Label maxWidth="1.7976931348623157E308" styleClass="DarkBoltHeader0" text="Historie záloh" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#restorDataFromAllPackages" text="Obnovit">
+                           <styleClass>
+                              <String fx:value="button_Primary1" />
+                              <String fx:value="WindowTitle_L1_Dark" />
+                           </styleClass>
+                        </Button>
+                        <Label fx:id="lbDate" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="150.0" styleClass="WindowTitle_L1_Dark" text="Obnovit nejnovější data z celé historie" wrapText="true">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Region minWidth="50.0" />
+                        <Button mnemonicParsing="false" onAction="#restorDataFromAllPackages" text="Obnovit">
+                           <styleClass>
+                              <String fx:value="button_Primary1" />
+                              <String fx:value="WindowTitle_L1_Dark" />
+                           </styleClass>
+                        </Button>
+                        <Label fx:id="lbDate1" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="150.0" styleClass="WindowTitle_L1_Dark" text="Obnovit právě vybraný balíček" wrapText="true">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <ScrollPane hbarPolicy="NEVER" hmin="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
+                     <content>
+                        <FlowPane>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </FlowPane>
+                     </content>
+                     <styleClass>
+                        <String fx:value="backgroundModify_transparent" />
+                        <String fx:value="scrollPainScrollBar_Styl1" />
+                        <String fx:value="allBorder_2" />
+                        <String fx:value="borderBackgroundModify_Only1001_Radius10" />
+                     </styleClass>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </ScrollPane>
+               </children>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="5.0" />
+               </padding>
+            </VBox>
+            <HBox nodeOrientation="RIGHT_TO_LEFT">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#closeWindow" text="Zavřít">
+                     <styleClass>
+                        <String fx:value="button_NonBackground" />
+                        <String fx:value="buttonModify_backgroundBrown" />
+                        <String fx:value="WindowTitle_L1_Dark" />
+                     </styleClass>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="15.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</AnchorPane>

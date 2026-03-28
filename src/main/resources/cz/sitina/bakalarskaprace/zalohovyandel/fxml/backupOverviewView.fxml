@@ -262,6 +262,10 @@
                   <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="102.0" styleClass="layout_justifyContent">
                      <children>
                         <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showBlockList" prefHeight="50.0" prefWidth="50.0">
+                           <styleClass>
+                              <String fx:value="toolBarButton" />
+                              <String fx:value="toolBarButtonLite" />
+                           </styleClass>
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -269,12 +273,21 @@
                                  </image>
                               </ImageView>
                            </graphic>
-                           <styleClass>
-                              <String fx:value="toolBarButton" />
-                              <String fx:value="toolBarButtonLite" />
-                           </styleClass>
                         </Button>
                         <Region prefHeight="200.0" prefWidth="200.0" />
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showJournal" prefHeight="50.0" prefWidth="50.0">
+                           <styleClass>
+                              <String fx:value="toolBarButton" />
+                              <String fx:value="modificator_RestoreData" />
+                           </styleClass>
+                           <graphic>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/icons/dataPackageHistory.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
                      </children>
                      <VBox.margin>
                         <Insets />

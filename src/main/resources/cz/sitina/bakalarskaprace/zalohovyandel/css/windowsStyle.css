@@ -204,6 +204,26 @@
 .textField_Styl1_Blue_noRadius:focused {
     -fx-border-color: -fx-color-mark6; /* Změna barvy rámečku */
 }
+
+/* ----------------------------
+        Toggle button Area Styly
+------------------------------*/
+
+.toggleButton_Styl2_light {
+    -fx-background-color: -fx-color-lightBackground;
+    -fx-border-color: -fx-color-textDark;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-background-insets: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 15, 0, 2, 2);
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+}
+
+.toggleButton_Styl2_light:selected {
+    -fx-border-color: -fx-color-mark3; /* Změna barvy rámečku */
+    -fx-background-color: -fx-color-mark3-50;
+}
 /* ----------------------------
         Text Area Styly
 ------------------------------*/

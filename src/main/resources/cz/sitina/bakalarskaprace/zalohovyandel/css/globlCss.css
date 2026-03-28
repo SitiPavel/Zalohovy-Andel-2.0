@@ -108,13 +108,15 @@
     -fx-background-radius: 15;
 }
 
+.conteinerModify_Radius10{
+    -fx-background-radius: 10;
+}
+
 .borderModify_Radius15{
     -fx-border-radius: 15;
 }
 
-.conteinerModify_Radius10{
-    -fx-background-radius: 10;
-}
+
 
 .borderModify_Radius10{
     -fx-border-radius: 10;
@@ -250,6 +252,10 @@
 
 .modificator_backupTask{
     -fx-border-color: -fx-color-backup;
+}
+
+.modificator_RestoreData{
+    -fx-border-color: -fx-color-folder1;
 }
 
 .modificator-offButton {

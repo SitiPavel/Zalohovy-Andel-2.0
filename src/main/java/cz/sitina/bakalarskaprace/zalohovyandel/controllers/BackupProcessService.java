@@ -70,12 +70,13 @@ public class BackupProcessService {
         try (DatabaseManager databaseManager = new DatabaseManager(editableBackupTask.getBackupDatabasePath())) {
 
             int dataPackageCount = databaseManager.getPackageCount();
+            long timestamp = System.currentTimeMillis();
 
             String packName;
             if (dataPackageCount == 0) {
-                packName = "FullBackup_1";
+                packName = "FullBackup_1_" + timestamp;
             } else {
-                packName = "Increment_" + dataPackageCount;
+                packName = "Increment_" + dataPackageCount +"_" + timestamp;
             }
 
             packageAbsolutePath = Paths.get(editableBackupTask.getRootBackupPath(), packName);
