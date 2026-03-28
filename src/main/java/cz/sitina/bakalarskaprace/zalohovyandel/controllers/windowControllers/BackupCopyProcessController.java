@@ -70,6 +70,8 @@ public class BackupCopyProcessController {
     private int errorCount = 0;
     private int totalFilesToProcess = 0;
 
+    private Runnable canBeResetTreeTable;
+
     /// žurnál info
     private final LocalDateTime dateTimeOfStart = LocalDateTime.now();
     private final Set<String> failPathList = new HashSet<>();
@@ -232,6 +234,7 @@ public class BackupCopyProcessController {
         originTaskModel.getJurnalInfoList().add(reportData);
         editedTaskModel.getJurnalInfoList().add(reportData);
         jsonService.updateTask_saveOldSave(originTaskModel);
+        canBeResetTreeTable.run();
     }
 
     @FXML
@@ -245,5 +248,9 @@ public class BackupCopyProcessController {
         } else {
             ((Stage) btnCancel.getScene().getWindow()).close();
         }
+    }
+
+    public void setCanBeResetTreeTable(Runnable canBeResetTreeTable) {
+        this.canBeResetTreeTable = canBeResetTreeTable;
     }
 }

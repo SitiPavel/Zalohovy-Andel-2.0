@@ -156,15 +156,13 @@ public class BackupProcessService {
             }
 
             // A TADY, AŽ SKONČÍ CYKLUS buď po uspěšném dokončeí nebo přerušení
+            //zeptá se zda zanechat částečnou zálohu nebo smazat a provede příkaz
             if (wasCancelled && !recordsToDatabase.isEmpty() ) {
                 boolean keepPartialBackup = keepPartialBackupDialogWindow();
                 if (keepPartialBackup) {
                     saveIntoDatabase(recordsToDatabase, databaseManager);
-                    System.out.println("Databáze uložena.");
                 } else  {
                     deleteDirectoryRecursively(packageAbsolutePath);
-                    System.out.println("tady se to zesralo #2");
-                    System.out.println("Částečná záloha byla smazána.");
                 }
             } else {
                 saveIntoDatabase(recordsToDatabase, databaseManager);
@@ -233,7 +231,6 @@ public class BackupProcessService {
             Thread.interrupted();
             return future.get();
         } catch (InterruptedException | ExecutionException e) {
-            System.out.println("tady se to zesralo #1");
             e.printStackTrace();
             return false; // V případě chyby raději děláme bezpečný Rollback
         }

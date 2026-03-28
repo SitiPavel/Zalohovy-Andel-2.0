@@ -444,6 +444,12 @@ public class BackupTaskController implements TaskController {
                 controller.setOriginalBackupTask(originBackupTask);
                 controller.setEditableBackupTask(editableBackupTask);
                 controller.setComparedFilesList(statisticsAndComparedData.getComparedFilesList());
+                controller.setCanBeResetTreeTable(() -> {
+                    resetWindow();
+                    Label tablePlaceholder = new Label("Proběhla synchronizace ✔");
+                    tablePlaceholder.getStyleClass().add("DarkBoltHeader1");
+                    filesTreeTable.setPlaceholder(tablePlaceholder);
+                });
 
                 controller.setGui();
 

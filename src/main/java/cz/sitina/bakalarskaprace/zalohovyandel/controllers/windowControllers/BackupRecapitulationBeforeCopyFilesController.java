@@ -36,6 +36,8 @@ public class BackupRecapitulationBeforeCopyFilesController {
     private BackupTask originalBackupTask;
     private BackupTask editableBackupTask;
 
+    private Runnable canBeResetTreeTable;
+
     @FXML
     private void initialize() {
     }
@@ -59,12 +61,15 @@ public class BackupRecapitulationBeforeCopyFilesController {
             BackupCopyProcessController controller = new BackupCopyProcessController();
             loader.setController(controller);
             loader.load(); // Toto zavolá metodu inicialize a nastaví controler podle FXML
+            controller.setCanBeResetTreeTable(canBeResetTreeTable);
             controller.startProcess(originalBackupTask, editableBackupTask, comparedFilesList);
 
             String title =  "Záloha souborů";
             Stage copyProcessStage = WindowManager.openRunningWindow(loader, title, 750, 400);
 
-            copyProcessStage.setOnCloseRequest(e -> controller.cancelAction());
+            copyProcessStage.setOnCloseRequest(e -> {
+                controller.cancelAction();
+            });
 
 
         } catch (IOException e) {
@@ -95,5 +100,9 @@ public class BackupRecapitulationBeforeCopyFilesController {
 
     public void setOriginalBackupTask(BackupTask originalBackupTask) {
         this.originalBackupTask = originalBackupTask;
+    }
+
+    public void setCanBeResetTreeTable(Runnable canBeResetTreeTable) {
+        this.canBeResetTreeTable = canBeResetTreeTable;
     }
 }

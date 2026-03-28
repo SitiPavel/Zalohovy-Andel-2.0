@@ -33,6 +33,8 @@ public class RecapitulationBeforeCopyFilesController  {
     private CompareStrategy strategy;
     private List<ComparedItemOperItemRowModel> list;
 
+    private Runnable canBeResetTreeTable;
+
 
     @FXML private Label lbLeftAddCount;
     @FXML private Label lbLeftUpdateCount;
@@ -79,12 +81,16 @@ public class RecapitulationBeforeCopyFilesController  {
             CopyProcessController controller = new CopyProcessController();
             loader.setController(controller);
             loader.load(); // Toto zavolá metodu inicialize a nastaví controler podle FXML
+            controller.setCanBeResetTreeTable(canBeResetTreeTable);
             controller.startProcess( originTask, editedTask, list);
 
             String title = "Synchronizace souborů";
             Stage copyProcessStage = WindowManager.openRunningWindow(loader, title, 750, 400);
 
-            copyProcessStage.setOnCloseRequest(e -> controller.cancelAction());
+            copyProcessStage.setOnCloseRequest(e -> {
+                controller.cancelAction();
+
+            });
 
 
 
@@ -125,6 +131,10 @@ public class RecapitulationBeforeCopyFilesController  {
 
     public void setList(List<ComparedItemOperItemRowModel> list) {
         this.list = list;
+    }
+
+    public void setCanBeResetTreeTable(Runnable canBeResetTreeTable) {
+        this.canBeResetTreeTable = canBeResetTreeTable;
     }
 }
 

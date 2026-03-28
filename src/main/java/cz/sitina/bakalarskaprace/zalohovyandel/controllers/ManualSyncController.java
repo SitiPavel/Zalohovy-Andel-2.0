@@ -275,7 +275,7 @@ public class ManualSyncController implements TaskController {
                         ComparedItemOperItemRowModel rowItem = cell.getTreeTableRow().getItem();
 
                         if (rowItem != null) {
-                            popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(), true,
+                            popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(), false,
                                     ()-> readAndSetStatistic());
                         }
                     }
@@ -559,6 +559,12 @@ public class ManualSyncController implements TaskController {
                 controller.setStrategy(strategyForRecapitulate);
                 controller.setText_SizeToLeft(lbPieChar_Left.getText());
                 controller.setText_SizeToRight(lbPieChar_Right.getText());
+                controller.setCanBeResetTreeTable(() -> {
+                    resetWindow();
+                    Label tablePlaceholder = new Label("Proběhla synchronizace ✔");
+                    tablePlaceholder.getStyleClass().add("DarkBoltHeader1");
+                    filesTreeTable.setPlaceholder(tablePlaceholder);
+                });
                 controller.setGui();
 
                 WindowManager.openNewWindow(loader, "Rekapitulace", 372, 350);

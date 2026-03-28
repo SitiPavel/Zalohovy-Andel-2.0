@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="205.0" prefWidth="154.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.popupControllers.ChangeFolderOrFileOperationController">
+<AnchorPane minHeight="250.0" minWidth="170.0" prefHeight="250.0" prefWidth="170.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.popupControllers.ChangeFolderOrFileOperationController">
    <stylesheets>
       <URL value="@../../css/globlCss.css" />
       <URL value="@../../css/windowsStyle.css" />
@@ -24,10 +24,17 @@
    <children>
       <VBox alignment="TOP_CENTER" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label alignment="CENTER" styleClass="WindowTitle_L2_Colored" text="Operace složky">
+            <Label alignment="CENTER" contentDisplay="BOTTOM" styleClass="WindowTitle_L2_Colored" text="Operace složky">
                <VBox.margin>
                   <Insets bottom="5.0" />
                </VBox.margin>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../images/visualObjects/folder20x20.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Label>
             <HBox alignment="CENTER">
                <children>

@@ -80,6 +80,7 @@ public class CopyProcessController {
     private LocalDateTime dateTimeOfStart = LocalDateTime.now();
     private int successCount;
     private Set<String> failPathList = new HashSet<>();
+    private Runnable canBeResetTreeTable;
 
 
     public void initialize() {
@@ -345,6 +346,7 @@ public class CopyProcessController {
         editedTaskModel.getJurnalInfoList().add(reportData);
 
         jsonService.updateTask_saveOldSave(originTaskModel);
+        canBeResetTreeTable.run();
     }
 
     @FXML
@@ -359,6 +361,11 @@ public class CopyProcessController {
         } else {
             ((Stage) btnCancel.getScene().getWindow()).close();
         }
+
+    }
+
+    public void setCanBeResetTreeTable(Runnable canBeResetTreeTable) {
+        this.canBeResetTreeTable = canBeResetTreeTable;
     }
 
 }
