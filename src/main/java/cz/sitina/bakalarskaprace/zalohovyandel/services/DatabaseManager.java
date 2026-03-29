@@ -208,6 +208,29 @@ public class DatabaseManager implements AutoCloseable {
         return 0; // Pokud nastane nečekaná chyba, vrátí 0
     }
 
+    public List<String> getPackageContent(String packageName) throws SQLException {
+        List<String> itemsRelativePaths = new ArrayList<>();
+
+        String sql = "SELECT relativePath FROM backup_catalog WHERE location = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            // Dosazení názvu destinace za otazník
+            pstmt.setString(1, packageName);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    // Vytáhneme hodnotu sloupce a rovnou ji přidáme do listu
+                    String path = rs.getString("relativePath");
+                    if (path != null) {
+                        itemsRelativePaths.add(path);
+                    }
+                }
+            }
+        }
+        return itemsRelativePaths;
+    }
+
+
 
     @Override
     public void close() throws SQLException {

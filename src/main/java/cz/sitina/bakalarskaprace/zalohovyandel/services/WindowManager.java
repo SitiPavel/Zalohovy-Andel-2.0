@@ -25,10 +25,7 @@ public class WindowManager {
         return loader;
     }
 
-    public static FXMLLoader loadFXML_component_noLoad(String fxmlFile) throws IOException {
-        FXMLLoader loader = new FXMLLoader(WindowManager.class.getResource(componentPath + fxmlFile));
-        return loader;
-    }
+
     //2 KROK: načte připravený loader jako modulární okno
     public static void openNewWindow(FXMLLoader loader, String title, int width, int height) {
 

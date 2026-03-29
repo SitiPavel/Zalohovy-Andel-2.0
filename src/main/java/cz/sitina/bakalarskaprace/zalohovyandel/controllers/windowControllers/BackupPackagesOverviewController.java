@@ -64,6 +64,7 @@ public class BackupPackagesOverviewController {
         String guiTime;
 
         ToggleGroup group = new ToggleGroup();
+        String finalGuiName;
 
 
 
@@ -86,6 +87,7 @@ public class BackupPackagesOverviewController {
                 guiTime = Utility.getTimeOnly(nameParts[2]);
 
                 controller.loadContent(guiName,guiDate,guiTime);
+                finalGuiName = (guiName + "   " + guiDate + "   " + guiTime);
 
                 ToggleButton toggleCard = new ToggleButton();
 
@@ -101,6 +103,16 @@ public class BackupPackagesOverviewController {
                 toggleCard.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
                 toggleCard.getStyleClass().add("toggleButton_Styl1_light");
 
+                // finalGuiName1 pro správné definování, z finalGuiName to neche brát
+                String finalGuiName1 = finalGuiName;
+
+                toggleCard.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2) {
+                        // načtení okna s oobsahem vybraného package
+                        showContentOfPackage(packageName, finalGuiName1);
+                    }
+                });
+
 
                 fpToggleButtonContainer.getChildren().add(toggleCard);
 
@@ -114,4 +126,20 @@ public class BackupPackagesOverviewController {
 
         }
     }
+
+    private void showContentOfPackage(String packageName, String packageNameGUI) {
+        try{
+            FXMLLoader loader = WindowManager.loadFXML("insidePackageContentOverview.fxml");
+            InsidePackageContentController controller = loader.getController();
+            controller.loadContentToTable(absolutDatabasePath, packageName, packageNameGUI);
+
+            WindowManager.openNewWindowAutoSized(loader, "Obsah balíčku: " + packageName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            ErrorUtility.showError_WindowLoading();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }
