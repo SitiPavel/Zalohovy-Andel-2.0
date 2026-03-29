@@ -6,6 +6,7 @@ import java.nio.file.Path;
 
 import java.nio.file.Paths;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,6 +174,23 @@ public class DatabaseManager implements AutoCloseable {
         } finally {
             conn.setAutoCommit(true); // Vrácení do původního stavu
         }
+    }
+
+    public List<String> getAllPackages() throws SQLException {
+        List<String> packages = new ArrayList<>();
+
+        String sql = "SELECT DISTINCT location FROM backup_catalog;";
+        try (java.sql.Statement stmt = conn.createStatement();
+            java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String packageName = rs.getString("location");
+                // Pojistka, kdyby tam náhodou byl prázdný záznam
+                if (packageName != null && !packageName.isEmpty()) {
+                    packages.add(packageName);
+                }
+            }
+        }
+        return packages;
     }
 
 

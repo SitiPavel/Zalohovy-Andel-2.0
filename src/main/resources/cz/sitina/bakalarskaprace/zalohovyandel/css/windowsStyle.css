@@ -209,7 +209,7 @@
         Toggle button Area Styly
 ------------------------------*/
 
-.toggleButton_Styl2_light {
+.toggleButton_Styl1_light {
     -fx-background-color: -fx-color-lightBackground;
     -fx-border-color: -fx-color-textDark;
     -fx-border-style: solid;
@@ -220,7 +220,7 @@
     -fx-background-radius: 15;
 }
 
-.toggleButton_Styl2_light:selected {
+.toggleButton_Styl1_light:selected {
     -fx-border-color: -fx-color-mark3; /* Změna barvy rámečku */
     -fx-background-color: -fx-color-mark3-50;
 }

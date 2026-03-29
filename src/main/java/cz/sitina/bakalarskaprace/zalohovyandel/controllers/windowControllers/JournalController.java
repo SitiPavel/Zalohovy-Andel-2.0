@@ -23,6 +23,7 @@ import java.util.Set;
 public class JournalController {
 
     @FXML private ListView<JournalItemDataPack> lvJournalContainer;
+    @FXML private Label lbHeader;
 
     private Runnable isChanged;
     private TaskModel editedTask;
@@ -114,6 +115,10 @@ public class JournalController {
     }
     public void setIsChanged(Runnable isChanged) {
         this.isChanged = isChanged;
+    }
+
+    public void setHeader(String header) {
+        lbHeader.setText(header);
     }
 }
 

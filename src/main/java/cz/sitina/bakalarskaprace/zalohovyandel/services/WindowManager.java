@@ -1,7 +1,5 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.services;
 
-import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -15,14 +13,20 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class WindowManager {
-    static String path = "/cz/sitina/bakalarskaprace/zalohovyandel/fxml/windows/";
+    static String windowPath = "/cz/sitina/bakalarskaprace/zalohovyandel/fxml/windows/";
+    static String componentPath = "/cz/sitina/bakalarskaprace/zalohovyandel/fxml/components/";
 
 
     /// Rozděleno na dva kroky, loader vytvoří instanci controleru,
     //1 KROK: jen načte controler a data z FXML souboru  (umožňuje předat data do controleru)
     public static FXMLLoader loadFXML(String fxmlFile) throws IOException {
-        FXMLLoader loader = new FXMLLoader(WindowManager.class.getResource(path + fxmlFile));
+        FXMLLoader loader = new FXMLLoader(WindowManager.class.getResource(windowPath + fxmlFile));
         loader.load();
+        return loader;
+    }
+
+    public static FXMLLoader loadFXML_component_noLoad(String fxmlFile) throws IOException {
+        FXMLLoader loader = new FXMLLoader(WindowManager.class.getResource(componentPath + fxmlFile));
         return loader;
     }
     //2 KROK: načte připravený loader jako modulární okno
@@ -95,5 +99,13 @@ public class WindowManager {
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
+    }
+
+    public static String getWindowPath() {
+        return windowPath;
+    }
+
+    public static String getComponentPath() {
+        return componentPath;
     }
 }

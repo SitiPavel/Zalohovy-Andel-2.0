@@ -446,7 +446,7 @@ public class BackupTaskController implements TaskController {
                 controller.setComparedFilesList(statisticsAndComparedData.getComparedFilesList());
                 controller.setCanBeResetTreeTable(() -> {
                     resetWindow();
-                    Label tablePlaceholder = new Label("Proběhla synchronizace ✔");
+                    Label tablePlaceholder = new Label("Proběhla záloha ✔");
                     tablePlaceholder.getStyleClass().add("DarkBoltHeader1");
                     filesTreeTable.setPlaceholder(tablePlaceholder);
                 });
@@ -495,6 +495,7 @@ public class BackupTaskController implements TaskController {
             FXMLLoader loader = loadFXML("journalWindow.fxml");
             JournalController controller = loader.getController();
             controller.setEditedTask(editableBackupTask);
+            controller.setHeader("Historie dokončených záloh");
             controller.setIsChanged(() -> markAsDirty());
 
             WindowManager.openNewWindowAutoSized(loader, "Journal");
@@ -505,6 +506,22 @@ public class BackupTaskController implements TaskController {
         }
     }
 
+    @FXML
+    private void showPackages(ActionEvent event) {
+        try {
+            FXMLLoader loader  = loadFXML("BackupPackagesOverview.fxml");
+            BackupPackagesOverviewController controller = loader.getController();
+            controller.setAbsolutDatabasePath(originBackupTask.getBackupDatabasePath());
+
+            WindowManager.openNewWindowAutoSized(loader, "Přehled datových balíčků");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ErrorUtility.showError_WindowLoading();
+        } catch (Exception e ){
+            e.printStackTrace();
+        }
+    }
     @FXML void setFastFilter(ActionEvent event) {
         Node source = (Node) event.getSource();
 

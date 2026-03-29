@@ -6,6 +6,10 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class Utility {
 
@@ -92,6 +96,36 @@ public class Utility {
     /**  =======^=======^=======^=======^=======*/
 
 
-    //
+    // 1. Metoda pro vytažení čistého DATA (např. 26. 03. 2026)
+    public static String getDateOnly(String timestampStr) {
+        try {
+            long timeInMillis = Long.parseLong(timestampStr);
+            LocalDateTime date = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(timeInMillis),
+                    ZoneId.systemDefault()
+            );
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd. MM. yyyy");
+            return date.format(formatter);
+        } catch (NumberFormatException e) {
+            System.err.println("Chyba při parsování data: " + timestampStr);
+            return "Neznámé datum";
+        }
+    }
+
+    // 2. Metoda pro vytažení čistého ČASU (např. 15:40)
+    public static String getTimeOnly(String timestampStr) {
+        try {
+            long timeInMillis = Long.parseLong(timestampStr);
+            LocalDateTime date = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(timeInMillis),
+                    ZoneId.systemDefault()
+            );
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            return date.format(formatter);
+        } catch (NumberFormatException e) {
+            System.err.println("Chyba při parsování času: " + timestampStr);
+            return "--:--";
+        }
+    }
 
 }

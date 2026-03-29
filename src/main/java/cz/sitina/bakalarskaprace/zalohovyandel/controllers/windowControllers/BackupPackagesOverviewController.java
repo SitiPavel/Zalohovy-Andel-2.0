@@ -1,0 +1,117 @@
+package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
+
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.components.BackupPackageToggleButtonController;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.DatabaseManager;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.FlowPane;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+public class BackupPackagesOverviewController {
+    @FXML
+    private FlowPane fpToggleButtonContainer;
+
+    private String absolutDatabasePath;
+    private List<String> allPackages;
+
+    @FXML
+    private void initialize() {
+        fpToggleButtonContainer.setHgap(10);
+        fpToggleButtonContainer.setVgap(10);
+    }
+
+    @FXML
+    private void restoreDataFromAllPackages(ActionEvent event) {}
+
+    @FXML
+    private void restoreDataFromOnePackage(ActionEvent event) {}
+
+    @FXML
+    private void closeWindow(ActionEvent event) {
+        WindowManager.findByActionAndClose(event);
+    }
+
+
+
+    public void setAbsolutDatabasePath(String absolutDatabasePath) {
+        this.absolutDatabasePath = absolutDatabasePath;
+
+        try (DatabaseManager databaseManager = new DatabaseManager(absolutDatabasePath)) {
+            allPackages = databaseManager.getAllPackages();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            ErrorUtility.showError_databaseError("Soubor databáze je poškozený nebo k němu aplikace ztratila přístup.");
+        }
+        loadPackages();
+    }
+
+    private void loadPackages() {
+
+        String guiName;
+        String guiDate;
+        String guiTime;
+
+        ToggleGroup group = new ToggleGroup();
+
+
+
+        for (String packageName : allPackages) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(WindowManager.getComponentPath() +
+                        "BackupPackageToggleButton.fxml"));
+                Node graphic = loader.load();
+                BackupPackageToggleButtonController controller = loader.getController();
+
+                String[] nameParts = packageName.split("_");
+
+                if (nameParts[0].contains("FullBackup")) {
+                    guiName = "Plná záloha " + nameParts[1];
+                } else {
+                    guiName = "Přírůstek " + nameParts[1];
+                }
+
+                guiDate = Utility.getDateOnly(nameParts[2]);
+                guiTime = Utility.getTimeOnly(nameParts[2]);
+
+                controller.loadContent(guiName,guiDate,guiTime);
+
+                ToggleButton toggleCard = new ToggleButton();
+
+                toggleCard.setUserData(packageName);
+
+
+                toggleCard.setToggleGroup(group);
+
+                toggleCard.setPrefWidth(110);
+                toggleCard.setPrefHeight(120);
+
+                toggleCard.setGraphic(graphic);
+                toggleCard.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                toggleCard.getStyleClass().add("toggleButton_Styl1_light");
+
+
+                fpToggleButtonContainer.getChildren().add(toggleCard);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                ErrorUtility.showError_WindowLoading();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+}

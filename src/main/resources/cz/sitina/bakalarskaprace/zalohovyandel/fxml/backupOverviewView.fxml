@@ -275,7 +275,7 @@
                            </graphic>
                         </Button>
                         <Region prefHeight="200.0" prefWidth="200.0" />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showJournal" prefHeight="50.0" prefWidth="50.0">
+                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showPackages" prefHeight="50.0" prefWidth="50.0">
                            <styleClass>
                               <String fx:value="toolBarButton" />
                               <String fx:value="modificator_RestoreData" />
