@@ -4,6 +4,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepositor
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -29,8 +30,8 @@ public class CreateTaskController {
     protected Runnable isAddedTask;
 
     @FXML protected void initialize() {
-        setupCharacterLimit(tfName, lbNameLettersCount, maxLettersCount_name);
-        setupCharacterLimit(taDescription, lbDescriptLettersCount, maxLettersCount_Desc);
+        GuiUtility.setupCharacterLimit(tfName, lbNameLettersCount, maxLettersCount_name);
+        GuiUtility.setupCharacterLimit(taDescription, lbDescriptLettersCount, maxLettersCount_Desc);
     }
 
     @FXML
@@ -53,40 +54,7 @@ public class CreateTaskController {
         WindowManager.findByActionAndClose(event);
     }
 
-    // omezení a pořítání znaků v polích
-    private void setupCharacterLimit(TextInputControl inputField, Label countLabel, int maxChars) {
 
-        // 1. Zabezpečení vstupu (TextFormatter)
-        // Zabrání vložení textu, pokud by nová délka přesáhla maximum. Mazání vždy projde.
-        inputField.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().length() <= maxChars) {
-                return change;
-            }
-            return null; // Odmítnutí změny
-        }));
-
-        // 2. Vizuální odezva a počítadlo (Listener)
-        inputField.textProperty().addListener((observable, oldValue, newValue) -> {
-            int currentLength = newValue.length();
-
-            // Aktualizace textu v Labelu
-            countLabel.setText(currentLength + " / " + maxChars);
-
-            // Změna barvy rámečku
-            if (currentLength >= maxChars) {
-                // Přidáme červený rámeček přímo přes styl
-                inputField.setStyle("-fx-border-color: -fx-color-mark2; -fx-border-width: 2px;");
-                countLabel.setStyle("-fx-text-fill: -fx-color-mark2;"); // Volitelně zčervená i samotné počítadlo
-            } else {
-                // Vrátíme do původního stavu
-                inputField.setStyle("");
-                countLabel.setStyle("");
-            }
-        });
-
-        // 3. Počáteční nastavení při spuštění okna (aby na začátku nebyl Label prázdný)
-        countLabel.setText(inputField.getText().length() + " / " + maxChars);
-    }
 
     ///  ověření zda inputy sedí a můžeme ukládat
     ///  změní string na všechny Error hlášky + vrátí zda byla chyba

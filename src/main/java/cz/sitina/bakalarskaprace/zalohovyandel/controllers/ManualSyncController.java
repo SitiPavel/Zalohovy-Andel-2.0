@@ -227,8 +227,7 @@ public class ManualSyncController implements TaskController {
                     setTooltip(tooltip);
 
                      view = treeTableGuiModify.getIconByRowFormat(
-                            getTreeTableRow().getItem().getOperation(),
-                            ""
+                            getTreeTableRow().getItem().getOperation()
                     );
                     setGraphic(view);
                 }
@@ -313,8 +312,7 @@ public class ManualSyncController implements TaskController {
                     myTooltip.setText(item);
                     setTooltip(myTooltip);
                     view = treeTableGuiModify.getIconByRowFormat(
-                            getTreeTableRow().getItem().getOperation(),
-                            ""
+                            getTreeTableRow().getItem().getOperation()
                     );
                     setGraphic(view);
 

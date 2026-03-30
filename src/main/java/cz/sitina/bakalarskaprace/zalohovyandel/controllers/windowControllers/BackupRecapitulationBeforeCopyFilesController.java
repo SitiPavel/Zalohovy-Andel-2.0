@@ -4,15 +4,11 @@ import cz.sitina.bakalarskaprace.zalohovyandel.controllers.BackupProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.SynchronizationProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtiliy;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 

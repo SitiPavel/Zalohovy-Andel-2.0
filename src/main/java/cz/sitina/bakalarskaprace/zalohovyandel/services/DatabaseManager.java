@@ -230,6 +230,55 @@ public class DatabaseManager implements AutoCloseable {
         return itemsRelativePaths;
     }
 
+    public List<BackupDatabaseDTO> getAllDataWithLatestVersion() throws SQLException {
+        List<BackupDatabaseDTO> resultList = new ArrayList<>();
+        String sql = "SELECT relativePath, absolutPath, fileSize, lastModified, location" +
+                "FROM backup_catalog " +
+                "GROUP BY relativePath " +
+                "HAVING lastModified = MAX(lastModified)";
+
+        try (java.sql.Statement stmt = conn.createStatement();
+             java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                resultList.add(new BackupDatabaseDTO(
+                        rs.getString("relativePath"),
+                        rs.getString("absolutPath"),
+                        rs.getLong("fileSize"),
+                        rs.getLong("lastModified"),
+                        rs.getString("location")
+                ));
+            }
+        }
+        return resultList;
+    }
+
+    // Získání souborů pouze z jednoho vybraného balíčku
+    public List<BackupDatabaseDTO> getItemsFromSpecificPackage(String packageName) throws SQLException {
+        List<BackupDatabaseDTO> resultList = new ArrayList<>();
+
+        String sql = "SELECT relativePath, absolutPath, fileSize, lastModified, location " +
+                "FROM backup_catalog " +
+                "WHERE location = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, packageName);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    resultList.add(new BackupDatabaseDTO(
+                            rs.getString("absolutPath"),
+                            rs.getString("relativePath"),
+                            rs.getLong("fileSize"),
+                            rs.getLong("lastModified"),
+                            rs.getString("location")
+                    ));
+                }
+            }
+        }
+        return resultList;
+    }
+
 
 
     @Override

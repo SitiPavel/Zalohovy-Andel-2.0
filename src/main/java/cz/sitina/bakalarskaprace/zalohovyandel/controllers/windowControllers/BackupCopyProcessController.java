@@ -2,10 +2,12 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.BackupProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.CopyFilesUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -113,7 +115,7 @@ public class BackupCopyProcessController {
                 backupProcessService.executeBackupProcess(
                         list,
                         editedTaskModel,
-                        new BackupProcessService.ProgressCallback() {
+                        new CopyFilesUtility.ProgressCallback() {
                             private long lastTime = startTime;
                             private long lastBytes = 0;
 
@@ -145,6 +147,11 @@ public class BackupCopyProcessController {
                                         failPathList.add(errorPath.toString());
                                     }
                                 });
+                            }
+
+                            @Override
+                            public void onItemCompleted(boolean success, BackupDatabaseDTO dto) {
+
                             }
                         },
                         this::isCancelled

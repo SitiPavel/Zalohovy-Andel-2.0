@@ -2,9 +2,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers.components;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtiliy;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -54,16 +52,16 @@ public class JournalItemController {
     public void setItem(JournalItemDataPack dataPack) {
         this.dataPack = dataPack;
         // nadpis
-        imgTitleProcessStatus.setImage(GuiUtiliy.findIconForStrategy(dataPack.getCompareStrategy()));
-        imgTitleStrategy.setImage(GuiUtiliy.getIconProcessStatus(dataPack.getFinishProcesStatus()));
+        imgTitleProcessStatus.setImage(GuiUtility.findIconForStrategy(dataPack.getCompareStrategy()));
+        imgTitleStrategy.setImage(GuiUtility.getIconProcessStatus(dataPack.getFinishProcesStatus()));
         DateTimeFormatter formatterDateTime = DateTimeFormatter.ofPattern("dd. MM. yyyy.   HH:mm");
         lbStartDate.setText(dataPack.getDateTimeOfStart().format(formatterDateTime));
         lbTitleErrorCount.setText(String.valueOf(dataPack.getFailCount()));
 
         // obsah
         lbFinishProcessStatus.setText(getStatusName(dataPack.getFinishProcesStatus()));
-        lbImgFinishProcessStatus.setImage(GuiUtiliy.getIconProcessStatus(dataPack.getFinishProcesStatus()));
-        imgStrategy.setImage(GuiUtiliy.findIconForStrategy(dataPack.getCompareStrategy()));
+        lbImgFinishProcessStatus.setImage(GuiUtility.getIconProcessStatus(dataPack.getFinishProcesStatus()));
+        imgStrategy.setImage(GuiUtility.findIconForStrategy(dataPack.getCompareStrategy()));
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
         lbDurationTime.setText(dataPack.getProcessDuration().format(formatterTime));
         lbSuccessCount.setText(String.valueOf(dataPack.getFileCount()));

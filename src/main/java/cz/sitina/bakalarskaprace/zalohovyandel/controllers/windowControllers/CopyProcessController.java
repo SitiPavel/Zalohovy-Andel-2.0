@@ -2,6 +2,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.BackupProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
@@ -9,6 +10,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.SynchronizationProcessService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.CopyFilesUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -166,7 +168,7 @@ public class CopyProcessController {
                     backupProcessService.executeBackupProcess(
                             list,
                             backupTask,
-                            new BackupProcessService.ProgressCallback() {
+                            new CopyFilesUtility.ProgressCallback() {
                                 private long lastTime = startTime;
                                 private long lastBytes = 0;
                                 private int lastProcessedFileCount = 0;
@@ -188,6 +190,10 @@ public class CopyProcessController {
                                 @Override
                                 public void onItemCompleted(boolean success, ComparedItemOperItemRowModel row) {
                                     handleItemCompleted(success, row);
+                                }
+                                @Override
+                                public void onItemCompleted(boolean success, BackupDatabaseDTO dto) {
+
                                 }
                             },
                             this::isCancelled

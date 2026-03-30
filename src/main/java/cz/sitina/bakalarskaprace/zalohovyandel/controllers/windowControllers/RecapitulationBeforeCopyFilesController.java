@@ -3,18 +3,14 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.SynchronizationProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtiliy;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -61,7 +57,7 @@ public class RecapitulationBeforeCopyFilesController  {
         lbRightUpdateCount.setText(String.valueOf(comparedAndStatisticsData.getRightUpdateCount()));
         lbRightAddCount.setText(String.valueOf(comparedAndStatisticsData.getRightAddCount()));
 
-        imgCompareStrategy.setImage(GuiUtiliy.findIconForStrategy(strategy));
+        imgCompareStrategy.setImage(GuiUtility.findIconForStrategy(strategy));
 
         // indikátor upravy se naastaví podle
         modifiedIndicator.setDisable(isStrategyModified);

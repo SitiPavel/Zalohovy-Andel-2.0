@@ -1,6 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.components.BackupPackageToggleButtonController;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.DatabaseManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
@@ -24,6 +25,11 @@ public class BackupPackagesOverviewController {
 
     private String absolutDatabasePath;
     private List<String> allPackages;
+    private ToggleGroup toggleGroup;
+
+    private String absolutRootFolder;
+    private BackupTask originalBackupTask;
+    private BackupTask editedBackupTask;
 
     @FXML
     private void initialize() {
@@ -32,20 +38,34 @@ public class BackupPackagesOverviewController {
     }
 
     @FXML
-    private void restoreDataFromAllPackages(ActionEvent event) {}
+    private void restoreDataFromAllPackages(ActionEvent event) {
+        loadDialogWindowForRecovery("", true);
+    }
 
     @FXML
-    private void restoreDataFromOnePackage(ActionEvent event) {}
+    private void restoreDataFromOnePackage(ActionEvent event) {
+        if (toggleGroup.getSelectedToggle() == null) {
+            ErrorUtility.getInstance("Chyba výběru",
+                    "Nebyl vybrán datový balíček",
+                    "Z nabídky vyberte na balíček, který má být obnovit.");
+            return;
+        }
+
+        String selectedPackage = toggleGroup.getSelectedToggle().getUserData().toString();
+
+        loadDialogWindowForRecovery(selectedPackage, false);
+    }
 
     @FXML
     private void closeWindow(ActionEvent event) {
         WindowManager.findByActionAndClose(event);
     }
 
-
-
-    public void setAbsolutDatabasePath(String absolutDatabasePath) {
-        this.absolutDatabasePath = absolutDatabasePath;
+    public void setTasks(BackupTask originBackupTask, BackupTask editedTaskModel) {
+        this.originalBackupTask = originBackupTask;
+        this.editedBackupTask = editedTaskModel;
+        this.absolutDatabasePath = originBackupTask.getBackupDatabasePath();
+        this.absolutRootFolder = originBackupTask.getRootBackupPath();
 
         try (DatabaseManager databaseManager = new DatabaseManager(absolutDatabasePath)) {
             allPackages = databaseManager.getAllPackages();
@@ -63,7 +83,7 @@ public class BackupPackagesOverviewController {
         String guiDate;
         String guiTime;
 
-        ToggleGroup group = new ToggleGroup();
+        toggleGroup = new ToggleGroup();
         String finalGuiName;
 
 
@@ -94,7 +114,7 @@ public class BackupPackagesOverviewController {
                 toggleCard.setUserData(packageName);
 
 
-                toggleCard.setToggleGroup(group);
+                toggleCard.setToggleGroup(toggleGroup);
 
                 toggleCard.setPrefWidth(110);
                 toggleCard.setPrefHeight(120);
@@ -134,6 +154,22 @@ public class BackupPackagesOverviewController {
             controller.loadContentToTable(absolutDatabasePath, packageName, packageNameGUI);
 
             WindowManager.openNewWindowAutoSized(loader, "Obsah balíčku: " + packageName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            ErrorUtility.showError_WindowLoading();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void loadDialogWindowForRecovery(String packageName, boolean isFullRecovery) {
+        try {
+            FXMLLoader loader = WindowManager.loadFXML("DataRecaverySetWindow.fxml");
+            DataRecoverySettingsController controller = loader.getController();
+            controller.loadWindow(packageName, isFullRecovery, absolutRootFolder, absolutDatabasePath);
+            controller.setTasks(originalBackupTask,editedBackupTask);
+
+            WindowManager.openNewWindowAutoSized(loader, "DataRecaverySetWindow");
         } catch (IOException e) {
             e.printStackTrace();
             ErrorUtility.showError_WindowLoading();

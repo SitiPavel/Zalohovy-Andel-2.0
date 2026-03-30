@@ -195,8 +195,7 @@ public class BackupTaskController implements TaskController {
                             setTooltip(tooltip);
 
                             view = treeTableGuiModify.getIconByRowFormat(
-                                    getTreeTableRow().getItem().getOperation(),
-                                    ""
+                                    getTreeTableRow().getItem().getOperation()
                             );
                             setGraphic(view);
                         }
@@ -511,7 +510,8 @@ public class BackupTaskController implements TaskController {
         try {
             FXMLLoader loader  = loadFXML("BackupPackagesOverview.fxml");
             BackupPackagesOverviewController controller = loader.getController();
-            controller.setAbsolutDatabasePath(originBackupTask.getBackupDatabasePath());
+            controller.setTasks(originBackupTask, originBackupTask);
+
 
             WindowManager.openNewWindowAutoSized(loader, "Přehled datových balíčků");
 

@@ -6,6 +6,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.DatabaseManager;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.CopyFilesUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -35,17 +36,12 @@ public class BackupProcessService {
     // ukazatel zda byl soubor rozpracován ale nedokončen díky přerušení
     private boolean isBrokenByCancel = false;
 
-    public interface ProgressCallback {
-        void onProgress(long bytesProcessed, long totalBytes, String currentFile,
-                        int processedFileCount);
-        void onItemCompleted(boolean success, ComparedItemOperItemRowModel row);
-    }
 
 
     // zjistí nám do jakého balíčku máme dát dat (fullBackup1, increment1 nebo increment 23 )
     public void executeBackupProcess(List<ComparedItemOperItemRowModel> comparedFilesList,
                                      BackupTask editableBackupTask,
-                                     ProgressCallback callback,
+                                     CopyFilesUtility.ProgressCallback callback,
                                      Supplier<Boolean> isCancelled) {
 
         List<ComparedItemOperItemRowModel> filesToBackup = comparedFilesList.stream()
@@ -148,10 +144,13 @@ public class BackupProcessService {
                 }
             }
 
+            // Odstranění nekompletního souboru při tvrdém přerušení
             if (isBrokenByCancel) {
                 try {
                     Files.deleteIfExists(targetAbsolutPath);
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -255,7 +254,7 @@ public class BackupProcessService {
 
     private void copyFileWithProgress(Path sourceAbsolutPath, Path targetAbsolutPath,
                                       long alreadyProcessedGlobal, long totalBytes,
-                                      String currentFileRelativePath, ProgressCallback callback,
+                                      String currentFileRelativePath, CopyFilesUtility.ProgressCallback callback,
                                       Supplier<Boolean> isCancelled) throws IOException{
         try (FileChannel sourceChannel = FileChannel.open(sourceAbsolutPath, StandardOpenOption.READ);
              FileChannel targetChannel = FileChannel.open(targetAbsolutPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {

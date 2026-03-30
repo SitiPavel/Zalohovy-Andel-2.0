@@ -43,7 +43,7 @@
                               <String fx:value="WindowTitle_L1_Dark" />
                            </styleClass>
                         </Button>
-                        <Label fx:id="lbDate" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="150.0" styleClass="WindowTitle_L1_Dark" text="Obnovit nejnovější data z celé historie" wrapText="true">
+                        <Label fx:id="lbDate" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="160.0" styleClass="WindowTitle_L1_Dark" text="Obnovit všechny soubory v nejnovější verzi" wrapText="true">
                            <HBox.margin>
                               <Insets left="5.0" />
                            </HBox.margin>
@@ -67,7 +67,7 @@
                   </HBox>
                   <ScrollPane hbarPolicy="NEVER" hmin="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
                      <content>
-                        <FlowPane fx:id="fpToggleButtonContainer">
+                        <FlowPane fx:id="fpToggleButtonContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="300.0" prefHeight="257.0" prefWidth="612.0">
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>

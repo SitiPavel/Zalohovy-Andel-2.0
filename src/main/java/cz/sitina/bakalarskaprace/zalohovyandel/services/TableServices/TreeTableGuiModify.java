@@ -158,7 +158,7 @@ public class TreeTableGuiModify {
     }
 
     ///  vrací ikonu podle formátu souboru (zatím formáty neodlišujeme)
-    public ImageView getIconByRowFormat(CompareOperations operation, String rowFormat) {
+    public ImageView getIconByRowFormat(CompareOperations operation) {
         ImageView imageView = new ImageView();
         {
             imageView.setFitWidth(16);
@@ -167,6 +167,24 @@ public class TreeTableGuiModify {
         }
 
         if (operation.toString().contains("FOLDER")) {
+            imageView.setImage(iconManager.getFolder20x20());
+        } else {
+            imageView.setImage(iconManager.getFile20x20());
+        }
+
+        return imageView;
+
+    }
+
+    public ImageView getIconByIsFolder(boolean isFolder) {
+        ImageView imageView = new ImageView();
+        {
+            imageView.setFitWidth(16);
+            imageView.setFitHeight(16);
+            imageView.setPreserveRatio(true);
+        }
+
+        if (isFolder) {
             imageView.setImage(iconManager.getFolder20x20());
         } else {
             imageView.setImage(iconManager.getFile20x20());
