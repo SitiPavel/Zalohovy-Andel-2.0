@@ -148,6 +148,8 @@ public class DataRecoverySettingsController {
         } catch (SQLException e) {
             e.printStackTrace();
             ErrorUtility.showError_databaseError("Soubor databáze je poškozený nebo k němu aplikace ztratila přístup.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return foundDtoItems;

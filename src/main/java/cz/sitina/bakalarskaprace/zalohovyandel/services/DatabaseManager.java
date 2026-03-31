@@ -232,7 +232,7 @@ public class DatabaseManager implements AutoCloseable {
 
     public List<BackupDatabaseDTO> getAllDataWithLatestVersion() throws SQLException {
         List<BackupDatabaseDTO> resultList = new ArrayList<>();
-        String sql = "SELECT relativePath, absolutPath, fileSize, lastModified, location" +
+        String sql = "SELECT relativePath, absolutPath, fileSize, lastModified, location " +
                 "FROM backup_catalog " +
                 "GROUP BY relativePath " +
                 "HAVING lastModified = MAX(lastModified)";
@@ -242,8 +242,8 @@ public class DatabaseManager implements AutoCloseable {
 
             while (rs.next()) {
                 resultList.add(new BackupDatabaseDTO(
-                        rs.getString("relativePath"),
                         rs.getString("absolutPath"),
+                        rs.getString("relativePath"),
                         rs.getLong("fileSize"),
                         rs.getLong("lastModified"),
                         rs.getString("location")

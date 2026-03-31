@@ -14,10 +14,7 @@ import javafx.scene.control.ButtonType;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -148,6 +145,22 @@ public class BackupProcessService {
             if (isBrokenByCancel) {
                 try {
                     Files.deleteIfExists(targetAbsolutPath);
+
+                    Path parentDir = targetAbsolutPath.getParent();
+                    if (parentDir != null && Files.exists(parentDir)) {
+                        boolean isDirectoryEmpty = false;
+
+                        // zda je složka prázdná
+                        try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(parentDir)){
+                            isDirectoryEmpty = !dirStream.iterator().hasNext();
+                        }
+
+                        // 3. Smazání složky, pokud je prázdná
+                        if (isDirectoryEmpty) {
+                            Files.deleteIfExists(parentDir);
+                            System.out.println("Smazána prázdná rodičovská složka: " + parentDir);
+                        }
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
@@ -166,12 +179,12 @@ public class BackupProcessService {
                                 "(vytvořit částečnou zálohu), nebo již zkopírované soubory chcete smazat?"
                 );
                 if (keepPartialBackup) {
-                    saveIntoDatabase(recordsToDatabase, databaseManager);
+                    saveIntoDatabase(recordsToDatabase, databaseManager, packageAbsolutePath);
                 } else  {
                     CopyFilesUtility.deleteDirectoryRecursively(packageAbsolutePath);
                 }
             } else {
-                saveIntoDatabase(recordsToDatabase, databaseManager);
+                saveIntoDatabase(recordsToDatabase, databaseManager, packageAbsolutePath);
             }
 
 
@@ -226,14 +239,15 @@ public class BackupProcessService {
     }
 
 
-    private void saveIntoDatabase(List<BackupDatabaseDTO> recordsToDatabase, DatabaseManager databaseManager) {
+    private void saveIntoDatabase(List<BackupDatabaseDTO> recordsToDatabase, DatabaseManager databaseManager, Path packageAbsolutePath) {
         if (!recordsToDatabase.isEmpty()) {
             try {
                 databaseManager.insertNewItemsBatch(recordsToDatabase);
-            } catch (SQLException e) {
-                System.err.println("Kritická chyba: Nepodařilo se uložit dávku záznamů do databáze.");
-                // V reálném nasazení by se zde musely smazat i ty fyzické soubory,
-                // protože nejsou v DB, ale prozatím logujeme chybu.
+            } catch (SQLException e) { // když se nepodaří tak smazat soubory aby se integrita DB nenarušila
+                CopyFilesUtility.deleteDirectoryRecursively(packageAbsolutePath);
+                System.err.println("Kritická chyba: Nepodařilo se uložit dávku záznamů do databáze. Dávka byla " +
+                        "smazána");
+
             }
         }
     }

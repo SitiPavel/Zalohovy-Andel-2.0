@@ -51,6 +51,7 @@ public class RecoveryProcessService {
         Path targetAbsolutPathForFile = null;
         boolean anyFileProcessed = false;
 
+
         for (BackupDatabaseDTO dto : foundDtoItems) {
             if (isCancelled.get()) {
                 wasCancelled = true;
@@ -86,11 +87,14 @@ public class RecoveryProcessService {
                     globalProcessedBytes += dto.getSize();
                     anyFileProcessed = true;
 
+
                     callback.onItemCompleted(true, dto);
                 } else {
                     // Pokud bylo kopírování přerušeno, smažeme nekompletní soubor
                     isBrokenByCancel = true;
                     wasCancelled = true;
+
+
                     Files.deleteIfExists(targetAbsolutPathForFile);
                     fileSuccess = false;
                     callback.onItemCompleted(false, dto);
@@ -115,62 +119,19 @@ public class RecoveryProcessService {
         // A TADY, AŽ SKONČÍ CYKLUS buď po uspěšném dokončeí nebo přerušení
         //zeptá se zda zanechat částečnou obnovu nebo smazat
         if (wasCancelled && anyFileProcessed) {
-            boolean keepPartialRecovery = keepPartialRecoveryDialogWindow();
+            boolean keepPartialRecovery = CopyFilesUtility.keepPartialCopyDialogWindow(
+                    "Obnova přerušena",
+                    "Obnova dat byla přerušena uživatelem. ",
+                    "Část souborů již byla úspěšně zkopírována. Chcete tyto soubory ponechat " +
+                            "(částečná obnova), nebo chcete celou tuto nedokončenou operaci zrušit a vytvořenou složku smazat?");
             if (!keepPartialRecovery) {
-                deleteDirectoryRecursively(targetDirectory);
+                CopyFilesUtility.deleteDirectoryRecursively(targetDirectory);
             }
         }
     }
 
-    // dialogové okno pro dotaz na smazání částečné obnovy
-    private boolean keepPartialRecoveryDialogWindow() {
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Obnova přerušena");
-            alert.setHeaderText("Obnova dat byla přerušena uživatelem.");
-            alert.setContentText("Část souborů již byla úspěšně zkopírována. Chcete tyto soubory ponechat " +
-                    "(částečná obnova), nebo chcete celou tuto nedokončenou operaci zrušit a vytvořenou složku smazat?");
 
-            ButtonType btnKeep = new ButtonType("Ponechat obnovené");
-            ButtonType btnDiscard = new ButtonType("Smazat složku");
-
-            alert.getButtonTypes().setAll(btnKeep, btnDiscard);
-
-            Optional<ButtonType> result = alert.showAndWait();
-
-            if (result.isPresent() && result.get() == btnKeep) {
-                future.complete(true);
-            } else {
-                future.complete(false);
-            }
-        });
-
-        try {
-            Thread.interrupted();
-            return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    // Smaže celou cílovou složku i s jejím obsahem
-    private void deleteDirectoryRecursively(Path targetDirectory) {
-        if (!Files.exists(targetDirectory)) return;
-
-        try {
-            Files.walk(targetDirectory)
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
-            System.out.println("Rollback dokončen. Složka s částečnou obnovou byla smazána.");
-        } catch (IOException e) {
-            System.err.println("Chyba při mazání složky během rollbacku: " + targetDirectory);
-            e.printStackTrace();
-        }
-    }
 
 
     private void copyFileWithProgress(Path sourceAbsolutPath, Path targetAbsolutPath,
