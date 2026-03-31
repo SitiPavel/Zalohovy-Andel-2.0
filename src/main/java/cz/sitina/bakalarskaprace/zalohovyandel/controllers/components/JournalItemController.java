@@ -62,7 +62,7 @@ public class JournalItemController {
         lbFinishProcessStatus.setText(getStatusName(dataPack.getFinishProcesStatus()));
         lbImgFinishProcessStatus.setImage(GuiUtility.getIconProcessStatus(dataPack.getFinishProcesStatus()));
         imgStrategy.setImage(GuiUtility.findIconForStrategy(dataPack.getCompareStrategy()));
-        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
         lbDurationTime.setText(dataPack.getProcessDuration().format(formatterTime));
         lbSuccessCount.setText(String.valueOf(dataPack.getFileCount()));
         lbErrorCount.setText(String.valueOf(dataPack.getFailCount()));

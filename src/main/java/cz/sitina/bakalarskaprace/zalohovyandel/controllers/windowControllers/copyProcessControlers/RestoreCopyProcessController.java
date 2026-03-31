@@ -1,38 +1,26 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.copyProcessControlers;
 
-import cz.sitina.bakalarskaprace.zalohovyandel.services.CopyProcessServices.BackupProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.CopyProcessServices.RecoveryProcessService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.CopyFilesUtility;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.FilesUtility;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+
 import java.nio.file.Path;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class RestoreCopyProcessController extends CopyProcessController{
 
@@ -69,7 +57,7 @@ public class RestoreCopyProcessController extends CopyProcessController{
                 recoveryProcessService.executeRecovery(
                         foundDtoItems,
                         targetDirectory,
-                        new CopyFilesUtility.ProgressCallback() {
+                        new FilesUtility.ProgressCallback() {
                             private long lastTime = startTime;
                             private long lastBytes = 0;
 

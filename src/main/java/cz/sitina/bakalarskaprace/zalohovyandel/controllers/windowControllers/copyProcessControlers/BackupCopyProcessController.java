@@ -1,44 +1,32 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.copyProcessControlers;
 
-import cz.sitina.bakalarskaprace.zalohovyandel.services.CopyProcessServices.BackupProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.CopyFilesUtility;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.FilesUtility;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class BackupCopyProcessController extends CopyProcessController{
     // setData
     protected BackupTask originTaskModel;
     protected BackupTask editedTaskModel;
+
+    private final AtomicBoolean cancelRequested = new AtomicBoolean(false);
 
     public void startProcess(BackupTask originTaskModel, BackupTask editedTaskModel,
                              List<ComparedItemOperItemRowModel> list) {
@@ -51,6 +39,8 @@ public class BackupCopyProcessController extends CopyProcessController{
         startTime = System.currentTimeMillis();
 
         lbHeader.setText("Probíhá zálohování");
+        // pro získání zrušení
+        cancelRequested.set(false);
 
         backupProcessTask = new Task<>() {
             @Override
@@ -59,19 +49,23 @@ public class BackupCopyProcessController extends CopyProcessController{
                 backupProcessService.executeBackupProcess(
                         list,
                         editedTaskModel,
-                        new CopyFilesUtility.ProgressCallback() {
+                        new FilesUtility.ProgressCallback() {
                             private long lastTime = startTime;
                             private long lastBytes = 0;
 
                             @Override
                             public void onProgress(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount) {
-                                // Update standardního progress baru v Tasku
                                 updateProgress(bytesProcessed, totalBytes);
                                 updateMessage(currentFile);
 
-                                // Zpracování updatu grafu (s throttlingem 250ms)
+                                // 2. Voláme update a ZACHYTÍME, jestli se reálně něco stalo
                                 boolean didUpdate = handleProgressUpdate(bytesProcessed, totalBytes, currentFile, processedFileCount, lastTime, lastBytes);
-                            }
+
+                                // 3. KLÍČOVÁ OPRAVA: Musíme aktualizovat lokální stopky, jinak bude if v handleProgressUpdate příště zase true
+                                if (didUpdate) {
+                                    lastTime = System.currentTimeMillis();
+                                    lastBytes = bytesProcessed;
+                                }}
 
                             @Override
                             public void onItemCompleted(boolean success, ComparedItemOperItemRowModel row) {
@@ -83,7 +77,7 @@ public class BackupCopyProcessController extends CopyProcessController{
 
                             }
                         },
-                        this::isCancelled
+                        cancelRequested::get
                 );
                 return null;
             }
@@ -124,6 +118,7 @@ public class BackupCopyProcessController extends CopyProcessController{
 
         Platform.runLater(() -> lbFileInProcess.setText(currentFile));
         if (now - lastTime > 250 || isFinished) {
+            Platform.runLater(() -> lbFileInProcess.setText(currentFile));
 
             double timeDelta = (now - lastTime) / 1000.0;
 
@@ -180,6 +175,7 @@ public class BackupCopyProcessController extends CopyProcessController{
 
     public void cancelAction() {
         if (backupProcessTask != null && backupProcessTask.isRunning()) {
+            cancelRequested.set(true);
             backupProcessTask.cancel();
         } else {
             ((Stage) btnCancel.getScene().getWindow()).close();

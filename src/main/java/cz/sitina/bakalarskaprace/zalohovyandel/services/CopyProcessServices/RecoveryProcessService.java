@@ -1,24 +1,16 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.services.CopyProcessServices;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.CopyFilesUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.FilesUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 public class RecoveryProcessService {
@@ -33,7 +25,7 @@ public class RecoveryProcessService {
 
     public void executeRecovery(List<BackupDatabaseDTO> foundDtoItems,
                                 Path targetDirectory,
-                                CopyFilesUtility.ProgressCallback callback,
+                                FilesUtility.ProgressCallback callback,
                                 Supplier<Boolean> isCancelled) {
 
         if (foundDtoItems == null || foundDtoItems.isEmpty()) {
@@ -119,13 +111,13 @@ public class RecoveryProcessService {
         // A TADY, AŽ SKONČÍ CYKLUS buď po uspěšném dokončeí nebo přerušení
         //zeptá se zda zanechat částečnou obnovu nebo smazat
         if (wasCancelled && anyFileProcessed) {
-            boolean keepPartialRecovery = CopyFilesUtility.keepPartialCopyDialogWindow(
+            boolean keepPartialRecovery = FilesUtility.keepPartialCopyDialogWindow(
                     "Obnova přerušena",
                     "Obnova dat byla přerušena uživatelem. ",
                     "Část souborů již byla úspěšně zkopírována. Chcete tyto soubory ponechat " +
                             "(částečná obnova), nebo chcete celou tuto nedokončenou operaci zrušit a vytvořenou složku smazat?");
             if (!keepPartialRecovery) {
-                CopyFilesUtility.deleteDirectoryRecursively(targetDirectory);
+                FilesUtility.deleteDirectoryRecursively(targetDirectory);
             }
         }
     }
@@ -136,7 +128,7 @@ public class RecoveryProcessService {
 
     private void copyFileWithProgress(Path sourceAbsolutPath, Path targetAbsolutPath,
                                       long alreadyProcessedGlobal, long totalBytes,
-                                      String currentFileRelativePath, CopyFilesUtility.ProgressCallback callback,
+                                      String currentFileRelativePath, FilesUtility.ProgressCallback callback,
                                       Supplier<Boolean> isCancelled) throws IOException {
         try (FileChannel sourceChannel = FileChannel.open(sourceAbsolutPath, StandardOpenOption.READ);
              FileChannel targetChannel = FileChannel.open(targetAbsolutPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {

@@ -3,36 +3,22 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services.utilities;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.HBox;
-import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.nio.file.attribute.BasicFileAttributeView;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.DosFileAttributes;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
 
 
-public class CopyFilesUtility {
+public class FilesUtility {
 
     // služby
     private static Utility utility = new Utility();
@@ -100,6 +86,13 @@ public class CopyFilesUtility {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public static boolean isDirEmpty(Path path) throws IOException {
+        if (path == null || !Files.isDirectory(path)) return false;
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
+            return !ds.iterator().hasNext();
         }
     }
 

@@ -20,7 +20,7 @@ import java.util.List;
 
 public class JsonDataManagerService {
 
-    String taskFileName = "taskDataFile";
+    private String taskFileName = "taskDataFile";
     private  int maxBackup = 4;
 
     //Složka zálohový anděl

@@ -59,6 +59,7 @@ public class BackupPackagesOverviewController {
 
     @FXML
     private void closeWindow(ActionEvent event) {
+
         WindowManager.findByActionAndClose(event);
     }
 

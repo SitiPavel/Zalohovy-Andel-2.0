@@ -2,15 +2,12 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.co
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.CopyProcessServices.BackupProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.CopyFilesUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -21,7 +18,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;

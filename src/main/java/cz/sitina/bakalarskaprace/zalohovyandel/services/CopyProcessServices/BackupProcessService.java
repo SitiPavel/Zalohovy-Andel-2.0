@@ -6,11 +6,8 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.DatabaseManager;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.CopyFilesUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.FilesUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -18,9 +15,6 @@ import java.nio.file.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -38,7 +32,7 @@ public class BackupProcessService {
     // zjistí nám do jakého balíčku máme dát dat (fullBackup1, increment1 nebo increment 23 )
     public void executeBackupProcess(List<ComparedItemOperItemRowModel> comparedFilesList,
                                      BackupTask editableBackupTask,
-                                     CopyFilesUtility.ProgressCallback callback,
+                                     FilesUtility.ProgressCallback callback,
                                      Supplier<Boolean> isCancelled) {
 
         List<ComparedItemOperItemRowModel> filesToBackup = comparedFilesList.stream()
@@ -78,6 +72,7 @@ public class BackupProcessService {
             List<BackupDatabaseDTO> recordsToDatabase = new ArrayList<>();
 
             for (ComparedItemOperItemRowModel row : filesToBackup) {
+
                 if (isCancelled.get()) {
                     wasCancelled = true;
                     break;
@@ -95,8 +90,6 @@ public class BackupProcessService {
                 boolean fileSuccess = true;
                 targetAbsolutPath = packageAbsolutePath.resolve(leftItem.getRelativePath());
                 try {
-
-
                     if (targetAbsolutPath.getParent() != null) {
                         Files.createDirectories(targetAbsolutPath.getParent());
                     }
@@ -141,52 +134,29 @@ public class BackupProcessService {
                 }
             }
 
-            // Odstranění nekompletního souboru při tvrdém přerušení
-            if (isBrokenByCancel) {
-                try {
-                    Files.deleteIfExists(targetAbsolutPath);
+            if (wasCancelled) {
+                cleanUpBrokenFile(targetAbsolutPath);
 
-                    Path parentDir = targetAbsolutPath.getParent();
-                    if (parentDir != null && Files.exists(parentDir)) {
-                        boolean isDirectoryEmpty = false;
-
-                        // zda je složka prázdná
-                        try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(parentDir)){
-                            isDirectoryEmpty = !dirStream.iterator().hasNext();
-                        }
-
-                        // 3. Smazání složky, pokud je prázdná
-                        if (isDirectoryEmpty) {
-                            Files.deleteIfExists(parentDir);
-                            System.out.println("Smazána prázdná rodičovská složka: " + parentDir);
-                        }
+                if (!recordsToDatabase.isEmpty()) {
+                    boolean keep = FilesUtility.keepPartialCopyDialogWindow(
+                            "Zálohování přerušeno",
+                            "Zálohování bylo přerušeno uživatelem. ",
+                            "Část souborů již byla úspěšně zkopírována. " +
+                                    "Chcete tyto soubory v záloze ponechat " +
+                                    "(vytvořit částečnou zálohu), nebo již zkopírované soubory chcete smazat?"
+                    );
+                    if (keep) {
+                        saveIntoDatabase(recordsToDatabase, databaseManager, packageAbsolutePath);
+                    } else {
+                        FilesUtility.deleteDirectoryRecursively(packageAbsolutePath);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    // Nebylo nic hotovo, smažeme celou složku balíčku
+                    FilesUtility.deleteDirectoryRecursively(packageAbsolutePath);
                 }
-            }
-
-            // A TADY, AŽ SKONČÍ CYKLUS buď po uspěšném dokončeí nebo přerušení
-            //zeptá se zda zanechat částečnou zálohu nebo smazat a provede příkaz
-            if (wasCancelled && !recordsToDatabase.isEmpty() ) {
-                boolean keepPartialBackup = CopyFilesUtility.keepPartialCopyDialogWindow(
-                        "Zálohování přerušeno",
-                        "Zálohování bylo přerušeno uživatelem. ",
-                        "Část souborů již byla úspěšně zkopírována. " +
-                                "Chcete tyto soubory v záloze ponechat " +
-                                "(vytvořit částečnou zálohu), nebo již zkopírované soubory chcete smazat?"
-                );
-                if (keepPartialBackup) {
-                    saveIntoDatabase(recordsToDatabase, databaseManager, packageAbsolutePath);
-                } else  {
-                    CopyFilesUtility.deleteDirectoryRecursively(packageAbsolutePath);
-                }
-            } else {
+            }else {
                 saveIntoDatabase(recordsToDatabase, databaseManager, packageAbsolutePath);
             }
-
 
 
         } catch (SQLException e)  {
@@ -205,9 +175,26 @@ public class BackupProcessService {
 
     }
 
+    // Pomocná metoda pro bezpečný úklid jednoho souboru a prázdných složek
+    private void cleanUpBrokenFile(Path filePath) {
+        if (filePath == null || !Files.exists(filePath)) return;
+        try {
+            Files.deleteIfExists(filePath);
+
+            Path parent = filePath.getParent();
+            while (parent != null && FilesUtility.isDirEmpty(parent)) {
+                Path toDelete = parent;
+                parent = parent.getParent();
+                Files.delete(toDelete);
+            }
+        } catch (IOException e) {
+            System.err.println("Úklid po zrušení selhal (soubor je asi stále zamčen): " + e.getMessage());
+        }
+    }
+
     private void copyFileWithProgress(Path sourceAbsolutPath, Path targetAbsolutPath,
                                       long alreadyProcessedGlobal, long totalBytes,
-                                      String currentFileRelativePath, CopyFilesUtility.ProgressCallback callback,
+                                      String currentFileRelativePath, FilesUtility.ProgressCallback callback,
                                       Supplier<Boolean> isCancelled) throws IOException {
         try (FileChannel sourceChannel = FileChannel.open(sourceAbsolutPath, StandardOpenOption.READ);
              FileChannel targetChannel = FileChannel.open(targetAbsolutPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
@@ -220,7 +207,6 @@ public class BackupProcessService {
 
             while (position < size) {
                 if (isCancelled.get()) {
-                    isBrokenByCancel = true;
                     wasCancelled = true;
                     break;
                 }
@@ -244,7 +230,7 @@ public class BackupProcessService {
             try {
                 databaseManager.insertNewItemsBatch(recordsToDatabase);
             } catch (SQLException e) { // když se nepodaří tak smazat soubory aby se integrita DB nenarušila
-                CopyFilesUtility.deleteDirectoryRecursively(packageAbsolutePath);
+                FilesUtility.deleteDirectoryRecursively(packageAbsolutePath);
                 System.err.println("Kritická chyba: Nepodařilo se uložit dávku záznamů do databáze. Dávka byla " +
                         "smazána");
 
