@@ -1,7 +1,5 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
+package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.copyProcessControlers;
 
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.BackupProcessService;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.DatabaseManager;

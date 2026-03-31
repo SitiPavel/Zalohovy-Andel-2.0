@@ -1,16 +1,13 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
+package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.copyProcessControlers;
 
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.BackupProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.SynchronizationProcessService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.CopyFilesUtility;
+
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -38,7 +35,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public class CopyProcessController {
+public class SynchronizationCopyProcessController {
 
     @FXML private Label lbHeader;
     @FXML private Label lbFileInProcess;
@@ -62,7 +59,6 @@ public class CopyProcessController {
 
     private SynchronizationProcessService synchronizationProcessService = new SynchronizationProcessService();
     private JsonDataManagerService jsonService = new JsonDataManagerService();
-    private BackupProcessService backupProcessService = new BackupProcessService();
 
     private TaskModel originTaskModel;
     private TaskModel editedTaskModel;
@@ -133,7 +129,6 @@ public class CopyProcessController {
             protected Void call() throws Exception {
 
                 // ---- VÝHYBKA PRO SYNCHRONIZACI ----
-                if (editedTaskModel instanceof ManualSyncTask) {
                     synchronizationProcessService.executeCopyFiles(
                             editedTaskModel,
                             list,
@@ -144,61 +139,26 @@ public class CopyProcessController {
 
                                 @Override
                                 public void onProgress(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount) {
-                                    handleProgressUpdate(bytesProcessed, totalBytes, currentFile, processedFileCount,
+                                    // Získáme true/false podle toho, jestli už uplynulo 250ms
+                                    boolean didUpdate = handleProgressUpdate(bytesProcessed, totalBytes, currentFile, processedFileCount,
                                             lastTime, lastBytes, lastProcessedFileCount);
-                                    // Uložení stavů
-                                    lastTime = System.currentTimeMillis();
-                                    lastBytes = bytesProcessed;
-                                    lastProcessedFileCount = processedFileCount;
 
-                                }
-
-                                @Override
-                                public void onItemCompleted(boolean success, ComparedItemOperItemRowModel row) {
-                                    handleItemCompleted(success, row);
-                                }
-                            },
-                            this::isCancelled
-                    );
-
-                    // ---- VÝHYBKA PRO ZÁLOHU ----
-                } else if (editedTaskModel instanceof BackupTask) {
-                    BackupTask backupTask = (BackupTask) editedTaskModel;
-
-                    backupProcessService.executeBackupProcess(
-                            list,
-                            backupTask,
-                            new CopyFilesUtility.ProgressCallback() {
-                                private long lastTime = startTime;
-                                private long lastBytes = 0;
-                                private int lastProcessedFileCount = 0;
-
-                                @Override
-                                public void onProgress(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount) {
-                                    boolean didUpdate = handleProgressUpdate(bytesProcessed, totalBytes, currentFile,
-                                            processedFileCount,
-                                            lastTime, lastBytes, lastProcessedFileCount);
-                                    // Uložení stavů
+                                    // KLÍČOVÁ OPRAVA: Uložení stavů JEN pokud se graf opravdu updatoval
                                     if (didUpdate) {
                                         lastTime = System.currentTimeMillis();
                                         lastBytes = bytesProcessed;
                                         lastProcessedFileCount = processedFileCount;
                                     }
-
                                 }
 
                                 @Override
                                 public void onItemCompleted(boolean success, ComparedItemOperItemRowModel row) {
                                     handleItemCompleted(success, row);
                                 }
-                                @Override
-                                public void onItemCompleted(boolean success, BackupDatabaseDTO dto) {
-
-                                }
                             },
                             this::isCancelled
                     );
-                }
+
                 return null;
             }
         };

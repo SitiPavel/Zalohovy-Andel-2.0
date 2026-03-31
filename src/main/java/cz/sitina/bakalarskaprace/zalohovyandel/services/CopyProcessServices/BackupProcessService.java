@@ -1,4 +1,4 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
+package cz.sitina.bakalarskaprace.zalohovyandel.services.CopyProcessServices;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
@@ -107,8 +107,8 @@ public class BackupProcessService {
                     // proces kopírování souboru
                     copyFileWithProgress(sourceAbsolutPath, targetAbsolutPath,
                             globalProcessedBytes, totalBytes,
-                            currentFileRelativePath, callback,
-                            isCancelled);
+                            currentFileRelativePath,
+                            callback, isCancelled);
 
 
                     if (!isCancelled.get()) {
@@ -158,11 +158,17 @@ public class BackupProcessService {
             // A TADY, AŽ SKONČÍ CYKLUS buď po uspěšném dokončeí nebo přerušení
             //zeptá se zda zanechat částečnou zálohu nebo smazat a provede příkaz
             if (wasCancelled && !recordsToDatabase.isEmpty() ) {
-                boolean keepPartialBackup = keepPartialBackupDialogWindow();
+                boolean keepPartialBackup = CopyFilesUtility.keepPartialCopyDialogWindow(
+                        "Zálohování přerušeno",
+                        "Zálohování bylo přerušeno uživatelem. ",
+                        "Část souborů již byla úspěšně zkopírována. " +
+                                "Chcete tyto soubory v záloze ponechat " +
+                                "(vytvořit částečnou zálohu), nebo již zkopírované soubory chcete smazat?"
+                );
                 if (keepPartialBackup) {
                     saveIntoDatabase(recordsToDatabase, databaseManager);
                 } else  {
-                    deleteDirectoryRecursively(packageAbsolutePath);
+                    CopyFilesUtility.deleteDirectoryRecursively(packageAbsolutePath);
                 }
             } else {
                 saveIntoDatabase(recordsToDatabase, databaseManager);
@@ -186,76 +192,10 @@ public class BackupProcessService {
 
     }
 
-    private void saveIntoDatabase(List<BackupDatabaseDTO> recordsToDatabase, DatabaseManager databaseManager) {
-        if (!recordsToDatabase.isEmpty()) {
-            try {
-                databaseManager.insertNewItemsBatch(recordsToDatabase);
-            } catch (SQLException e) {
-                System.err.println("Kritická chyba: Nepodařilo se uložit dávku záznamů do databáze.");
-                // V reálném nasazení by se zde musely smazat i ty fyzické soubory,
-                // protože nejsou v DB, ale prozatím logujeme chybu.
-            }
-        }
-    }
-
-    // dialogové okno pro dotaz na smazání částečné zálohy
-    private boolean keepPartialBackupDialogWindow() {
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
-
-        // Odeslání požadavku na vykreslení do GUI vlákna
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Zálohování přerušeno");
-            alert.setHeaderText("Zálohování bylo přerušeno uživatelem.");
-            alert.setContentText("Část souborů již byla úspěšně zkopírována. Chcete tyto soubory v záloze ponechat " +
-                    "(vytvořit částečnou zálohu), nebo chcete celou tuto nedokončenou operaci zrušit a smazat?");
-
-            ButtonType btnKeep = new ButtonType("Ponechat uložené");
-            ButtonType btnDiscard = new ButtonType("Smazat částečnou zálohu");
-
-            alert.getButtonTypes().setAll(btnKeep, btnDiscard);
-
-            Optional<ButtonType> result = alert.showAndWait();
-
-            if (result.isPresent() && result.get() == btnKeep) {
-                future.complete(true);
-            } else {
-                future.complete(false);
-            }
-        });
-
-        try {
-            /**Thread.interrupted(); = pokud aplikace má více vláken a veldejší je pozastaveno, java ho hned probudí,
-             * to třeší Thread.interrupted();, to nám zaručí že okno bude čekat na ospověď z okna
-             * */
-            Thread.interrupted();
-            return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return false; // V případě chyby raději děláme bezpečný Rollback
-        }
-    }
-
-
-    // Smaže celou složku i s jejím obsahem
-    private void deleteDirectoryRecursively(Path packageAbsolutePath) {
-        if (!Files.exists(packageAbsolutePath)) return;
-
-        try {
-            Files.walk(packageAbsolutePath)
-                    .sorted(java.util.Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(java.io.File::delete);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     private void copyFileWithProgress(Path sourceAbsolutPath, Path targetAbsolutPath,
                                       long alreadyProcessedGlobal, long totalBytes,
                                       String currentFileRelativePath, CopyFilesUtility.ProgressCallback callback,
-                                      Supplier<Boolean> isCancelled) throws IOException{
+                                      Supplier<Boolean> isCancelled) throws IOException {
         try (FileChannel sourceChannel = FileChannel.open(sourceAbsolutPath, StandardOpenOption.READ);
              FileChannel targetChannel = FileChannel.open(targetAbsolutPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
 
@@ -284,5 +224,20 @@ public class BackupProcessService {
             callback.onProgress(alreadyProcessedGlobal + position, totalBytes, currentFileRelativePath, processedFileCount);
         }
     }
+
+
+    private void saveIntoDatabase(List<BackupDatabaseDTO> recordsToDatabase, DatabaseManager databaseManager) {
+        if (!recordsToDatabase.isEmpty()) {
+            try {
+                databaseManager.insertNewItemsBatch(recordsToDatabase);
+            } catch (SQLException e) {
+                System.err.println("Kritická chyba: Nepodařilo se uložit dávku záznamů do databáze.");
+                // V reálném nasazení by se zde musely smazat i ty fyzické soubory,
+                // protože nejsou v DB, ale prozatím logujeme chybu.
+            }
+        }
+    }
+
+
 
 }

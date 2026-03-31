@@ -24,5 +24,7 @@ module cz.sitina.bakalarskaprace.zalohovyandel {
     opens cz.sitina.bakalarskaprace.zalohovyandel.controllers.popupControllers to javafx.fxml;
 
     exports cz.sitina.bakalarskaprace.zalohovyandel;
+    opens cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.copyProcessControlers to javafx.fxml;
+    opens cz.sitina.bakalarskaprace.zalohovyandel.services.CopyProcessServices to javafx.fxml;
 
 }

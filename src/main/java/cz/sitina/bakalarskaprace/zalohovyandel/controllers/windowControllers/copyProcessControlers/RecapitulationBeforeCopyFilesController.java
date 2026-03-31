@@ -1,4 +1,4 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
+package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.copyProcessControlers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
@@ -74,7 +74,7 @@ public class RecapitulationBeforeCopyFilesController  {
             //načítáme okno
             FXMLLoader loader = new FXMLLoader(getClass()
                     .getResource("/cz/sitina/bakalarskaprace/zalohovyandel/fxml/windows/copyProcessWindow.fxml"));
-            CopyProcessController controller = new CopyProcessController();
+            SynchronizationCopyProcessController controller = new SynchronizationCopyProcessController();
             loader.setController(controller);
             loader.load(); // Toto zavolá metodu inicialize a nastaví controler podle FXML
             controller.setCanBeResetTreeTable(canBeResetTreeTable);

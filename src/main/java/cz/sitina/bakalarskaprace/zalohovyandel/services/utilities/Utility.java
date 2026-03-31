@@ -128,4 +128,10 @@ public class Utility {
         }
     }
 
+    //převádí z čas v milisekundách na čas HH:SS
+    public String formatDuration(long durationMillis) {
+        long s = durationMillis / 1000;
+        return String.format("%02d:%02d:%02d", s / 3600, (s % 3600) / 60, s % 60);
+    }
+
 }
