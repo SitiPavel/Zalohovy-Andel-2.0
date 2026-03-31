@@ -1,6 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.components.JournalItemController;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalBackupItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
@@ -70,7 +71,11 @@ public class JournalController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    itemController.setItem(this.getItem());
+                    if (this.getItem() instanceof JournalBackupItemDataPack backupReport){
+                        itemController.setItem(backupReport);
+                    } else {
+                        itemController.setItem(this.getItem());
+                    }
                     setGraphic(fxmlRoot);
 
                 }

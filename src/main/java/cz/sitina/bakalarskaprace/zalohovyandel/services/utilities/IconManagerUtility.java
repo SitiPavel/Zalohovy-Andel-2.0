@@ -25,6 +25,13 @@ public class IconManagerUtility {
     private final Image mirroringRightToLeft =
             new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_visualObjects + "mirroringRightToLeft.png")));
 
+    //**********************************/
+    // typy práce u zálohy
+    private final Image backupWork =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_visualObjects + "backupWork.png")));
+    private final Image recoveryWork =
+            new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_visualObjects + "recoveryWork.png")));
+
 
     //**********************************/
     // FILTRY
@@ -377,6 +384,18 @@ public class IconManagerUtility {
 
     public Image getFile20x20() {
         return file20x20;
+    }
+
+    public Image getBackupWork() {
+        return backupWork;
+    }
+
+    public Image getRecoveryWork() {
+        return recoveryWork;
+    }
+
+    public Image getBackupTask_TableIcon() {
+        return backupTask_TableIcon;
     }
 
     public String getPath_visualObjects() {

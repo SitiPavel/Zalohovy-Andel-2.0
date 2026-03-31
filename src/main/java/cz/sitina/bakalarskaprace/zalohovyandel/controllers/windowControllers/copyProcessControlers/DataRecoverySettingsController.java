@@ -42,6 +42,7 @@ public class DataRecoverySettingsController {
     private BackupTask editedBackupTask;
 
     private Path userSelectedPath;
+    private String selectedPackage;
 
 
     private int maxLettersCount = 150;
@@ -92,7 +93,7 @@ public class DataRecoverySettingsController {
             loader.load(); // Toto zavolá metodu inicialize a nastaví controler podle FXML
             controller.setFullRestoreTarget(fullRestoreTarget.toString());
             controller.executeProcess(originBackupTask, editedBackupTask,
-                    foundDtoItems, userSelectedPath);
+                    foundDtoItems, userSelectedPath, selectedPackage);
 
 
             String title =  "Obnova souborů";
@@ -115,7 +116,8 @@ public class DataRecoverySettingsController {
     }
 
     // načte data v GUI do oknteinerů, lablu a dalších
-    public void loadWindow(String packageName, boolean isFullRecovery, String backupRootFolder, String databasePath) {
+    public void loadWindow(String packageName, boolean isFullRecovery, String backupRootFolder, String databasePath,
+                           String selectedPackage) {
         if (!isFullRecovery) {
             headerPackageName.setText(getGuiPackageName(packageName));
         }
@@ -123,6 +125,7 @@ public class DataRecoverySettingsController {
         this.databasePath = databasePath;
         this.packageName = packageName;
         this.isFullRecovery = isFullRecovery;
+        this.selectedPackage = selectedPackage;
 
         GuiUtility.setupCharacterLimit(tfNamePath,lbNameLettersCount,maxLettersCount);
 
@@ -175,6 +178,13 @@ public class DataRecoverySettingsController {
             tfDestinationPath.setStyle("-fx-border-color: -fx-color-mark2;");
             errorMassage = errorMassage + "Cílová složka nebyla nalezena, zadejte existující složku. \n";
         }
+
+        // odstranení mezer ze začátku a konce
+        String folderName = tfNamePath.getText().trim();
+        tfNamePath.setText(folderName);
+        String folderPath = tfDestinationPath.getText().trim();
+        tfDestinationPath.setText(folderPath);
+
 
 
         return errorMassage;

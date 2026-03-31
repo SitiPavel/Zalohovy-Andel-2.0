@@ -2,6 +2,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.co
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalBackupItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
@@ -156,8 +157,9 @@ public class BackupCopyProcessController extends CopyProcessController{
         long durationMillis = System.currentTimeMillis() - startTime;
         LocalTime processDuration = LocalTime.ofSecondOfDay(durationMillis / 1000);
 
-        JournalItemDataPack reportData = new JournalItemDataPack(
+        JournalBackupItemDataPack reportData = new JournalBackupItemDataPack(
                 dateTimeOfStart, processDuration, editedTaskModel.getCompareStrategy(),
+                false,
                 finishProcesStatus, fileCount, errorCount, failPathList,
                 editedTaskModel.getLeftPath(), editedTaskModel.getRightPath()
         );

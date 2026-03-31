@@ -31,6 +31,7 @@ public class BackupPackagesOverviewController {
     private String absolutRootFolder;
     private BackupTask originalBackupTask;
     private BackupTask editedBackupTask;
+    private String selectedPackage;
 
     @FXML
     private void initialize() {
@@ -52,7 +53,7 @@ public class BackupPackagesOverviewController {
             return;
         }
 
-        String selectedPackage = toggleGroup.getSelectedToggle().getUserData().toString();
+        selectedPackage = toggleGroup.getSelectedToggle().getUserData().toString();
 
         loadDialogWindowForRecovery(selectedPackage, false);
     }
@@ -168,7 +169,7 @@ public class BackupPackagesOverviewController {
         try {
             FXMLLoader loader = WindowManager.loadFXML("DataRecaverySetWindow.fxml");
             DataRecoverySettingsController controller = loader.getController();
-            controller.loadWindow(packageName, isFullRecovery, absolutRootFolder, absolutDatabasePath);
+            controller.loadWindow(packageName, isFullRecovery, absolutRootFolder, absolutDatabasePath,selectedPackage);
             controller.setTasks(originalBackupTask,editedBackupTask);
 
             WindowManager.openNewWindowAutoSized(loader, "DataRecaverySetWindow");

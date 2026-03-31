@@ -29,6 +29,13 @@ public  class GuiUtility {
         };
     }
 
+    public static Image getIconBackupWork(boolean isRecovery) {
+        if (isRecovery) {
+            return iconManager.getRecoveryWork();
+        }
+        return iconManager.getBackupWork();
+    }
+
     // omezení a pořítání znaků v polích
     public static void setupCharacterLimit(TextInputControl inputField, Label countLabel, int maxChars) {
 

@@ -1,5 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
@@ -9,23 +11,33 @@ import java.time.LocalTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type" // Název pole, které se objeví v JSONu
+)
+@JsonSubTypes({
+        // Zde musíš vyjmenovat všechny potomky
+        @JsonSubTypes.Type(value = JournalBackupItemDataPack.class, name = "backup"),
+})
+
 public class JournalItemDataPack {
 
-    private long id;
-    private LocalDateTime dateTimeOfStart;
-    private LocalTime processDuration;
+    protected long id;
+    protected LocalDateTime dateTimeOfStart;
+    protected LocalTime processDuration;
 
-    private CompareStrategy compareStrategy;
-    private FinishProcesStatus finishProcesStatus;
+    protected CompareStrategy compareStrategy;
+    protected FinishProcesStatus finishProcesStatus;
 
-    private int failCount;
-    private int fileCount;
+    protected int failCount;
+    protected int fileCount;
 
-    private String leftRootPath;
-    private String rightRootPath;
+    protected String leftRootPath;
+    protected String rightRootPath;
 
 
-    private Set<String> failPathList;
+    protected Set<String> failPathList;
 
     public JournalItemDataPack() {
     }
@@ -99,5 +111,45 @@ public class JournalItemDataPack {
 
     public String getRightRootPath() {
         return rightRootPath;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setDateTimeOfStart(LocalDateTime dateTimeOfStart) {
+        this.dateTimeOfStart = dateTimeOfStart;
+    }
+
+    public void setProcessDuration(LocalTime processDuration) {
+        this.processDuration = processDuration;
+    }
+
+    public void setCompareStrategy(CompareStrategy compareStrategy) {
+        this.compareStrategy = compareStrategy;
+    }
+
+    public void setFinishProcesStatus(FinishProcesStatus finishProcesStatus) {
+        this.finishProcesStatus = finishProcesStatus;
+    }
+
+    public void setFailCount(int failCount) {
+        this.failCount = failCount;
+    }
+
+    public void setFileCount(int fileCount) {
+        this.fileCount = fileCount;
+    }
+
+    public void setLeftRootPath(String leftRootPath) {
+        this.leftRootPath = leftRootPath;
+    }
+
+    public void setRightRootPath(String rightRootPath) {
+        this.rightRootPath = rightRootPath;
+    }
+
+    public void setFailPathList(Set<String> failPathList) {
+        this.failPathList = failPathList;
     }
 }

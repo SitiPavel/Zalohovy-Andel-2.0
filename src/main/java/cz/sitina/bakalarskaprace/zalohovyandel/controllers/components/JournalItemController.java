@@ -1,8 +1,10 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.components;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalBackupItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.GuiUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -25,11 +27,15 @@ public class JournalItemController {
     // obsah
     @FXML private Label lbFinishProcessStatus;
     @FXML private ImageView lbImgFinishProcessStatus;
+    @FXML private Label lbTypeOfWorkInput;
     @FXML private ImageView imgStrategy;
     @FXML private Label lbDurationTime;
     @FXML private Label lbSuccessCount;
     @FXML private Label lbErrorCount;
     @FXML private ListView<String> errorPathsContent;
+
+    @FXML private Label lbHeaderLeft;
+    @FXML private Label lbHeaderRight;
     @FXML private Label lbLeftRootPath;
     @FXML private Label lbRightRootPath;
 
@@ -52,8 +58,8 @@ public class JournalItemController {
     public void setItem(JournalItemDataPack dataPack) {
         this.dataPack = dataPack;
         // nadpis
-        imgTitleProcessStatus.setImage(GuiUtility.findIconForStrategy(dataPack.getCompareStrategy()));
-        imgTitleStrategy.setImage(GuiUtility.getIconProcessStatus(dataPack.getFinishProcesStatus()));
+        imgTitleProcessStatus.setImage(GuiUtility.getIconProcessStatus(dataPack.getFinishProcesStatus()));
+        imgTitleStrategy.setImage(GuiUtility.findIconForStrategy(dataPack.getCompareStrategy()));
         DateTimeFormatter formatterDateTime = DateTimeFormatter.ofPattern("dd. MM. yyyy.   HH:mm");
         lbStartDate.setText(dataPack.getDateTimeOfStart().format(formatterDateTime));
         lbTitleErrorCount.setText(String.valueOf(dataPack.getFailCount()));
@@ -73,6 +79,63 @@ public class JournalItemController {
             errorPathsContent.getItems().add(path);
         }
 
+    }
+
+    public void setItem(JournalBackupItemDataPack dataPack) {
+        this.dataPack = dataPack;
+        // nadpis
+        imgTitleProcessStatus.setImage(GuiUtility.getIconProcessStatus(dataPack.getFinishProcesStatus()));
+        imgTitleStrategy.setImage(GuiUtility.getIconBackupWork(dataPack.isDataRecovery()));
+        DateTimeFormatter formatterDateTime = DateTimeFormatter.ofPattern("dd. MM. yyyy.   HH:mm");
+        lbStartDate.setText(dataPack.getDateTimeOfStart().format(formatterDateTime));
+        lbTitleErrorCount.setText(String.valueOf(dataPack.getFailCount()));
+
+        // obsah
+        lbFinishProcessStatus.setText(getStatusName(dataPack.getFinishProcesStatus()));
+        lbImgFinishProcessStatus.setImage(GuiUtility.getIconProcessStatus(dataPack.getFinishProcesStatus()));
+        imgStrategy.setImage(GuiUtility.getIconBackupWork(dataPack.isDataRecovery()));
+        lbTypeOfWorkInput.setText((dataPack.isDataRecovery()) ? "Obnova":"Záloha");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+        lbDurationTime.setText(dataPack.getProcessDuration().format(formatterTime));
+        lbSuccessCount.setText(String.valueOf(dataPack.getFileCount()));
+        lbErrorCount.setText(String.valueOf(dataPack.getFailCount()));
+
+
+
+
+        if (!dataPack.isDataRecovery()) {
+            lbHeaderLeft.setText("Zdroj: ");
+            lbHeaderRight.setText("Cíl: ");
+            lbLeftRootPath.setText(dataPack.getLeftRootPath());
+
+        } else {
+            lbHeaderLeft.setText("Balíček: ");
+            lbHeaderRight.setText("Obnova: ");
+            lbLeftRootPath.setText(getGuiPackageName(dataPack.getLeftRootPath()));
+        }
+        lbRightRootPath.setText(dataPack.getRightRootPath());
+
+
+        for (String path : dataPack.getFailPathList()) {
+            errorPathsContent.getItems().add(path);
+        }
+
+    }
+
+    private String getGuiPackageName(String status) {
+        String[] nameParts = dataPack.getLeftRootPath().split("_");
+        String guiName;
+
+        if (nameParts[0].contains("FullBackup")) {
+            guiName = "Plná záloha " + nameParts[1];
+        } else {
+            guiName = "Přírůstek " + nameParts[1];
+        }
+
+
+        return guiName + "  " +
+                Utility.getDateOnly(nameParts[2]) + "  " +
+                Utility.getTimeOnly(nameParts[2]);
     }
 
     private String getStatusName(FinishProcesStatus status) {

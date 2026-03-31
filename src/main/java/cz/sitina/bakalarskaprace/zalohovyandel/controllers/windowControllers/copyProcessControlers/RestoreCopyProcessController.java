@@ -2,6 +2,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.co
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalBackupItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
@@ -33,16 +34,18 @@ public class RestoreCopyProcessController extends CopyProcessController{
     private Path  targetDirectory;
     private BackupTask originTaskModel;
     private BackupTask editedTaskModel;
-
+    private String selectedPackage;
 
 
     public void executeProcess(BackupTask originTaskModel, BackupTask editedTaskModel,
-                               List<BackupDatabaseDTO> foundDtoItems, Path targetDirectory) {
+                               List<BackupDatabaseDTO> foundDtoItems, Path targetDirectory,
+                               String selectedPackage) {
 
         this.editedTaskModel = editedTaskModel;
         this.originTaskModel = originTaskModel;
         this.targetDirectory = targetDirectory;
         this.totalFilesToProcess = foundDtoItems.size();
+        this.selectedPackage = selectedPackage;
 
         speedSeries.getData().clear();
         speedSeries.getData().add(new XYChart.Data<>(0, 0));
@@ -164,12 +167,14 @@ public class RestoreCopyProcessController extends CopyProcessController{
         LocalTime processDuration = LocalTime.ofSecondOfDay(durationMillis / 1000);
 
         // Tvorba žurnálu pro obnovu. Odvozuji parametry podle toho, co vyžaduje tvůj JournalItemDataPack.
-        JournalItemDataPack reportData = new JournalItemDataPack(
-                dateTimeOfStart, processDuration, originTaskModel.getCompareStrategy(),
-                finishProcesStatus, fileCount, errorCount, failPathList,
-                originTaskModel.getLeftPath(), originTaskModel.getRightPath() // Zde zapisujeme novou cestu
+        JournalBackupItemDataPack reportData = new JournalBackupItemDataPack(
+                dateTimeOfStart, processDuration, editedTaskModel.getCompareStrategy(),
+                true,
+                finishProcesStatus, fileCount, errorCount, failPathList, selectedPackage
+                , targetDirectory.toString()
         );
 
+        editedTaskModel.getJurnalInfoList().add(reportData);
         originTaskModel.getJurnalInfoList().add(reportData);
         jsonService.updateTask_saveOldSave(originTaskModel);
 

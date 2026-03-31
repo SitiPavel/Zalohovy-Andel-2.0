@@ -60,7 +60,7 @@ public class JsonDataManagerService {
         } catch (IOException e) {
             ErrorUtility.getInstance("Chyba načítaní dat",
                     "Nepodařilo se načíst uložená data",
-                    e.getMessage());
+                    "Soubor s uloženými úlohami byl poškozen, proto není možné načíst data.");
             e.printStackTrace();
             return new ArrayList<>();
         }
@@ -113,7 +113,7 @@ public class JsonDataManagerService {
         }catch (IOException e) {
             ErrorUtility.getInstance("Chyba ukládání dat",
                     "Nepodařilo se uložit data",
-                    e.getMessage());
+                    "Aplikace může mít omezená práva ke složce nebo je soubor používán jiným procesem.");
             e.printStackTrace();
         }
     }
@@ -159,7 +159,8 @@ public class JsonDataManagerService {
         } catch (IOException e) {
             ErrorUtility.getInstance("Chyba zálohy",
                     "Nepodařilo se vytvořit zálohu úloh",
-                    e.getMessage());
+                    "Pravděpodobně aplikace nemá práva k zápisu nebo čtení, " +
+                            "proto není možné vytvořit zálohu.");
             e.printStackTrace();
         }
 

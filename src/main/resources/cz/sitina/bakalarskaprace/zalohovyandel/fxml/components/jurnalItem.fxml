@@ -22,10 +22,7 @@
                   <Image url="@../../images/visualObjects/cros.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="imgTitleStrategy" fitHeight="21.0" fitWidth="130.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
-               <image>
-                  <Image url="@../../images/visualObjects/biDirectionalSync.png" />
-               </image>
+            <ImageView fx:id="imgTitleStrategy" fitHeight="21.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="SOMETIMES">
                <HBox.margin>
                   <Insets left="5.0" right="5.0" />
                </HBox.margin>
@@ -105,14 +102,18 @@
                   <Insets />
                </VBox.margin>
             </HBox>
-            <HBox>
+            <HBox maxHeight="30.0" minHeight="30.0" prefHeight="30.0" VBox.vgrow="NEVER">
                <children>
-                  <Label styleClass="darkBoltText" text="Strategie:  " />
-                  <ImageView fx:id="imgStrategy" fitHeight="150.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../images/visualObjects/biDirectionalSync.png" />
-                     </image>
-                  </ImageView>
+                  <Label fx:id="lbTypOfWork" styleClass="darkBoltText" text="Strategie:  " />
+                  <Label fx:id="lbTypeOfWorkInput" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" styleClass="darkBoltText" HBox.hgrow="NEVER">
+                     <graphic>
+                        <ImageView fx:id="imgStrategy" fitHeight="150.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/visualObjects/biDirectionalSync.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
                   <Region HBox.hgrow="ALWAYS" />
                   <Label fx:id="lbErrorCount" styleClass="darkBoltText" text="00000000">
                      <graphic>
@@ -143,7 +144,7 @@
             </HBox>
             <HBox>
                <children>
-                  <Label styleClass="darkBoltText" text="Levá: ">
+                  <Label fx:id="lbHeaderLeft" styleClass="darkBoltText" text="Levá: ">
                      <padding>
                         <Insets right="5.0" />
                      </padding>
@@ -153,7 +154,7 @@
             </HBox>
             <HBox>
                <children>
-                  <Label styleClass="darkBoltText" text="Pravá: ">
+                  <Label fx:id="lbHeaderRight" styleClass="darkBoltText" text="Pravá: ">
                      <padding>
                         <Insets right="5.0" />
                      </padding>
