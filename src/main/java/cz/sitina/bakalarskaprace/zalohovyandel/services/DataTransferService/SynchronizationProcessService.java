@@ -1,4 +1,4 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.services;
+package cz.sitina.bakalarskaprace.zalohovyandel.services.DataTransferService;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;

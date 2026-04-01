@@ -1,7 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.*;
-import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.copyProcessControlers.BackupRecapitulationBeforeCopyFilesController;
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.DataTransferControllers.BackupRecapitulationBeforeCopyFilesController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;

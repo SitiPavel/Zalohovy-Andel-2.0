@@ -1,4 +1,4 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.copyProcessControlers;
+package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.DataTransferControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;

@@ -1,4 +1,4 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.copyProcessControlers;
+package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.DataTransferControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalItemDataPack;
@@ -6,7 +6,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.SynchronizationProcessService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.DataTransferService.SynchronizationProcessService;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.animation.KeyFrame;

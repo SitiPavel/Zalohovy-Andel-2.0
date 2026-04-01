@@ -1,8 +1,8 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.copyProcessControlers;
+package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.DataTransferControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.CopyProcessServices.BackupProcessService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.DataTransferService.BackupProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.animation.Timeline;
