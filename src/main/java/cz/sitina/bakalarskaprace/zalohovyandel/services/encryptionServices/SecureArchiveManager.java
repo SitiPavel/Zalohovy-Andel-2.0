@@ -58,9 +58,8 @@ public class SecureArchiveManager implements AutoCloseable{
         }
     }
 
-    public void addFile(Path sourceAbsolutPath, String relativePath,// pro
-                        FilesUtility.ProgressCallback callback,
-                        Supplier<Boolean> isCancelled ) throws IOException {
+    public void addFile(Path sourceAbsolutPath, String relativePath// pro
+                        ) throws IOException {
         OutputStream activeStream;
 
         if (useCompression) {

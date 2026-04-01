@@ -268,6 +268,35 @@
     -fx-border-color: -fx-color-mark6; /* Změna barvy rámečku */
 }
 
+/* ----------------------------
+        passwordField bar
+------------------------------*/
+
+.passwordField_Styl1_Blue_noRadius {
+    /* --- Vlastnosti z TextField --- */
+    -fx-background-color: -fx-color-primary2;
+    -fx-prompt-text-fill: -fx-color-lightBackground;
+    -fx-border-color: -fx-color-mark3;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-background-insets: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 15, 0, 2, 2);
+
+    /* --- Vlastnosti z WindowTitle --- */
+    -fx-font-size: 13px; /* Opravena mezera */
+    -fx-font-weight: bold;
+
+    /* --- Vyřešený konflikt textu --- */
+    /* Vzal jsem barvu z nadpisu. Pokud chceš původní z textfieldu,
+       přepiš to na: -fx-color-textLight */
+    -fx-text-fill: -fx-color-primary1;
+}
+
+/* Efekt při prokliku (Focused) */
+.passwordField_Styl1_Blue_noRadius:focused {
+    -fx-border-color: -fx-color-mark6;
+}
+
 
 
 /* ----------------------------
@@ -435,7 +464,7 @@
     -fx-border-color: -fx-color-primary2;
 }
 
-
+/* ---------------*/
 
 .checkBox_styl2 {
     -fx-text-fill: -fx-color-textDark;
@@ -480,6 +509,54 @@
     -fx-background-color: -fx-color-textDark;
 }
 
+.checkBox_styl2.checkBoxModify_blue:selected .box  {
+    -fx-background-color: -fx-color-mark3;
+}
+
+/* ---------------*/
+
+.checkBox_styl2 {
+    -fx-text-fill: -fx-color-textDark;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-label-padding: 0 0 0 8px; /* Moderní detail: mírně větší mezera mezi boxem a textem */
+}
+
+/* 2. Čtvereček (Box) ve VYPNUTÉM stavu */
+.checkBox_styl2 .box {
+    -fx-background-color: -fx-color-primary2; /* Tvá barva pro vypnutý stav */
+    -fx-border-color: -fx-color-lightBackground;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px; /* Čistší, modernější zaoblení */
+    -fx-background-radius: 4px;
+    -fx-min-width: 22px;  /* Fixní větší velikost vůči 13px textu */
+    -fx-min-height: 22px;
+    -fx-max-width: 22px;
+    -fx-max-height: 22px;
+    -fx-alignment: center;
+}
+
+/* 3. Čtvereček (Box) v ZAPNUTÉM stavu */
+.checkBox_styl2:selected .box {
+    -fx-background-color: -fx-color-folder1; /* Tvá barva pro zapnutý stav */
+    -fx-border-color: transparent; /* Po zapnutí okraj skryjeme pro čistý vzhled */
+}
+
+/* 4. Fajfka (Mark) ve VYPNUTÉM stavu - tvůj SVG tvar */
+.checkBox_styl2 .mark {
+    -fx-shape: "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z";
+    -fx-background-color: transparent; /* Dokud není checked, fajfka je neviditelná */
+    -fx-scale-shape: true;
+    -fx-padding: 4px; /* Řídí velikost fajfky uvnitř čtverečku */
+}
+
+/* 5. Fajfka (Mark) v ZAPNUTÉM stavu */
+.checkBox_styl2:selected .mark {
+    /* Zde musí být kontrastní barva vůči primary1, jinak fajfka splyne s pozadím.
+       Můžeš použít white nebo svou světlou proměnnou */
+    -fx-background-color: -fx-color-textDark;
+}
 
 
 /* ----------------------------

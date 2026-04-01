@@ -15,12 +15,20 @@ public class BackupTask extends TaskModel {
     private String rootBackupPath;
     private String backupDatabasePath;
 
+    private byte[] cryptoSalt; // Sůl pro odvození klíče z hesla (vygeneruje se při tvorbě Tasku)
+    private byte[] cryptoIv;   // Inicializační vektor pro obálku
+    private String encryptedPayloadBase64; // ZDE BUDE ZAŠIFROVANÁ OBÁLKA
+
     public BackupTask() {
         super();
     }
 
-    public BackupTask( String name, String leftPath, String rightPath, String description) {
+    public BackupTask( String name, String leftPath, String rightPath, String description,
+                       boolean isCompressed, boolean isEncrypted) {
         super(BACKUP, name, leftPath, rightPath, description, CompareStrategy.BACKUP_TO_RIGHT);
+
+        this.isCompressed = isCompressed;
+        this.isEncrypted = isEncrypted;
 
         rootFilteredFolders_Source = new ArrayList<>();
         rootBackupPath = rightPath +"\\Backup_" + name  +"_"+ id ;

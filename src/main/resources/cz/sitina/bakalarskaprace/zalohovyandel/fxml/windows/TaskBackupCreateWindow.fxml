@@ -5,13 +5,16 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="liteDarkConteiner" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateBackupTaskController">
@@ -146,7 +149,7 @@
                               </TextField>
                            </children>
                         </HBox>
-                        <Label styleClass="descriptionText" text="označené pole nejdou změnit! Po vytvoření je trvalé.">
+                        <Label styleClass="descriptionText" text="označená pole nejdou změnit! Po vytvoření jsou trvalé.">
                            <graphic>
                               <Label styleClass="blueText" text="# Modře" />
                            </graphic>
@@ -157,6 +160,73 @@
                               <Insets top="10.0" />
                            </VBox.margin>
                         </Label>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <CheckBox fx:id="chbxIsCompress" mnemonicParsing="false" text="Komprese ZIP ( Záloha může být zmenšena)">
+                                 <styleClass>
+                                    <String fx:value="checkBox_styl2" />
+                                    <String fx:value="checkBoxModify_blue" />
+                                 </styleClass>
+                              </CheckBox>
+                              <CheckBox fx:id="chbxIsEncrypt" mnemonicParsing="false" onAction="#turnOnOffEncryption" text="Šifrování (Záloha jde přečíst pouze s přístupovým heslem)">
+                                 <styleClass>
+                                    <String fx:value="checkBox_styl2" />
+                                    <String fx:value="checkBoxModify_blue" />
+                                 </styleClass>
+                              </CheckBox>
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="10.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox fx:id="vbPasswordContainer" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Region maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="78.0" />
+                                    <Label minWidth="-Infinity" styleClass="darkBoltText" text="Heslo: ">
+                                       <graphic>
+                                          <Label styleClass="formRequiredMark_Red" text="✱" />
+                                       </graphic>
+                                       <padding>
+                                          <Insets left="5.0" />
+                                       </padding>
+                                    </Label>
+                                    <PasswordField fx:id="pwfPassword1" maxHeight="30.0" maxWidth="200.0" minHeight="30.0" minWidth="200.0" prefHeight="30.0" prefWidth="200.0" promptText="Heslo">
+                                       <styleClass>
+                                          <String fx:value="passwordField_Styl1_Blue_noRadius" />
+                                          <String fx:value="borderModify_Radius10" />
+                                          <String fx:value="conteinerModify_Radius10" />
+                                       </styleClass>
+                                    </PasswordField>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label minWidth="150.0" styleClass="darkBoltText" text="Zopakovat heslo: ">
+                                       <graphic>
+                                          <Label styleClass="formRequiredMark_Red" text="✱" />
+                                       </graphic>
+                                       <padding>
+                                          <Insets left="5.0" />
+                                       </padding>
+                                    </Label>
+                                    <PasswordField fx:id="pwfPassword2" maxHeight="30.0" maxWidth="200.0" minHeight="30.0" minWidth="200.0" prefHeight="30.0" prefWidth="200.0" promptText="Zopakovat heslo">
+                                       <styleClass>
+                                          <String fx:value="passwordField_Styl1_Blue_noRadius" />
+                                          <String fx:value="borderModify_Radius10" />
+                                       </styleClass>
+                                    </PasswordField>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Label maxWidth="1.7976931348623157E308" styleClass="darkBoltText" text="Popis:" />

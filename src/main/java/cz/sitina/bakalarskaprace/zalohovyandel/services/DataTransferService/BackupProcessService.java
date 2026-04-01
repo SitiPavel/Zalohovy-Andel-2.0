@@ -6,6 +6,7 @@
     import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
     import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
     import cz.sitina.bakalarskaprace.zalohovyandel.services.DatabaseManager;
+    import cz.sitina.bakalarskaprace.zalohovyandel.services.encryptionServices.SecureArchiveManager;
     import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.FilesUtility;
     import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 
@@ -26,6 +27,8 @@
         private boolean wasCancelled = false;
         // ukazatel zda byl soubor rozpracován ale nedokončen díky přerušení
         private boolean isBrokenByCancel = false;
+
+        private  SecureArchiveManager secureArchiveManager;
 
 
 
@@ -71,6 +74,13 @@
 
                 List<BackupDatabaseDTO> recordsToDatabase = new ArrayList<>();
 
+                /// *# pro šifrování
+                /*
+                if(editableBackupTask.isEncrypted()) {
+                    Path encryptPackageAbsolutPath = packageAbsolutePath.resolve(packName + ".enc");
+
+                };*/
+
                 for (ComparedItemOperItemRowModel row : filesToBackup) {
 
                     if (isCancelled.get()) {
@@ -109,6 +119,7 @@
                                     leftItem.getLastModified(),
                                     packName
                             );
+
 
                             recordsToDatabase.add(copiedItem);;
 

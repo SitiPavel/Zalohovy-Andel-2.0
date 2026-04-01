@@ -103,7 +103,9 @@ public class Main extends Application {
         BackupTask task11 = new BackupTask("Pro testování zálohy s hystorií",
                 "D:\\testBakalarky\\Test05",
                 "D:\\testBakalarky\\TestBackup01",
-                "test historie ");
+                "test historie ",
+                false,
+                false);
         task11.setCompareStrategy(CompareStrategy.BACKUP_TO_RIGHT);
         task11.getBlockSet().add("skola\\semestr2\\PRIPO_základy elektroniky.pptx");
         task11.getBlockSet().add("_gsdata_");

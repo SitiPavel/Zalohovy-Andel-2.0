@@ -25,8 +25,8 @@ public class FilesUtility {
 
 
     public interface ProgressCallback {
-        void onProgress(long bytesProcessed, long totalBytes, String currentFile,
-                        int processedFileCount);
+        void onProgress(long bytesProcessed, long totalBytes,
+                        String currentFile, int processedFileCount);
         void onItemCompleted(boolean success, ComparedItemOperItemRowModel row);
         void onItemCompleted(boolean success, BackupDatabaseDTO dto);
     }
