@@ -190,6 +190,39 @@ public abstract class TaskModel {
 
     //setry
 
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setTaskType(TaskTypes taskType) {
+        this.taskType = taskType;
+    }
+
+    public void setLeftPath(String leftPath) {
+        this.leftPath = leftPath;
+    }
+
+    public void setRightPath(String rightPath) {
+        this.rightPath = rightPath;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setBlockList(Set<String> blockList) {
+        this.blockList = blockList;
+    }
+
+    public void setJurnalInfoList(List<JournalItemDataPack> jurnalInfoList) {
+        this.jurnalInfoList = jurnalInfoList;
+    }
+
+    public void setGuiOperationFilters(GuiOperationFilters_TaskData guiOperationFilters) {
+        this.guiOperationFilters = guiOperationFilters;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

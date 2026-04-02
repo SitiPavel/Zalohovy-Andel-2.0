@@ -102,4 +102,16 @@ public class BackupTask extends TaskModel {
     public String getBackupDatabasePath() {
         return backupDatabasePath;
     }
+
+    public void setRootFilteredFolders_Source(List<String> rootFilteredFolders_Source) {
+        this.rootFilteredFolders_Source = rootFilteredFolders_Source;
+    }
+
+    public void setRootBackupPath(String rootBackupPath) {
+        this.rootBackupPath = rootBackupPath;
+    }
+
+    public void setBackupDatabasePath(String backupDatabasePath) {
+        this.backupDatabasePath = backupDatabasePath;
+    }
 }

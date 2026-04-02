@@ -120,4 +120,5 @@ public class EncryptedBackupTask extends TaskModel {
     public void setEncryptedPayloadBase64(String encryptedPayloadBase64) {
         this.encryptedPayloadBase64 = encryptedPayloadBase64;
     }
+
 }

@@ -1,7 +1,9 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.AppFrameController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
@@ -20,6 +22,7 @@ public class EntryPasswordController {
 
     //servis
     private JsonDataManagerService jsonManager = JsonDataManagerService.getInstance();
+    private AppFrameController appFrameController;
 
     // setter hodnoty
     private EncryptedBackupTask encryptedBackupTask;
@@ -30,7 +33,8 @@ public class EntryPasswordController {
             if (encryptedBackupTask.verifyPassword(pfPasswordInput.getText())) {
                 BackupTask unlockedTask = encryptedBackupTask.unlockTask(pfPasswordInput.getText(),
                         jsonManager.getMapper());
-                System.out.println(unlockedTask);
+                WindowManager.findByActionAndClose(event);
+                appFrameController.showBackupOverview(unlockedTask);
             } else {
                 pfPasswordInput.setStyle("-fx-border-color: -fx-color-mark2;");
                 lbIncorrectPassword.setVisible(true);
@@ -40,15 +44,18 @@ public class EntryPasswordController {
             ErrorUtility.getInstance("Chyba ověření",
                     "Nastala nečekaná chyba při ověření hesla.",
                     "Systém narazil na interní problém při zpracování zabezpečení. Zkuste to prosím znovu.");
+            WindowManager.findByActionAndClose(event);
         }
+
     }
     @FXML
     public void closeWindow(ActionEvent event) {
         WindowManager.findByActionAndClose(event);
     }
 
-    public void loadWindow(EncryptedBackupTask encryptedBackupTask) {
+    public void loadWindow(EncryptedBackupTask encryptedBackupTask, AppFrameController appFrameController) {
         this.encryptedBackupTask = encryptedBackupTask;
+        this.appFrameController = appFrameController;
 
         lbNameOfBackup.setText(encryptedBackupTask.getName());
     }

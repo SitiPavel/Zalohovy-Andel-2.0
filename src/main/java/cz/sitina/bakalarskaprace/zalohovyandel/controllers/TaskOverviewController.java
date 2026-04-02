@@ -1,5 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.EntryPasswordController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateBackupTaskController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateManualSyncController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateTaskController;
@@ -8,6 +9,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
@@ -21,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager.loadFXML;
 
@@ -29,6 +32,7 @@ public class TaskOverviewController {
     private TaskRepository taskRepository;
     private AppFrameController appFrameController;
     private final IconManagerUtility iconManager = new IconManagerUtility();
+    private JsonDataManagerService jsonManager = JsonDataManagerService.getInstance();
 
 
     //Definování tabulky a sloupců
@@ -54,6 +58,50 @@ public class TaskOverviewController {
         tablePlaceholder.getStyleClass().add("DarkBoltHeader1");
         taskTable.setPlaceholder(tablePlaceholder);
 
+        // nastavení řádků
+        taskTable.setRowFactory(tableView -> {
+            final TableRow<TaskModel> row = new TableRow<>();
+            final ContextMenu contextMenu = new ContextMenu();
+
+            MenuItem deleteItem = new MenuItem("Smazat úlohu");
+            deleteItem.setOnAction(event -> {
+                TaskModel selectedTask = row.getItem();
+
+                // 1. Vytvoření potvrzovacího dialogu
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Potvrzení smazání");
+                alert.setHeaderText("Opravdu chcete smazat tuto úlohu?");
+                alert.setContentText("Úloha: " + selectedTask.getName() + "\n\nTato akce je nevratná a data budou trvale smazána.");
+
+                // 2. Zobrazení okna a čekání na reakci uživatele
+                Optional<ButtonType> result = alert.showAndWait();
+
+                // 3. Rozhodnutí podle toho, na co uživatel klikl
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    // Smazání v datech (JSON)
+                    jsonManager.deleteTask_SaveOldSave(selectedTask);
+
+                    // AKTUALIZACE GUI: Aby řádek zmizel z obrazovky hned po smazání
+                    taskTable.getItems().remove(selectedTask);
+
+                    System.out.println("Úloha byla úspěšně smazána.");
+                } else {
+                    System.out.println("Smazání bylo zrušeno uživatelem.");
+                }
+            });
+
+            // Přidání položky do menu
+            contextMenu.getItems().add(deleteItem);
+
+            row.contextMenuProperty().bind(
+                    javafx.beans.binding.Bindings.when(row.emptyProperty())
+                            .then((ContextMenu) null)
+                            .otherwise(contextMenu)
+            );
+
+            return row;
+        });
+
 
         // nastavení vzhledu buňky pro vstup do úlohy = přidání tpačítka s ikonou
         taskColEntry.setCellValueFactory(cellData -> new SimpleObjectProperty<>(iconManager.getEntryIcon()));
@@ -77,6 +125,17 @@ public class TaskOverviewController {
 
                     } else if (taskModel instanceof BackupTask bt) {
                         appFrameController.showBackupOverview(bt);
+
+                    } else if (taskModel instanceof EncryptedBackupTask ebt) {
+                        try {
+                            FXMLLoader loader = WindowManager.loadFXML("EntryPasswordWindow.fxml");
+                            EntryPasswordController controller = loader.getController();
+                            controller.loadWindow(ebt, appFrameController);
+                            WindowManager.openNewWindowAutoSized(loader, "Přehled zálohovací úlohy");
+                        } catch (IOException e) {
+                            ErrorUtility.showError_WindowLoading();
+                        } catch (Exception e) {e.printStackTrace();}
+
                     }
                     else {
                         ErrorUtility.getInstance("Kritická chyba",
@@ -166,18 +225,31 @@ public class TaskOverviewController {
         taskColCompression.setCellValueFactory(cellData ->{
             if (cellData.getValue() instanceof BackupTask backupTask) {
                 if (backupTask.isCompressed()) {
-                    return new SimpleStringProperty("✓");
+                    return new SimpleStringProperty("✔");
                 } else {
                     return new SimpleStringProperty("✘");
                 }
-            } else {
+            } else if (cellData.getValue() instanceof EncryptedBackupTask encryptedBackupTask) {
+                if (encryptedBackupTask.isCompressed()) {
+                    return new SimpleStringProperty("✔");
+                } else {
+                    return new SimpleStringProperty("✘");
+                }
+            }
+            else {
                 return new SimpleStringProperty("---");
             }
         });
         taskColEncryption.setCellValueFactory(cellData ->{
             if (cellData.getValue() instanceof BackupTask backupTask) {
                 if (backupTask.isEncrypted()) {
-                    return new SimpleStringProperty("✓");
+                    return new SimpleStringProperty("✔");
+                } else {
+                    return new SimpleStringProperty("✘");
+                }
+            }else if (cellData.getValue() instanceof EncryptedBackupTask encryptedBackupTask) {
+                if (encryptedBackupTask.isEncrypted()) {
+                    return new SimpleStringProperty("✔");
                 } else {
                     return new SimpleStringProperty("✘");
                 }

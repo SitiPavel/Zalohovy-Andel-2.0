@@ -107,8 +107,12 @@ public class JsonDataManagerService {
         }
 
     }
-    public void updateTask_rewriteOldSave(TaskModel task) {
 
+    public void deleteTask_SaveOldSave(TaskModel deletedTask) {
+        List<TaskModel> taskList = loadAllTasks();
+        taskList.removeIf(task -> task.getId() == deletedTask.getId());
+
+        saveAllTask_SaveOldSave(taskList);
     }
 
     public void saveAllTask_SaveOldSave(List<TaskModel> taskList) {
