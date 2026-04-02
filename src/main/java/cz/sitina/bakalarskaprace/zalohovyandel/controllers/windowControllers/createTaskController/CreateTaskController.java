@@ -12,7 +12,7 @@ import javafx.scene.control.*;
 import java.io.File;
 
 public class CreateTaskController {
-    protected JsonDataManagerService jsonService = new JsonDataManagerService();
+    protected JsonDataManagerService jsonService = JsonDataManagerService.getInstance();;
 
     @FXML protected TextField tfName;
     @FXML protected TextField tfLeftPath;

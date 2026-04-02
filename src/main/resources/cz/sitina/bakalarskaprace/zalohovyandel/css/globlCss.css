@@ -29,6 +29,12 @@
     -fx-font-weight: bold;
 }
 
+.wrongBoltText {
+    -fx-text-fill: -fx-color-mark2;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
 .DarkBoltHeader0 {
     -fx-text-fill: -fx-color-textDark;
     -fx-font-size: 21 px;

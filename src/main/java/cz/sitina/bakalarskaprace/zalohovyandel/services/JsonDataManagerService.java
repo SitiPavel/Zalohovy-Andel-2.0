@@ -20,6 +20,9 @@ import java.util.List;
 
 public class JsonDataManagerService {
 
+    // drží instanci JsonDataManagerService pro
+    private static JsonDataManagerService instance;
+
     private String taskFileName = "taskDataFile";
     private  int maxBackup = 4;
 
@@ -33,7 +36,7 @@ public class JsonDataManagerService {
     private final ObjectMapper mapper;
 
 
-    public JsonDataManagerService() {
+    private JsonDataManagerService() {
         appDirectory = getAppDataFolder("ZalohovyAndel");
         tasksDirectory = new File(appDirectory, "tasks");
         taskDataJsonFile = new File(tasksDirectory, taskFileName+".json");
@@ -45,8 +48,16 @@ public class JsonDataManagerService {
         // Inicializace a nastavení Jacksonu
         this.mapper = new ObjectMapper();
         this.mapper.enable(SerializationFeature.INDENT_OUTPUT); // bude formátovaný pod sebou (přehledný)
+        this.mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         this.mapper.registerModule(new JavaTimeModule());
 
+    }
+    // pokud neexistuje, vytvoří instanci a pokud existuje tak jen vrátí existující
+    public static JsonDataManagerService getInstance() {
+        if (instance == null) {
+            instance = new JsonDataManagerService();
+        }
+        return instance;
     }
 
     public List<TaskModel> loadAllTasks() {
@@ -183,4 +194,7 @@ public class JsonDataManagerService {
         }
     }
 
+    public ObjectMapper getMapper() {
+        return mapper;
+    }
 }

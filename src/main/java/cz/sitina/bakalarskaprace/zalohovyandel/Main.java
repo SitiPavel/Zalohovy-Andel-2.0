@@ -22,7 +22,7 @@ import java.util.Objects;
 
 public class Main extends Application {
 
-    JsonDataManagerService jsonManager = new JsonDataManagerService();
+    JsonDataManagerService jsonManager = JsonDataManagerService.getInstance();
 
     @Override
     public void start(Stage stage) throws IOException {

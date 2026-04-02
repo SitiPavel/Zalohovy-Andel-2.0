@@ -1,6 +1,8 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import javafx.event.ActionEvent;
@@ -27,7 +29,7 @@ public class CreateBackupTaskController extends CreateTaskController {
 
 
     @FXML
-    public void closeWindow_Create(ActionEvent event) {
+    public void closeWindow_Create(ActionEvent event)  {
 
 
         String errorMassage = backupInputCheck(
@@ -40,7 +42,7 @@ public class CreateBackupTaskController extends CreateTaskController {
             return;
         }
 
-        BackupTask newTask = new BackupTask(
+        BackupTask newBackupTask = new BackupTask(
                 tfName.getText(),
                 tfLeftPath.getText(),
                 tfRightPath.getText(),
@@ -48,9 +50,25 @@ public class CreateBackupTaskController extends CreateTaskController {
                 chbxIsCompress.isSelected(),
                 chbxIsEncrypt.isSelected()
         );
+        // pokud je šifrován tak vytvořit Reprezentanta zašifrovaného tasku
+         if (chbxIsEncrypt.isSelected()) {
+             try {
+                 EncryptedBackupTask encryptedTask = new EncryptedBackupTask(newBackupTask, pwfPassword1.getText());
+                 jsonService.saveNewTask_saveOldSave(encryptedTask);
+                 taskRepository.add(encryptedTask);
+             } catch (Exception e) {
+                 e.printStackTrace();
+                 ErrorUtility.getInstance("Chyba vytváření objektu",
+                         "Pří tvorbě nové úlohy se vyskytla chyba. ",
+                         "Nastala chyba uvnitř aplikace, prosím zkuste to znovu.");
+                 return;
+             }
+         } else {
+             jsonService.saveNewTask_saveOldSave(newBackupTask);
+             taskRepository.add(newBackupTask);
+         }
 
-        jsonService.saveNewTask_saveOldSave(newTask);
-        taskRepository.add(newTask);
+
         isAddedTask.run();
         WindowManager.findByActionAndClose(event);
     }

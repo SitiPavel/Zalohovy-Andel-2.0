@@ -48,7 +48,7 @@ public class BackupTaskController implements TaskController {
 
     // třídy poskytující služby
     private IconManagerUtility iconManager = new IconManagerUtility();
-    private JsonDataManagerService jsonManager = new JsonDataManagerService();
+    private JsonDataManagerService jsonManager = JsonDataManagerService.getInstance();;
     private final PopupDialogService popupDialogService = new PopupDialogService();
     private Utility utility = new Utility();
     private FileScannerService fileScannerService = new FileScannerService();

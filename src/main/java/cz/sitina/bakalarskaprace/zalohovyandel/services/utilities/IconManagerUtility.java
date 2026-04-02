@@ -86,20 +86,16 @@ public class IconManagerUtility {
 
     //**********************************/
     // task kategorie
-    /*
-    private final Image autoBackupIcon =
-            new Image(getClass().getResourceAsStream(path_iconsSmall + "autoBackup_TableIcon_n_n.png"));
-    private final Image autoBackupIcon_Com =
-            new Image(getClass().getResourceAsStream(path_iconsSmall + "autoBackup_TableIcon_n_K.png"));
-    private final Image autoBackupIcon_Enc =
-            new Image(getClass().getResourceAsStream(path_iconsSmall + "autoBackup_TableIcon_S_n.png"));
-    private final Image autoBackupIcon_EncCom =
-            new Image(getClass().getResourceAsStream(path_iconsSmall + "autoBackup_TableIcon_S_K.png"));
-            */
     private final Image manualSync_TabbleIcon =
             new Image(getClass().getResourceAsStream(path_iconsSmall + "manualSync_TabbleIcon.png"));
     private final Image backupTask_TableIcon =
             new Image(getClass().getResourceAsStream(path_iconsSmall + "backupTask_TableIcon.png"));
+    private final Image backupTask_TableIcon_Com_Enc =
+            new Image(getClass().getResourceAsStream(path_iconsSmall + "backupTask_TableIcon_Com_Enc.png"));
+    private final Image backupTask_TableIcon_Com_X =
+            new Image(getClass().getResourceAsStream(path_iconsSmall + "backupTask_TableIcon_Com_X.png"));
+    private final Image backupTask_TableIcon_X_Enc =
+            new Image(getClass().getResourceAsStream(path_iconsSmall + "backupTask_TableIcon_X_Enc.png"));
 
 
     //**********************************/
@@ -432,5 +428,17 @@ public class IconManagerUtility {
 
     public Image getBackup_TableIcon() {
         return backupTask_TableIcon;
+    }
+
+    public Image getBackupTask_TableIcon_Com_Enc() {
+        return backupTask_TableIcon_Com_Enc;
+    }
+
+    public Image getBackupTask_TableIcon_Com_X() {
+        return backupTask_TableIcon_Com_X;
+    }
+
+    public Image getBackupTask_TableIcon_X_Enc() {
+        return backupTask_TableIcon_X_Enc;
     }
 }

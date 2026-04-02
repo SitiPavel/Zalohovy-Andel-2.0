@@ -47,7 +47,7 @@ public abstract class CopyProcessController {
     // servis
     protected final Utility utility = new Utility();
     protected final BackupProcessService backupProcessService = new BackupProcessService();
-    protected final JsonDataManagerService jsonService = new JsonDataManagerService();
+    protected final JsonDataManagerService jsonService = JsonDataManagerService.getInstance();;
 
 
     // data objekty

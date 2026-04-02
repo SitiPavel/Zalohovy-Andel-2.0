@@ -2,7 +2,9 @@ package cz.sitina.bakalarskaprace.zalohovyandel.models.taskType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.encryptionServices.CryptoManager;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 
 import javax.crypto.SecretKey;
 
@@ -18,6 +20,8 @@ public class EncryptedBackupTask extends TaskModel {
     private byte[] cryptoSalt;
     private byte[] cryptoIv;
     private String passwordHash;
+
+    JsonDataManagerService jsonManager = JsonDataManagerService.getInstance();
 
     // zašifrovaný objekt task
     private String encryptedPayloadBase64;
@@ -38,7 +42,7 @@ public class EncryptedBackupTask extends TaskModel {
 
         this.creationDate = plainTask.getCreationDate();
         this.isCompressed = plainTask.isCompressed();
-        this.rootFolderPathStr = plainTask.getRootBackupPath();
+        this.rootFolderPathStr = plainTask.getRootBackupPath(); /// null nutno opravit
 
         // generování soly a inicializačního vektoru
         this.cryptoSalt = CryptoManager.generateRandomBytes(16);
@@ -47,10 +51,29 @@ public class EncryptedBackupTask extends TaskModel {
         this.passwordHash = CryptoManager.createPasswordHash(userPassword, cryptoSalt);
         SecretKey key =CryptoManager.deriveKey(userPassword.toCharArray(), cryptoSalt);
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = jsonManager.getMapper();
         String plainTaskJson = mapper.writeValueAsString(plainTask);
         this.encryptedPayloadBase64 = CryptoManager.encryptText(plainTaskJson, key, this.cryptoIv);
 
+    }
+
+    public boolean verifyPassword(String userPassword) throws Exception {
+        return CryptoManager.verifyPassword(userPassword, cryptoSalt,passwordHash);
+    }
+
+    public BackupTask unlockTask(String userPassword, ObjectMapper mapper) throws Exception {
+        // 1. BEZPEČNOSTNÍ POJISTKA: Nejdřív ověříme, že je heslo fakt správné
+        if (!verifyPassword(userPassword)) {
+            throw new IllegalArgumentException("Nesprávné heslo pro odemčení Tasku.");
+        }
+
+        SecretKey key = CryptoManager.deriveKey(userPassword.toCharArray(), cryptoSalt);
+        String plainTaskJson = CryptoManager.decryptText(encryptedPayloadBase64, key, cryptoIv);
+        BackupTask unlockedTask = mapper.readValue(plainTaskJson, BackupTask.class);
+
+        CryptoManager.clearPassword(userPassword.toCharArray());
+
+        return unlockedTask;
     }
 
     public boolean isCompressed() {

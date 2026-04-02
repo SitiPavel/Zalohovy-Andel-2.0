@@ -297,6 +297,30 @@
     -fx-border-color: -fx-color-mark6;
 }
 
+.passwordField_Styl1 {
+    /* --- Vlastnosti z TextField --- */
+    -fx-background-color: -fx-color-primary2;
+    -fx-prompt-text-fill: -fx-color-lightBackground;
+    -fx-border-color: -fx-color-primary1;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-border-radius: 15;
+    -fx-background-insets: 2;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 15, 0, 2, 2);
+
+    /* --- Vlastnosti z WindowTitle --- */
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+
+    -fx-text-fill: -fx-color-primary1;
+}
+
+/* Efekt při prokliku (Focused) */
+.passwordField_Styl1_Blue_noRadius:focused {
+    -fx-border-color: -fx-color-mark6;
+}
+
 
 
 /* ----------------------------

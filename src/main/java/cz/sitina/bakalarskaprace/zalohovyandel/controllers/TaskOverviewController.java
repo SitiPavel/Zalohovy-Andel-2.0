@@ -5,6 +5,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.cre
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateTaskController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
@@ -116,23 +117,17 @@ public class TaskOverviewController {
                 iconToDisplay = iconManager.getManualSync_TabbleIcon();
 
             } else if (task instanceof BackupTask backupTask) {
-                iconToDisplay = iconManager.getBackup_TableIcon();
-
-                /*
-                if (autoBackupTask.isCompressed() &&
-                        autoBackupTask.isEncripted()) {
-                    iconToDisplay =  iconManager.getAutoBackupIcon_EncCom();
-
-                } else if (autoBackupTask.isCompressed() &&
-                        !autoBackupTask.isEncripted()) {
-                    iconToDisplay = iconManager.getAutoBackupIcon_Com();
-
-                } else if (autoBackupTask.isEncripted()) {
-                    iconToDisplay = iconManager.getAutoBackupIcon_Enc();
+                if (backupTask.isCompressed()) {
+                    iconToDisplay = iconManager.getBackupTask_TableIcon_Com_X();
                 } else {
-                    iconToDisplay = iconManager.getAutoBackupIcon();
+                    iconToDisplay = iconManager.getBackup_TableIcon();
                 }
-                */
+            } else if (task instanceof EncryptedBackupTask encryptedBackupTask) {
+                if (encryptedBackupTask.isCompressed()) {
+                    iconToDisplay = iconManager.getBackupTask_TableIcon_Com_Enc();
+                } else {
+                    iconToDisplay = iconManager.getBackupTask_TableIcon_X_Enc();
+                }
             }
             return new SimpleObjectProperty<>(iconToDisplay);
         });

@@ -58,7 +58,7 @@ public class SynchronizationCopyProcessController {
     @FXML private HBox containerError;
 
     private SynchronizationProcessService synchronizationProcessService = new SynchronizationProcessService();
-    private JsonDataManagerService jsonService = new JsonDataManagerService();
+    private JsonDataManagerService jsonService = JsonDataManagerService.getInstance();;
 
     private TaskModel originTaskModel;
     private TaskModel editedTaskModel;

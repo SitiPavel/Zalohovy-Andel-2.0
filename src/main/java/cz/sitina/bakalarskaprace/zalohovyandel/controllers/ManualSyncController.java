@@ -68,7 +68,7 @@ public class ManualSyncController implements TaskController {
 
     private final ComparisonService comparisonService = new ComparisonService();
     private final TreeTableGuiModify treeTableGuiModify = new TreeTableGuiModify();
-    private final JsonDataManagerService jsonManager = new JsonDataManagerService();
+    private final JsonDataManagerService jsonManager = JsonDataManagerService.getInstance();;
     private final Utility utility = new Utility();
     private AppFrameController appFrameController;
 

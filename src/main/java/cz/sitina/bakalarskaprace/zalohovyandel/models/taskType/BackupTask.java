@@ -27,7 +27,18 @@ public class BackupTask extends TaskModel {
         this.isEncrypted = isEncrypted;
 
         rootFilteredFolders_Source = new ArrayList<>();
-        rootBackupPath = rightPath +"\\Backup_" + name  +"_"+ id ;
+
+        // složení názvu ovlivněno šifrováním a kompresí
+        String rootBackupPath_Start = rightPath +"\\Backup_";
+        String rootBackupPath_Middle = "";
+        String rootBackupPath_End =  name  +"_"+ id;
+        if (isCompressed) {
+            rootBackupPath_Middle = rootBackupPath_Middle + "Com_";
+        }
+        if (isEncrypted) {
+            rootBackupPath_Middle = rootBackupPath_Middle + "Enc_";
+        }
+        rootBackupPath =  rootBackupPath_Start + rootBackupPath_Middle + rootBackupPath_End ;
         backupDatabasePath = rootBackupPath +"\\index.db" ;
     }
 
