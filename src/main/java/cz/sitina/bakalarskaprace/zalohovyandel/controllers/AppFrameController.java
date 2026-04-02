@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -31,27 +32,33 @@ public class AppFrameController {
     @FXML
     public void showTasksOverview() {
         if (checkAndSaveUnsavedChanges()) {
-            loadView("TasksOverviewView.fxml", null);
+            loadView("TasksOverviewView.fxml", null, null);
         }
     }
 
     @FXML
     public void showCompareOverview(TaskModel taskModel) {
         if (checkAndSaveUnsavedChanges()) {
-            loadView("compareOverviewView.fxml", taskModel);
+            loadView("compareOverviewView.fxml", taskModel, null);
         }
     }
 
     @FXML
     public void showBackupOverview(TaskModel taskModel) {
         if (checkAndSaveUnsavedChanges()) {
-            loadView("backupOverviewView.fxml", taskModel);
+            loadView("backupOverviewView.fxml", taskModel, null);
+        }
+    }
+
+    public void showBackupOverview_Encrypt(TaskModel taskModel, SecretKey key) {
+        if (checkAndSaveUnsavedChanges()) {
+            loadView("backupOverviewView.fxml", taskModel, key);
         }
     }
 
 
     // načítání jednotlivích obrazovek
-    private void loadView(String fxml, TaskModel taskModel) {
+    private void loadView(String fxml, TaskModel taskModel, SecretKey key) {
         try {
             String path = "/cz/sitina/bakalarskaprace/zalohovyandel/fxml/" + fxml;
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
@@ -77,6 +84,7 @@ public class AppFrameController {
                         BTC.setTaskRepository(taskRepository);
                         BTC.setTaskModel(bt);
                         BTC.setAppFrameController(this);
+                        BTC.setSessionKey(key);
                         BTC.loadView();
                     }
 

@@ -70,7 +70,7 @@ public class BackupPackagesOverviewController {
         this.absolutDatabasePath = originBackupTask.getBackupDatabasePath();
         this.absolutRootFolder = originBackupTask.getRootBackupPath();
 
-        try (DatabaseManager databaseManager = new DatabaseManager(absolutDatabasePath)) {
+        try (DatabaseManager databaseManager = new DatabaseManager(absolutDatabasePath,null)) {
             allPackages = databaseManager.getAllPackages();
 
         } catch (SQLException e) {

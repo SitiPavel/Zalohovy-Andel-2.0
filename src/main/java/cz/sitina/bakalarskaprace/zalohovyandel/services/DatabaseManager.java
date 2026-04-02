@@ -2,22 +2,42 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
+
+import javax.crypto.SecretKey;
 import java.nio.file.Path;
 
 import java.nio.file.Paths;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DatabaseManager implements AutoCloseable {
     private Connection conn;
 
     // Konstruktor otevře spojení a zaručí existenci tabulky
-    public DatabaseManager(String databaseAbsolutPath) throws SQLException {
+    public DatabaseManager(String databaseAbsolutPath, SecretKey secretKey) throws SQLException {
         String url = "jdbc:sqlite:" + databaseAbsolutPath;
-        this.conn = DriverManager.getConnection(url);
+
+        // vlastnosti připojení
+        Properties props = new Properties();
+
+        // umožní databázi spracovávat i šifrování, určujeme to podle toho pokud key je null
+        if (secretKey != null) {
+            byte[] rawKeyBytes = null;
+
+            try  {
+                rawKeyBytes = secretKey.getEncoded(); // takto na klíč máme pořád referenci a můžeme ho vynulovat
+                String hexKey = java.util.HexFormat.of().withUpperCase().formatHex(rawKeyBytes);
+
+                // Vložíme surový klíč
+                props.setProperty("pragma.key", "x'" + hexKey + "'");
+            }finally {
+                // přepíšeme klíč na samé nuli v ram paměti
+                if (rawKeyBytes != null) {
+                    Arrays.fill(rawKeyBytes, (byte) 0);
+                }
+            }
+        }
+        this.conn = DriverManager.getConnection(url, props);
         tableInicializazion();
     }
 

@@ -33,9 +33,12 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -57,6 +60,8 @@ public class BackupTaskController implements TaskController {
 
     private TreeTableGuiModify treeTableGuiModify = new TreeTableGuiModify();
     private TreeTableBuilderService treeBuilder = new TreeTableBuilderService();
+
+    private SecretKey sessionKey;
 
 
     // objekty
@@ -226,7 +231,7 @@ public class BackupTaskController implements TaskController {
             };
 
             cell.setOnMouseClicked(event -> {
-                if (!cell.isEmpty() && event.getButton() == javafx.scene.input.MouseButton.SECONDARY) {
+                if (!cell.isEmpty() && event.getButton() == MouseButton.SECONDARY) {
 
                     // získá list vybraných řádků
                     ObservableList<TreeItem<ComparedItemOperItemRowModel>> selectedItems =
@@ -269,7 +274,7 @@ public class BackupTaskController implements TaskController {
     @FXML
         private void sourceRootFilter(ActionEvent event) {
         try {
-            FXMLLoader loader = WindowManager.loadFXML("RootFolderFilterWindow.fxml");
+            FXMLLoader loader = loadFXML("RootFolderFilterWindow.fxml");
             RootFolderFilterController controller = loader.getController();
             controller.setOriginalPath(originBackupTask.getLeftPath());
             controller.setEditedPath(editableBackupTask.getLeftPath());
@@ -326,19 +331,21 @@ public class BackupTaskController implements TaskController {
                         progressWindowController.setLbHeader("Skenuji histori záloh... 2/3");
                     });
 
-                    Map<String, FileItemModel> databaseMap;
+                    Map<String, FileItemModel> databaseMap = Map.of();
                     Path rootDirectory = Paths.get(editableBackupTask.getRootBackupPath());
                     try {
                         // Vytvoří složku a všechny nadřazené složky, pokud neexistují. Když existuje tak metoda nic neudělá
-                        java.nio.file.Files.createDirectories(rootDirectory);
+                        Files.createDirectories(rootDirectory);
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.out.println("Nepodařilo se vytvořit složku");
                     }
                     String dbPath = editableBackupTask.getBackupDatabasePath();
 
-                    try (DatabaseManager databaseManager = new DatabaseManager(dbPath)) {
+                    try (DatabaseManager databaseManager = new DatabaseManager(dbPath, sessionKey)) {
                         databaseMap = databaseManager.loadLatestIndexToMemory();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     // Zrušení uživatelem?
@@ -763,4 +770,7 @@ public class BackupTaskController implements TaskController {
         this.appFrameController = appFrameController;
     }
 
+    public void setSessionKey(SecretKey sessionKey) {
+        this.sessionKey = sessionKey;
+    }
 }

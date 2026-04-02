@@ -84,7 +84,7 @@ public class InsidePackageContentController {
     public void loadContentToTable(String databasePath, String packageName, String packageNameGUI) {
         colName.setText(packageNameGUI);
 
-        try (DatabaseManager databaseManager = new DatabaseManager(databasePath)) {
+        try (DatabaseManager databaseManager = new DatabaseManager(databasePath, null)) {
             List<String> relativePaths;
             relativePaths = databaseManager.getPackageContent(packageName);
             TreeTableShowPackageFilesService.buildTreeTablePackageFiles(rootItem, relativePaths);

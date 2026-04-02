@@ -136,7 +136,7 @@ public class DataRecoverySettingsController {
     private List<BackupDatabaseDTO> findListOfFilesToRestore() {
         List<BackupDatabaseDTO> foundDtoItems = new ArrayList<>();
 
-        try (DatabaseManager databaseManager = new DatabaseManager(databasePath)) {
+        try (DatabaseManager databaseManager = new DatabaseManager(databasePath, null)) {
             if (isFullRecovery) {
                 foundDtoItems = databaseManager.getAllDataWithLatestVersion();
             } else {

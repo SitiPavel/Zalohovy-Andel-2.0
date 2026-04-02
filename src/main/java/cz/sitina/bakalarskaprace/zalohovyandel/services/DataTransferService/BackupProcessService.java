@@ -57,7 +57,8 @@
             Path packageAbsolutePath;
 
 
-            try (DatabaseManager databaseManager = new DatabaseManager(editableBackupTask.getBackupDatabasePath())) {
+            try (DatabaseManager databaseManager = new DatabaseManager(editableBackupTask.getBackupDatabasePath(),
+                    null)) {
 
                 int dataPackageCount = databaseManager.getPackageCount();
                 long timestamp = System.currentTimeMillis();

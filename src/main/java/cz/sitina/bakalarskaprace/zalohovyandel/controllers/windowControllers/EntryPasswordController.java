@@ -6,12 +6,14 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTa
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.encryptionServices.CryptoManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Label;
 
+import javax.crypto.SecretKey;
 
 
 public class EntryPasswordController {
@@ -31,10 +33,12 @@ public class EntryPasswordController {
     public void confirmPassword(ActionEvent event) {
         try {
             if (encryptedBackupTask.verifyPassword(pfPasswordInput.getText())) {
+                SecretKey key = CryptoManager.deriveKey(pfPasswordInput.getText().toCharArray() ,
+                                encryptedBackupTask.getCryptoSalt());
                 BackupTask unlockedTask = encryptedBackupTask.unlockTask(pfPasswordInput.getText(),
                         jsonManager.getMapper());
                 WindowManager.findByActionAndClose(event);
-                appFrameController.showBackupOverview(unlockedTask);
+                appFrameController.showBackupOverview_Encrypt(unlockedTask, key);
             } else {
                 pfPasswordInput.setStyle("-fx-border-color: -fx-color-mark2;");
                 lbIncorrectPassword.setVisible(true);
