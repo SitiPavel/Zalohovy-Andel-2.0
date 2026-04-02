@@ -15,10 +15,6 @@ public class BackupTask extends TaskModel {
     private String rootBackupPath;
     private String backupDatabasePath;
 
-    private byte[] cryptoSalt; // Sůl pro odvození klíče z hesla (vygeneruje se při tvorbě Tasku)
-    private byte[] cryptoIv;   // Inicializační vektor pro obálku
-    private String encryptedPayloadBase64; // ZDE BUDE ZAŠIFROVANÁ OBÁLKA
-
     public BackupTask() {
         super();
     }

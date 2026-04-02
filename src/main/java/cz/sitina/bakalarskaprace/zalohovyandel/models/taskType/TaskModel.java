@@ -20,7 +20,8 @@ import java.util.Set;
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = ManualSyncTask.class, name = "MANUAL_SYNC_TASK"),
-        @JsonSubTypes.Type(value = BackupTask.class, name = "BACKUP_TASK")
+        @JsonSubTypes.Type(value = BackupTask.class, name = "BACKUP_TASK"),
+        @JsonSubTypes.Type(value = EncryptedBackupTask.class, name = "ENCRYPTED_BACKUP_TASK")
 })
 
 public abstract class TaskModel {
