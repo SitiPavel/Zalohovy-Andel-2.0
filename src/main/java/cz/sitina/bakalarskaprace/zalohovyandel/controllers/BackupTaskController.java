@@ -452,6 +452,7 @@ public class BackupTaskController implements TaskController {
                 controller.setComparedAndStatisticsData(statisticsAndComparedData);
                 controller.setOriginalBackupTask(originBackupTask);
                 controller.setEditableBackupTask(editableBackupTask);
+                controller.setEncryptedTask(encryptedBackupTask);
                 controller.setSecretKey(sessionKey);
                 controller.setComparedFilesList(statisticsAndComparedData.getComparedFilesList());
                 controller.setCanBeResetTreeTable(() -> {

@@ -5,6 +5,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalBackupItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.FilesUtility;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -24,16 +25,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BackupCopyProcessController extends CopyProcessController{
     // setData
-    protected BackupTask originTaskModel;
-    protected BackupTask editedTaskModel;
+    private BackupTask originTaskModel;
+    private BackupTask editedTaskModel;
+    private EncryptedBackupTask encryptedTask;
+    private SecretKey secretKey;
 
     private final AtomicBoolean cancelRequested = new AtomicBoolean(false);
 
     public void startProcess(BackupTask originTaskModel, BackupTask editedTaskModel,
-                             List<ComparedItemOperItemRowModel> list, SecretKey secretKey) {
+                             EncryptedBackupTask encryptedBackupTask, List<ComparedItemOperItemRowModel> list,
+                             SecretKey secretKey) {
         this.originTaskModel = originTaskModel;
         this.editedTaskModel = editedTaskModel;
         this.totalFilesToProcess = list.size();
+        this.encryptedTask = encryptedBackupTask;
+        this.secretKey = secretKey;
 
         speedSeries.getData().clear();
         speedSeries.getData().add(new XYChart.Data<>(0, 0));
@@ -167,7 +173,15 @@ public class BackupCopyProcessController extends CopyProcessController{
 
         originTaskModel.getJurnalInfoList().add(reportData);
         editedTaskModel.getJurnalInfoList().add(reportData);
-        jsonService.updateTask_saveOldSave(originTaskModel);
+        if (originTaskModel.isEncrypted()) {
+            try {
+                encryptedTask.updateEncryptedTask(originTaskModel, secretKey);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            jsonService.updateTask_saveOldSave(originTaskModel);
+        }
         canBeResetTreeTable.run();
     }
 

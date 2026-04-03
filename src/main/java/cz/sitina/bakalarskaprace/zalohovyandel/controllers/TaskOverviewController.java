@@ -51,8 +51,8 @@ public class TaskOverviewController {
 
 
     public void initialize() {
-        int entrySize = 20;
-        int typeSize = 30;
+        int entrySize = 25;
+        int typeSize = 35;
 
         Label tablePlaceholder = new Label("Nejsou vytvořené úlohy!");
         tablePlaceholder.getStyleClass().add("DarkBoltHeader1");

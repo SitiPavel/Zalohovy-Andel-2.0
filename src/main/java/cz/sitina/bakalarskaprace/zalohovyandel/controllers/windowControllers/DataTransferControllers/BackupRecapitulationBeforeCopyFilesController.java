@@ -1,5 +1,6 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.DataTransferControllers;
 
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.DataTransferService.BackupProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
@@ -35,6 +36,7 @@ public class BackupRecapitulationBeforeCopyFilesController {
 
     private Runnable canBeResetTreeTable;
     private SecretKey secretKey;
+    private EncryptedBackupTask encryptedTask;
 
     @FXML
     private void initialize() {
@@ -60,7 +62,8 @@ public class BackupRecapitulationBeforeCopyFilesController {
             loader.setController(controller);
             loader.load(); // Toto zavolá metodu inicialize a nastaví controler podle FXML
             controller.setCanBeResetTreeTable(canBeResetTreeTable);
-            controller.startProcess(originalBackupTask, editableBackupTask, comparedFilesList, secretKey);
+            controller.startProcess(originalBackupTask, editableBackupTask, encryptedTask, comparedFilesList,
+                    secretKey);
             secretKey = null;
 
             String title =  "Záloha souborů";
@@ -92,6 +95,10 @@ public class BackupRecapitulationBeforeCopyFilesController {
 
     public void setEditableBackupTask(BackupTask editableBackupTask) {
         this.editableBackupTask = editableBackupTask;
+    }
+
+    public void setEncryptedTask(EncryptedBackupTask encryptedTask) {
+        this.encryptedTask = encryptedTask;
     }
 
     public void setSecretKey(SecretKey secretKey) {

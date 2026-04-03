@@ -12,10 +12,44 @@
 
 }
 
-.coloredBoltText {
-    -fx-text-fill: -fx-color-primary1;
-    -fx-font-size: 17 px;
+.WindowTitle_L1 {
+    -fx-font-size: 13 px;
     -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-textLight;
+}
+
+.WindowTitle_L1_Dark {
+    -fx-font-size: 13 px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-textDark;
+}
+
+.WindowTitle_L1_Colored {
+    -fx-font-size: 13 px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-primary1;
+}
+
+.descriptionText {
+    -fx-font-size: 13 px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-textLight;
+    -fx-background-color: -fx-color-primary2;
+    -fx-background-radius: 15;
+}
+.blueText {
+    -fx-text-fill: -fx-color-mark3;
+}
+
+.WindowTitle_L2_Colored {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-primary1;
+}
+
+.formRequiredMark_Red {
+    -fx-font-size: 15px;
+    -fx-text-fill: -fx-color-mark2;
 }
 
 .normalBoltText {
@@ -35,6 +69,19 @@
     -fx-font-weight: bold;
 }
 
+.DarkBoltHeader1 {
+    -fx-text-fill: -fx-color-textDark;
+    -fx-font-size: 17 px;
+    -fx-font-weight: bold;
+}
+
+.coloredBoltText {
+    -fx-text-fill: -fx-color-primary1;
+    -fx-font-size: 17 px;
+    -fx-font-weight: bold;
+}
+
+
 .DarkBoltHeader0 {
     -fx-text-fill: -fx-color-textDark;
     -fx-font-size: 21 px;
@@ -52,58 +99,9 @@
     -fx-font-weight: bold;
 }
 
-.DarkBoltHeader1 {
-    -fx-text-fill: -fx-color-textDark;
-    -fx-font-size: 17 px;
-    -fx-font-weight: bold;
-}
-
-
-.WindowTitle_L1 {
-    -fx-font-size: 13 px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-color-textLight;
-}
-
-.WindowTitle_L1_Dark {
-    -fx-font-size: 13 px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-color-textDark;
-}
-
-.WindowTitle_L1_Colored {
-    -fx-font-size: 13 px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-color-primary1;
-}
-
-
-.WindowTitle_L2_Colored {
-    -fx-font-size: 15px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-color-primary1;
-}
-
 .TextModify_RedColor {
     -fx-text-fill: -fx-color-mark2;
 }
-
-.formRequiredMark_Red {
-    -fx-font-size: 15px;
-    -fx-text-fill: -fx-color-mark2;
-}
-
-.descriptionText {
-    -fx-font-size: 13 px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-color-textLight;
-    -fx-background-color: -fx-color-primary2;
-    -fx-background-radius: 15;
-}
-.blueText {
-    -fx-text-fill: -fx-color-mark3;
-}
-
 
 
 /*  ===========================================

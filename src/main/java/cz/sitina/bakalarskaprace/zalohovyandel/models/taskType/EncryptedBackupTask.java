@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareStrategy;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.encryptionServices.CryptoManager;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.encryptionServices.EncryptionConfigFileManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 
 import javax.crypto.SecretKey;
+
+import java.nio.file.Path;
 
 import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.TaskTypes.BACKUP;
 
@@ -21,7 +24,9 @@ public class EncryptedBackupTask extends TaskModel {
     private byte[] cryptoIv;
     private String passwordHash;
 
-    JsonDataManagerService jsonManager = JsonDataManagerService.getInstance();
+    private JsonDataManagerService jsonManager = JsonDataManagerService.getInstance();
+    private EncryptionConfigFileManager encryptConfigManager = new EncryptionConfigFileManager(jsonManager.getMapper());
+
 
     // zašifrovaný objekt task
     private String encryptedPayloadBase64;
@@ -55,9 +60,12 @@ public class EncryptedBackupTask extends TaskModel {
         String plainTaskJson = mapper.writeValueAsString(plainTask);
         this.encryptedPayloadBase64 = CryptoManager.encryptText(plainTaskJson, key, this.cryptoIv);
 
+        encryptConfigManager.makeConfigUpToDate(this, Path.of(rootFolderPathStr));
+
     }
 
-    //uloží nová viditelná nastavení a zbytek zašifruje a uloží
+    // uložení NEšifrovaného tasku do reprezentačního objektu
+    //uloží nová viditelná nastavení a zbytek zašifruje a uloží do reprezentačního objektu
     public void updateEncryptedTask(BackupTask plainTask, SecretKey key) throws Exception {
         this.name = plainTask.getName();
         this.description = plainTask.getDescription();
@@ -68,6 +76,20 @@ public class EncryptedBackupTask extends TaskModel {
         String plainTaskJson = mapper.writeValueAsString(plainTask);
         this.encryptedPayloadBase64 = CryptoManager.encryptText(plainTaskJson, key, this.cryptoIv);
 
+        encryptConfigManager.makeConfigUpToDate(this, Path.of(rootFolderPathStr));
+    }
+
+    // aktualizuje preprezentační task pomocí již zašifrovaného preprezentačního tasku
+    public void updateEncryptedTask(EncryptedBackupTask encryptedBackupTask)  {
+        super.updateTaskModel(encryptedBackupTask);
+
+        this.isCompressed = encryptedBackupTask.isCompressed;
+        this.isEncrypted = encryptedBackupTask.isEncrypted;
+        this.cryptoSalt = encryptedBackupTask.cryptoSalt;
+        this.cryptoIv = encryptedBackupTask.cryptoIv;
+
+        this.passwordHash = encryptedBackupTask.passwordHash;
+        this.encryptedPayloadBase64 = encryptedBackupTask.encryptedPayloadBase64;
     }
 
     public boolean verifyPassword(String userPassword) throws Exception {
