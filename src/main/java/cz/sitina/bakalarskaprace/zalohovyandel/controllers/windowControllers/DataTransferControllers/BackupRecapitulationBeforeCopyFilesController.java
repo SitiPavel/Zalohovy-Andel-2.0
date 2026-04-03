@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class BackupRecapitulationBeforeCopyFilesController {
     private BackupTask editableBackupTask;
 
     private Runnable canBeResetTreeTable;
+    private SecretKey secretKey;
 
     @FXML
     private void initialize() {
@@ -58,10 +60,12 @@ public class BackupRecapitulationBeforeCopyFilesController {
             loader.setController(controller);
             loader.load(); // Toto zavolá metodu inicialize a nastaví controler podle FXML
             controller.setCanBeResetTreeTable(canBeResetTreeTable);
-            controller.startProcess(originalBackupTask, editableBackupTask, comparedFilesList);
+            controller.startProcess(originalBackupTask, editableBackupTask, comparedFilesList, secretKey);
+            secretKey = null;
 
             String title =  "Záloha souborů";
             Stage copyProcessStage = WindowManager.openRunningWindow(loader, title, 750, 400);
+
 
             copyProcessStage.setOnCloseRequest(e -> {
                 controller.cancelAction();
@@ -88,6 +92,10 @@ public class BackupRecapitulationBeforeCopyFilesController {
 
     public void setEditableBackupTask(BackupTask editableBackupTask) {
         this.editableBackupTask = editableBackupTask;
+    }
+
+    public void setSecretKey(SecretKey secretKey) {
+        this.secretKey = secretKey;
     }
 
     public void setComparedFilesList(List<ComparedItemOperItemRowModel> comparedFilesList) {

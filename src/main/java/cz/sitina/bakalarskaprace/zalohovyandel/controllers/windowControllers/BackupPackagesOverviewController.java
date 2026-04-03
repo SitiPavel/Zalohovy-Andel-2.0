@@ -106,8 +106,9 @@ public class BackupPackagesOverviewController {
                     guiName = "Přírůstek " + nameParts[1];
                 }
 
-                guiDate = Utility.getDateOnly(nameParts[2]);
-                guiTime = Utility.getTimeOnly(nameParts[2]);
+                String[] timeSeparatedFromEnding= nameParts[2].split("\\.");;
+                guiDate = Utility.getDateOnly(timeSeparatedFromEnding[0]);
+                guiTime = Utility.getTimeOnly(timeSeparatedFromEnding[0]);
 
                 controller.loadContent(guiName,guiDate,guiTime);
                 finalGuiName = (guiName + "   " + guiDate + "   " + guiTime);

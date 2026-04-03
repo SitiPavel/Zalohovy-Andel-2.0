@@ -19,8 +19,11 @@ import java.util.zip.ZipOutputStream;
 public class SecureArchiveManager implements AutoCloseable{
 
     private final OutputStream fileOut;
-    private final CipherOutputStream cipherOut;
+    private CipherOutputStream cipherOut = null;
     private final ZipOutputStream zipOut;
+
+    // Tady si uložíme tu "nejvyšší" vrstvu potrubí, do které budeme rovnou sypat data
+    private final OutputStream activeTopStream;
     private final boolean useCompression;
 
 
@@ -32,57 +35,65 @@ public class SecureArchiveManager implements AutoCloseable{
     public SecureArchiveManager(Path targetPackagePath, SecretKey secretKey, boolean useCompression) throws Exception {
         this.useCompression = useCompression;
 
-        // 1. Otevřeme surový zápis na disk
+        // otevře přímou rouru pro zápis na disk
         this.fileOut = Files.newOutputStream(targetPackagePath);
+        OutputStream currentStream = this.fileOut;
 
-        // 2. Vygenerujeme náhodný Inicializační vektor (IV) - nutnost pro AES v CBC módu (16 bytů)
-        byte[] iv = CryptoManager.generateRandomBytes(16);
+        // volitelné: Šifrování
+        if (secretKey != null) {
+            byte[] iv = CryptoManager.generateRandomBytes(16);
+            this.fileOut.write(iv); // IV musí být zapsán do čistého souboru jako první
 
-        // Zápis IV v čistém textu na úplný začátek souboru (při dešifrování ho musíme načíst jako první)
-        this.fileOut.write(iv);
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
 
-        // 3. Inicializace šifrovacího enginu
-        Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
-
-        // 4. Obalení diskového streamu do šifrovacího streamu
-        this.cipherOut = new CipherOutputStream(this.fileOut, cipher);
-
-        // 5. Obalení do komprese (pokud ji uživatel chce)
-        if (this.useCompression) {
-            this.zipOut = new ZipOutputStream(this.cipherOut);
-            // Zvýšení úrovně komprese (0 = žádná, 9 = maximální)
-            this.zipOut.setLevel(6);
-        } else {
-            this.zipOut = null;
+            this.cipherOut = new CipherOutputStream(currentStream, cipher);
+            currentStream = this.cipherOut;
         }
+
+        this.zipOut = new ZipOutputStream(currentStream);
+
+        if (this.useCompression) {
+            this.zipOut.setLevel(6); // Běžná komprese
+        } else {
+            this.zipOut.setLevel(0); // Úroveň 0 (jen to zabalí a nekomprimuje)
+        }
+        currentStream = this.zipOut;
+
+        this.activeTopStream = currentStream;
     }
 
-    public void addFile(Path sourceAbsolutPath, String relativePath// pro
-                        ) throws IOException {
-        OutputStream activeStream;
 
-        if (useCompression) {
-            // Řekneme ZIPu: "Teď začínám zapisovat tento konkrétní soubor"
-            zipOut.putNextEntry(new ZipEntry(relativePath.replace("\\", "/")));
-            activeStream = zipOut;
-        } else {
-            // Bez komprese zapisujeme rovnou do šifrovače
-            activeStream = cipherOut;
-        }
+
+    public void addFile(Path sourceAbsolutePath, String relativePath,
+                        long alreadyProcessedGlobal, long totalBytes,
+                        FilesUtility.ProgressCallback callback,
+                        Supplier<Boolean> isCancelled, int processedFileCount) throws IOException {
+
+        zipOut.putNextEntry(new ZipEntry(relativePath.replace("\\", "/")));
+
+        long localPosition = 0;
 
         // Kopírování dat ze zdroje do našeho potrubí
-        try (InputStream in = Files.newInputStream(sourceAbsolutPath)){
+        try (InputStream in = Files.newInputStream(sourceAbsolutePath)){
             byte[] buffer = new byte[1024 * 1024 * 4]; //4MB bufferem
             int bytesRead;
+
             while ((bytesRead = in.read(buffer)) != -1) {
-                activeStream.write(buffer, 0, bytesRead);
+                if (isCancelled.get()) {
+                    throw new IOException("Proces byl přerušen uživatelem.");
+                }
+
+                activeTopStream.write(buffer, 0, bytesRead);
+                localPosition += bytesRead;
+
+                if (callback != null) {
+                    callback.onProgress(alreadyProcessedGlobal + localPosition, totalBytes, relativePath, processedFileCount);
+                }
             }
         }
 
-        if (useCompression) {
-            zipOut.closeEntry();
-        }
+        zipOut.closeEntry();
     }
 
 
@@ -91,12 +102,9 @@ public class SecureArchiveManager implements AutoCloseable{
      */
     @Override
     public void close() throws Exception {
+
         if (this.zipOut != null) {
-            this.zipOut.close(); // // ZipOutputStream interně zavře i cipherOut a fileOut
-        } else if (cipherOut != null) {
-            cipherOut.close();
-        } else {
-            fileOut.close();
+            this.zipOut.close();
         }
 
     }

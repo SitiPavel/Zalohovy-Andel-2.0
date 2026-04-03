@@ -16,6 +16,7 @@ import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javax.crypto.SecretKey;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -29,7 +30,7 @@ public class BackupCopyProcessController extends CopyProcessController{
     private final AtomicBoolean cancelRequested = new AtomicBoolean(false);
 
     public void startProcess(BackupTask originTaskModel, BackupTask editedTaskModel,
-                             List<ComparedItemOperItemRowModel> list) {
+                             List<ComparedItemOperItemRowModel> list, SecretKey secretKey) {
         this.originTaskModel = originTaskModel;
         this.editedTaskModel = editedTaskModel;
         this.totalFilesToProcess = list.size();
@@ -49,6 +50,7 @@ public class BackupCopyProcessController extends CopyProcessController{
                 backupProcessService.executeBackupProcess(
                         list,
                         editedTaskModel,
+                        secretKey,
                         new FilesUtility.ProgressCallback() {
                             private long lastTime = startTime;
                             private long lastBytes = 0;

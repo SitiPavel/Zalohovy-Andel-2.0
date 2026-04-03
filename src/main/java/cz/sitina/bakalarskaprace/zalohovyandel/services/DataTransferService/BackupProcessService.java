@@ -9,8 +9,11 @@
     import cz.sitina.bakalarskaprace.zalohovyandel.services.encryptionServices.SecureArchiveManager;
     import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.FilesUtility;
     import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+    import javafx.application.Platform;
 
+    import javax.crypto.SecretKey;
     import java.io.IOException;
+    import java.io.OutputStream;
     import java.nio.channels.FileChannel;
     import java.nio.file.*;
     import java.sql.SQLException;
@@ -18,6 +21,7 @@
     import java.util.List;
     import java.util.function.Supplier;
     import java.util.stream.Collectors;
+    import java.util.zip.ZipOutputStream;
 
     public class BackupProcessService {
         private int processedFileCount = 0;
@@ -35,6 +39,7 @@
         // zjistí nám do jakého balíčku máme dát dat (fullBackup1, increment1 nebo increment 23 )
         public void executeBackupProcess(List<ComparedItemOperItemRowModel> comparedFilesList,
                                          BackupTask editableBackupTask,
+                                         SecretKey secretKey,
                                          FilesUtility.ProgressCallback callback,
                                          Supplier<Boolean> isCancelled) {
 
@@ -55,10 +60,11 @@
             long globalProcessedBytes = 0;
             Path targetAbsolutPath = null;
             Path packageAbsolutePath;
+            boolean useArchive = editableBackupTask.isEncrypted() || editableBackupTask.isCompressed();
 
 
             try (DatabaseManager databaseManager = new DatabaseManager(editableBackupTask.getBackupDatabasePath(),
-                    null)) {
+                    secretKey)) {
 
                 int dataPackageCount = databaseManager.getPackageCount();
                 long timestamp = System.currentTimeMillis();
@@ -69,87 +75,163 @@
                 } else {
                     packName = "Increment_" + dataPackageCount +"_" + timestamp;
                 }
+                String extension = "";
+                if (editableBackupTask.isEncrypted() && editableBackupTask.isCompressed()) {
+                    extension = ".zip.enc"; // Zkomprimováno a pak zašifrováno
+                } else if (editableBackupTask.isEncrypted() && !editableBackupTask.isCompressed()) {
+                    extension = ".enc";     // Jen zašifrováno
+                } else if (!editableBackupTask.isEncrypted() && editableBackupTask.isCompressed()){
+                    extension = ".zip";
+                }
 
+                packName = packName + extension;
                 packageAbsolutePath = Paths.get(editableBackupTask.getRootBackupPath(), packName);
-                Files.createDirectories(packageAbsolutePath);
+
+                if (packageAbsolutePath.getParent() != null) {
+                    Files.createDirectories(packageAbsolutePath.getParent());
+                }
 
                 List<BackupDatabaseDTO> recordsToDatabase = new ArrayList<>();
 
-                /// *# pro šifrování
-                /*
-                if(editableBackupTask.isEncrypted()) {
-                    Path encryptPackageAbsolutPath = packageAbsolutePath.resolve(packName + ".enc");
-
-                };*/
-
-                for (ComparedItemOperItemRowModel row : filesToBackup) {
-
-                    if (isCancelled.get()) {
-                        wasCancelled = true;
-                        break;
+                /*----------------------------------
+                  POkud je šifrování nebo komprese
+                ------------------------------------*/
+                if (useArchive) {
+                    if (packageAbsolutePath.getParent() != null) {
+                        Files.createDirectories(packageAbsolutePath.getParent());
                     }
 
-                    FileItemModel leftItem = row.getLeftItem();
-                    Path sourceAbsolutPath = leftItem.getFileAbsolutePath();
-                    String currentFileRelativePath = leftItem.getRelativePath().toString();
+                    try (SecureArchiveManager archive = new SecureArchiveManager(packageAbsolutePath,
+                                                                                secretKey,
+                                                                                editableBackupTask.isCompressed())) {
+                        for (ComparedItemOperItemRowModel row : filesToBackup) {
+                            if (isCancelled.get()) {
+                                wasCancelled = true;
+                                break;
+                            }
+                            FileItemModel leftItem = row.getLeftItem();
+                            Path sourceAbsolutPath = leftItem.getFileAbsolutePath();
+                            String currentFileRelativePath = leftItem.getRelativePath().toString();
 
-                    if (!Files.isReadable(sourceAbsolutPath)) {
-                        callback.onItemCompleted(false, row);
-                        continue;
+                            if (!Files.isReadable(sourceAbsolutPath)) {
+                                callback.onItemCompleted(false, row);
+                                continue;
+                            }
+
+                            targetAbsolutPath = packageAbsolutePath.resolve(currentFileRelativePath);
+                            try {
+                                archive.addFile(sourceAbsolutPath, currentFileRelativePath,
+                                        globalProcessedBytes, totalBytes, callback, isCancelled, processedFileCount);
+
+                                BackupDatabaseDTO copiedItem = new BackupDatabaseDTO(
+                                        targetAbsolutPath.toString(),
+                                        leftItem.getRelativePath().toString(),
+                                        leftItem.getFileSize(),
+                                        leftItem.getLastModified(),
+                                        packName
+                                );
+                                recordsToDatabase.add(copiedItem);
+                                successfullyPackagedCount++;
+                                processedFileCount++;
+                                globalProcessedBytes += leftItem.getFileSize();
+
+                                callback.onItemCompleted(true, row);
+                            }catch (Exception e) {
+                                if (isCancelled.get()) {
+                                    wasCancelled = true;
+                                    break;
+                                }
+                                System.err.println("Chyba při vkládání do archivu: " + sourceAbsolutPath);
+                                callback.onItemCompleted(false, row);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Platform.runLater(() -> {
+                            ErrorUtility.getInstance("Chyba přenosu",
+                                    "Nepodařilo se vytvořit rouru pro přenos dat.",
+                                    "Nastal interní problém při přenosu, zkuste to znovu.");
+                        });
                     }
 
-                    boolean fileSuccess = true;
-                    targetAbsolutPath = packageAbsolutePath.resolve(leftItem.getRelativePath());
-                    try {
-                        if (targetAbsolutPath.getParent() != null) {
-                            Files.createDirectories(targetAbsolutPath.getParent());
+                } else {
+                    for (ComparedItemOperItemRowModel row : filesToBackup) {
+
+                        if (isCancelled.get()) {
+                            wasCancelled = true;
+                            break;
                         }
 
-                        // proces kopírování souboru
-                        copyFileWithProgress(sourceAbsolutPath, targetAbsolutPath,
-                                globalProcessedBytes, totalBytes,
-                                currentFileRelativePath,
-                                callback, isCancelled);
+                        FileItemModel leftItem = row.getLeftItem();
+                        Path sourceAbsolutPath = leftItem.getFileAbsolutePath();
+                        String currentFileRelativePath = leftItem.getRelativePath().toString();
+
+                        if (!Files.isReadable(sourceAbsolutPath)) {
+                            callback.onItemCompleted(false, row);
+                            continue;
+                        }
+
+                        boolean fileSuccess = true;
+                        targetAbsolutPath = packageAbsolutePath.resolve(leftItem.getRelativePath());
+                        try {
+                            if (targetAbsolutPath.getParent() != null) {
+                                Files.createDirectories(targetAbsolutPath.getParent());
+                            }
+
+                            // proces kopírování souboru
+                            copyFileWithProgress(sourceAbsolutPath, targetAbsolutPath,
+                                    globalProcessedBytes, totalBytes,
+                                    currentFileRelativePath,
+                                    callback, isCancelled);
 
 
-                        if (!isCancelled.get()) {
-                            BackupDatabaseDTO copiedItem = new BackupDatabaseDTO(
-                                    targetAbsolutPath.toString(),
-                                    leftItem.getRelativePath().toString(),
-                                    leftItem.getFileSize(),
-                                    leftItem.getLastModified(),
-                                    packName
-                            );
+                            if (!isCancelled.get()) {
+                                BackupDatabaseDTO copiedItem = new BackupDatabaseDTO(
+                                        targetAbsolutPath.toString(),
+                                        leftItem.getRelativePath().toString(),
+                                        leftItem.getFileSize(),
+                                        leftItem.getLastModified(),
+                                        packName
+                                );
 
 
-                            recordsToDatabase.add(copiedItem);;
+                                recordsToDatabase.add(copiedItem);;
 
-                            successfullyPackagedCount++;
-                            processedFileCount++;
-                            globalProcessedBytes += leftItem.getFileSize(); // Přidáme velikost souboru do celku
+                                successfullyPackagedCount++;
+                                processedFileCount++;
+                                globalProcessedBytes += leftItem.getFileSize(); // Přidáme velikost souboru do celku
 
-                            callback.onItemCompleted(true, row);
-                        } else {
-                            // Pokud bylo kopírování přerušeno, smažeme nekompletní soubor
-                            isBrokenByCancel = true;
-                            wasCancelled = true;
-                            Files.deleteIfExists(targetAbsolutPath);
-                            fileSuccess = false;
+                                callback.onItemCompleted(true, row);
+                            } else {
+                                // Pokud bylo kopírování přerušeno, smažeme nekompletní soubor
+                                isBrokenByCancel = true;
+                                wasCancelled = true;
+                                Files.deleteIfExists(targetAbsolutPath);
+                                fileSuccess = false;
+                                callback.onItemCompleted(false, row);
+                            }
+
+                        } catch (IOException e) {
+                            System.err.println("Chyba při zpracování: " + sourceAbsolutPath);
                             callback.onItemCompleted(false, row);
                         }
-
-
-
-                    } catch (IOException e) {
-                        System.err.println("Chyba při zpracování: " + sourceAbsolutPath);
-                        callback.onItemCompleted(false, row);
                     }
                 }
 
-                if (wasCancelled) {
-                    cleanUpBrokenFile(targetAbsolutPath);
 
-                    if (!recordsToDatabase.isEmpty()) {
+                /*-------------
+                    dokončení
+                -----------*/
+                if (wasCancelled) {
+                    if (useArchive) {//proces přerušen, není možné ponechat částečnou zálohu
+                        try {
+                            Files.deleteIfExists(packageAbsolutePath);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (!recordsToDatabase.isEmpty()) {
+                        cleanUpBrokenFile(targetAbsolutPath);
+
                         boolean keep = FilesUtility.keepPartialCopyDialogWindow(
                                 "Zálohování přerušeno",
                                 "Zálohování bylo přerušeno uživatelem. ",
@@ -162,8 +244,7 @@
                         } else {
                             FilesUtility.deleteDirectoryRecursively(packageAbsolutePath);
                         }
-                    } else {
-                        // Nebylo nic hotovo, smažeme celou složku balíčku
+                    } else {// Nebylo nic hotovo, smažeme celou složku balíčku
                         FilesUtility.deleteDirectoryRecursively(packageAbsolutePath);
                     }
                 }else {
