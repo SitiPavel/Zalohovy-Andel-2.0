@@ -38,7 +38,7 @@ public class EntryPasswordController {
                 BackupTask unlockedTask = encryptedBackupTask.unlockTask(pfPasswordInput.getText(),
                         jsonManager.getMapper());
                 WindowManager.findByActionAndClose(event);
-                appFrameController.showBackupOverview_Encrypt(unlockedTask, key);
+                appFrameController.showBackupOverview_Encrypt(unlockedTask, key, encryptedBackupTask);
             } else {
                 pfPasswordInput.setStyle("-fx-border-color: -fx-color-mark2;");
                 lbIncorrectPassword.setVisible(true);

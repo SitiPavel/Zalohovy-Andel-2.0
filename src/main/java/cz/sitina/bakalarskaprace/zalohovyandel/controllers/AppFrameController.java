@@ -2,6 +2,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
@@ -32,33 +33,33 @@ public class AppFrameController {
     @FXML
     public void showTasksOverview() {
         if (checkAndSaveUnsavedChanges()) {
-            loadView("TasksOverviewView.fxml", null, null);
+            loadView("TasksOverviewView.fxml", null, null, null);
         }
     }
 
     @FXML
     public void showCompareOverview(TaskModel taskModel) {
         if (checkAndSaveUnsavedChanges()) {
-            loadView("compareOverviewView.fxml", taskModel, null);
+            loadView("compareOverviewView.fxml", taskModel, null, null);
         }
     }
 
     @FXML
     public void showBackupOverview(TaskModel taskModel) {
         if (checkAndSaveUnsavedChanges()) {
-            loadView("backupOverviewView.fxml", taskModel, null);
+            loadView("backupOverviewView.fxml", taskModel, null, null);
         }
     }
 
-    public void showBackupOverview_Encrypt(TaskModel taskModel, SecretKey key) {
+    public void showBackupOverview_Encrypt(TaskModel taskModel, SecretKey key, EncryptedBackupTask encryptedBackupTask) {
         if (checkAndSaveUnsavedChanges()) {
-            loadView("backupOverviewView.fxml", taskModel, key);
+            loadView("backupOverviewView.fxml", taskModel, key, encryptedBackupTask);
         }
     }
 
 
     // načítání jednotlivích obrazovek
-    private void loadView(String fxml, TaskModel taskModel, SecretKey key) {
+    private void loadView(String fxml, TaskModel taskModel, SecretKey key, EncryptedBackupTask encryptedBackupTask) {
         try {
             String path = "/cz/sitina/bakalarskaprace/zalohovyandel/fxml/" + fxml;
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
@@ -84,7 +85,7 @@ public class AppFrameController {
                         BTC.setTaskRepository(taskRepository);
                         BTC.setTaskModel(bt);
                         BTC.setAppFrameController(this);
-                        BTC.setSessionKey(key);
+                        BTC.setEncryptObjects(key, encryptedBackupTask);
                         BTC.loadView();
                     }
 

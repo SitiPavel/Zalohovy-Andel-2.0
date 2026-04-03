@@ -10,6 +10,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.GuiOperationFilte
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.repositories.TaskRepository;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.*;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.DatabaseManager;
@@ -61,6 +62,7 @@ public class BackupTaskController implements TaskController {
     private TreeTableGuiModify treeTableGuiModify = new TreeTableGuiModify();
     private TreeTableBuilderService treeBuilder = new TreeTableBuilderService();
 
+    private EncryptedBackupTask encryptedBackupTask;
     private SecretKey sessionKey;
 
 
@@ -411,7 +413,10 @@ public class BackupTaskController implements TaskController {
 
     @FXML //
     private void showTaskOverviewGUI(ActionEvent event) {
+        sessionKey = null;
         appFrameController.showTasksOverview();
+        originBackupTask = null;
+        editableBackupTask = null;
     }
 
     @FXML
@@ -677,7 +682,19 @@ public class BackupTaskController implements TaskController {
     }
 
     public void saveChanges() {
-        this.originBackupTask.updateBackupTask( editableBackupTask);
+        if (encryptedBackupTask != null && sessionKey != null) {
+            try {
+                this.encryptedBackupTask.updateEncryptedTask(editableBackupTask, sessionKey);
+            } catch (Exception e) {
+                ErrorUtility.getInstance("Chyba uložení",
+                        "Nastala nečekávaá chyba při uložení nastavení této úlohy.",
+                        "Chyba mohla nastat při ukládání úlohy nastavení nebo při šifrování citlivích " +
+                                "informací této úlohy");
+            }
+
+        } else {
+            this.originBackupTask.updateBackupTask( editableBackupTask);
+        }
         isDirtyFlag.set(false);
     }
 
@@ -752,6 +769,7 @@ public class BackupTaskController implements TaskController {
         this.originBackupTask = backupTask;
         this.editableBackupTask = new BackupTask(backupTask);
 
+        imgTypeOfBackup.setImage(setRightBackupTypeIcon());
 
         Tooltip ttSourcePath = utility.createToolTip_300ms(lbSourceFolderPath.getText());
         lbSourceFolderPath.setTooltip(ttSourcePath);
@@ -759,6 +777,18 @@ public class BackupTaskController implements TaskController {
         lbDestinationFolderPath.setTooltip(ttDestinationPath);
 
         setFastFiltersImg();
+    }
+
+    private Image setRightBackupTypeIcon() {
+        if (originBackupTask.isCompressed() && originBackupTask.isEncrypted()) {
+            return iconManager.getBackupTask_Com_Enc_200x200();
+        } else if (!originBackupTask.isCompressed() && originBackupTask.isEncrypted()) {
+            return iconManager.getBackupTask_X_Enc_200x200();
+        }else if (originBackupTask.isCompressed() && !originBackupTask.isEncrypted()) {
+            return iconManager.getBackupTask_Com_X_200x200();
+        } else {
+            return iconManager.getBackupTask_200x200();
+        }
     }
 
 
@@ -770,7 +800,8 @@ public class BackupTaskController implements TaskController {
         this.appFrameController = appFrameController;
     }
 
-    public void setSessionKey(SecretKey sessionKey) {
+    public void setEncryptObjects(SecretKey sessionKey, EncryptedBackupTask encryptedBackupTask) {
         this.sessionKey = sessionKey;
+        this.encryptedBackupTask = encryptedBackupTask;
     }
 }

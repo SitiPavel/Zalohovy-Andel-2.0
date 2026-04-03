@@ -11,9 +11,10 @@ public class IconManagerUtility {
     private final String path_visualObjects = "/cz/sitina/bakalarskaprace/zalohovyandel/images/visualObjects/";
     private final String path_icons = "/cz/sitina/bakalarskaprace/zalohovyandel/images/icons/";
     private String path_iconsSmall =  "/cz/sitina/bakalarskaprace/zalohovyandel/images/iconsSmall/";
+    private String path_largeIcon =  "/cz/sitina/bakalarskaprace/zalohovyandel/images/largeIcon/";
 
     //**********************************/
-    // typy záloh
+    // strategie porovnání
     private final Image biDirectionalSync =
             new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_visualObjects + "biDirectionalSync.png")));
     private final Image oneWayLeftToRight =
@@ -24,6 +25,7 @@ public class IconManagerUtility {
             new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_visualObjects + "mirroringLeftToRight.png")));
     private final Image mirroringRightToLeft =
             new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_visualObjects + "mirroringRightToLeft.png")));
+
 
     //**********************************/
     // typy práce u zálohy
@@ -96,6 +98,19 @@ public class IconManagerUtility {
             new Image(getClass().getResourceAsStream(path_iconsSmall + "backupTask_TableIcon_Com_X.png"));
     private final Image backupTask_TableIcon_X_Enc =
             new Image(getClass().getResourceAsStream(path_iconsSmall + "backupTask_TableIcon_X_Enc.png"));
+
+
+    //**********************************/
+    // task kategorie velké = 200x200
+
+    private final Image backupTask_200x200 =
+            new Image(getClass().getResourceAsStream(path_largeIcon + "backupTask_200x200.png"));
+    private final Image backupTask_Com_X_200x200 =
+            new Image(getClass().getResourceAsStream(path_largeIcon + "backupTask_Com_X_200x200.png"));
+    private final Image backupTask_X_Enc_200x200 =
+            new Image(getClass().getResourceAsStream(path_largeIcon + "backupTask_X_Enc_200x200.png"));
+    private final Image backupTask_Com_Enc_200x200 =
+            new Image(getClass().getResourceAsStream(path_largeIcon + "backupTask_Com_Enc_200x200.png"));
 
 
     //**********************************/
@@ -440,5 +455,21 @@ public class IconManagerUtility {
 
     public Image getBackupTask_TableIcon_X_Enc() {
         return backupTask_TableIcon_X_Enc;
+    }
+
+    public Image getBackupTask_200x200() {
+        return backupTask_200x200;
+    }
+
+    public Image getBackupTask_Com_X_200x200() {
+        return backupTask_Com_X_200x200;
+    }
+
+    public Image getBackupTask_X_Enc_200x200() {
+        return backupTask_X_Enc_200x200;
+    }
+
+    public Image getBackupTask_Com_Enc_200x200() {
+        return backupTask_Com_Enc_200x200;
     }
 }

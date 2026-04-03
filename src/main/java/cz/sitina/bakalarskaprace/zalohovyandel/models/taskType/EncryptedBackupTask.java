@@ -42,7 +42,7 @@ public class EncryptedBackupTask extends TaskModel {
 
         this.creationDate = plainTask.getCreationDate();
         this.isCompressed = plainTask.isCompressed();
-        this.rootFolderPathStr = plainTask.getRootBackupPath(); /// null nutno opravit
+        this.rootFolderPathStr = plainTask.getRootBackupPath();
 
         // generování soly a inicializačního vektoru
         this.cryptoSalt = CryptoManager.generateRandomBytes(16);
@@ -50,6 +50,19 @@ public class EncryptedBackupTask extends TaskModel {
 
         this.passwordHash = CryptoManager.createPasswordHash(userPassword, cryptoSalt);
         SecretKey key =CryptoManager.deriveKey(userPassword.toCharArray(), cryptoSalt);
+
+        ObjectMapper mapper = jsonManager.getMapper();
+        String plainTaskJson = mapper.writeValueAsString(plainTask);
+        this.encryptedPayloadBase64 = CryptoManager.encryptText(plainTaskJson, key, this.cryptoIv);
+
+    }
+
+    //uloží nová viditelná nastavení a zbytek zašifruje a uloží
+    public void updateEncryptedTask(BackupTask plainTask, SecretKey key) throws Exception {
+        this.name = plainTask.getName();
+        this.description = plainTask.getDescription();
+
+        this.cryptoIv = CryptoManager.generateRandomBytes(16);
 
         ObjectMapper mapper = jsonManager.getMapper();
         String plainTaskJson = mapper.writeValueAsString(plainTask);

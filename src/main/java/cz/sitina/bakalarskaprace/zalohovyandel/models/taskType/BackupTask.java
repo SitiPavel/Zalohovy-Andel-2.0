@@ -44,6 +44,8 @@ public class BackupTask extends TaskModel {
 
     public BackupTask(BackupTask source) {
         super(source);
+        this.isCompressed = source.isCompressed();
+        this.isEncrypted = source.isEncrypted();
         this.rootFilteredFolders_Source = new ArrayList<>(source.rootFilteredFolders_Source);
         this.rootBackupPath = source.rootBackupPath;
         this.backupDatabasePath = source.backupDatabasePath;
@@ -53,6 +55,8 @@ public class BackupTask extends TaskModel {
 
     public void updateBackupTask(BackupTask task) {
         super.updateTaskModel(task);
+        this.isCompressed = task.isCompressed();
+        this.isEncrypted = task.isEncrypted();
         this.rootFilteredFolders_Source = new ArrayList<>(task.rootFilteredFolders_Source);
         this.rootBackupPath = task.rootBackupPath;
         this.backupDatabasePath = task.backupDatabasePath;
