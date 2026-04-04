@@ -19,10 +19,11 @@ import java.nio.file.Path;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javax.crypto.SecretKey;
 import java.time.LocalTime;
 import java.util.List;
 
-public class RestoreCopyProcessController extends CopyProcessController{
+public class RecoveryCopyProcessController extends CopyProcessController{
 
 
     // Servisy
@@ -36,7 +37,7 @@ public class RestoreCopyProcessController extends CopyProcessController{
     private String selectedPackage;
 
 
-    public void executeProcess(BackupTask originTaskModel, BackupTask editedTaskModel,
+    public void executeProcess(BackupTask originTaskModel, BackupTask editedTaskModel, SecretKey secretKey,
                                List<BackupDatabaseDTO> foundDtoItems, Path targetDirectory,
                                String selectedPackage) {
 
@@ -59,6 +60,7 @@ public class RestoreCopyProcessController extends CopyProcessController{
                 recoveryProcessService.executeRecovery(
                         foundDtoItems,
                         targetDirectory,
+                        secretKey,
                         new FilesUtility.ProgressCallback() {
                             private long lastTime = startTime;
                             private long lastBytes = 0;

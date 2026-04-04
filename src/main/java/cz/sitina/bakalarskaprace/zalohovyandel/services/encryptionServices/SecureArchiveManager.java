@@ -3,6 +3,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services.encryptionServices;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.FilesUtility;
 
 import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -14,6 +15,7 @@ import java.nio.file.Path;
 import java.util.function.Supplier;
 import java.util.zip.CheckedOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class SecureArchiveManager implements AutoCloseable{
@@ -30,7 +32,7 @@ public class SecureArchiveManager implements AutoCloseable{
     private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
 
     /**
-     * Konstruktor sestaví datové potrubí: Disk <- Šifrování <- (Volitelně) Komprese
+     * Konstruktor sestaví datové potrubí pro zálohu: Disk <- Šifrování <- (Volitelně) Komprese
      */
     public SecureArchiveManager(Path targetPackagePath, SecretKey secretKey, boolean useCompression) throws Exception {
         this.useCompression = useCompression;
@@ -62,8 +64,6 @@ public class SecureArchiveManager implements AutoCloseable{
 
         this.activeTopStream = currentStream;
     }
-
-
 
     public void addFile(Path sourceAbsolutePath, String relativePath,
                         long alreadyProcessedGlobal, long totalBytes,

@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import javax.crypto.SecretKey;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,6 +44,8 @@ public class DataRecoverySettingsController {
 
     private Path userSelectedPath;
     private String selectedPackage;
+
+    private SecretKey secretKey;
 
 
     private int maxLettersCount = 150;
@@ -88,12 +91,13 @@ public class DataRecoverySettingsController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass()
                     .getResource("/cz/sitina/bakalarskaprace/zalohovyandel/fxml/windows/copyProcessWindow.fxml"));
-            RestoreCopyProcessController controller = new RestoreCopyProcessController();
+            RecoveryCopyProcessController controller = new RecoveryCopyProcessController();
             loader.setController(controller);
             loader.load(); // Toto zavolá metodu inicialize a nastaví controler podle FXML
             controller.setFullRestoreTarget(fullRestoreTarget.toString());
-            controller.executeProcess(originBackupTask, editedBackupTask,
+            controller.executeProcess(originBackupTask, editedBackupTask, secretKey,
                     foundDtoItems, userSelectedPath, selectedPackage);
+
 
 
             String title =  "Obnova souborů";
@@ -101,6 +105,7 @@ public class DataRecoverySettingsController {
 
             copyProcessStage.setOnCloseRequest(e -> {
                 controller.cancelAction();
+                secretKey = null;
             });
 
 
@@ -211,9 +216,10 @@ public class DataRecoverySettingsController {
         return  (guiName + "   " + guiDate + "   " + guiTime);
     }
 
-    public void setTasks(BackupTask originBackupTask, BackupTask editedTaskModel) {
+    public void setTasks(BackupTask originBackupTask, BackupTask editedTaskModel, SecretKey secretKey) {
         this.originBackupTask = originBackupTask;
         this.editedBackupTask = editedTaskModel;
+        this.secretKey = secretKey;
     }
 
 

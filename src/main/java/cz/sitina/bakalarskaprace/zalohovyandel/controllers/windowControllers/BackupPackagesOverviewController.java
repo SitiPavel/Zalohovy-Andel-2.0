@@ -16,6 +16,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.FlowPane;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -32,6 +33,8 @@ public class BackupPackagesOverviewController {
     private BackupTask originalBackupTask;
     private BackupTask editedBackupTask;
     private String selectedPackage;
+
+    private SecretKey secretKey;
 
     @FXML
     private void initialize() {
@@ -60,15 +63,16 @@ public class BackupPackagesOverviewController {
 
     @FXML
     private void closeWindow(ActionEvent event) {
-
+        secretKey = null;
         WindowManager.findByActionAndClose(event);
     }
 
-    public void setTasks(BackupTask originBackupTask, BackupTask editedTaskModel) {
+    public void setTasks(BackupTask originBackupTask, BackupTask editedTaskModel, SecretKey secretKey) {
         this.originalBackupTask = originBackupTask;
         this.editedBackupTask = editedTaskModel;
         this.absolutDatabasePath = originBackupTask.getBackupDatabasePath();
         this.absolutRootFolder = originBackupTask.getRootBackupPath();
+        this.secretKey = secretKey;
 
         try (DatabaseManager databaseManager = new DatabaseManager(absolutDatabasePath,null)) {
             allPackages = databaseManager.getAllPackages();
@@ -171,7 +175,7 @@ public class BackupPackagesOverviewController {
             FXMLLoader loader = WindowManager.loadFXML("DataRecaverySetWindow.fxml");
             DataRecoverySettingsController controller = loader.getController();
             controller.loadWindow(packageName, isFullRecovery, absolutRootFolder, absolutDatabasePath,selectedPackage);
-            controller.setTasks(originalBackupTask,editedBackupTask);
+            controller.setTasks(originalBackupTask,editedBackupTask, secretKey);
 
             WindowManager.openNewWindowAutoSized(loader, "DataRecaverySetWindow");
         } catch (IOException e) {
@@ -181,5 +185,6 @@ public class BackupPackagesOverviewController {
             e.printStackTrace();
         }
     }
+
 
 }
