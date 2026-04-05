@@ -13,6 +13,8 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class JournalItemController {
@@ -56,6 +58,9 @@ public class JournalItemController {
     }
 
     public void setItem(JournalItemDataPack dataPack) {
+        if (dataPack == null) {
+            return;
+        }
         this.dataPack = dataPack;
         // nadpis
         imgTitleProcessStatus.setImage(GuiUtility.getIconProcessStatus(dataPack.getFinishProcesStatus()));
@@ -82,6 +87,9 @@ public class JournalItemController {
     }
 
     public void setItem(JournalBackupItemDataPack dataPack) {
+        if (dataPack == null) {
+            return;
+        }
         this.dataPack = dataPack;
         // nadpis
         imgTitleProcessStatus.setImage(GuiUtility.getIconProcessStatus(dataPack.getFinishProcesStatus()));
@@ -123,6 +131,9 @@ public class JournalItemController {
     }
 
     private String getGuiPackageName(String status) {
+        if (dataPack.getLeftRootPath().equals("Plná obnova dat")) {
+            return dataPack.getLeftRootPath();
+        }
         String[] nameParts = dataPack.getLeftRootPath().split("_");
         String guiName;
 
@@ -131,11 +142,13 @@ public class JournalItemController {
         } else {
             guiName = "Přírůstek " + nameParts[1];
         }
+        // odstraníme .zip.enc
+        String[] separateDate = nameParts[2].split("\\.");
 
 
         return guiName + "  " +
-                Utility.getDateOnly(nameParts[2]) + "  " +
-                Utility.getTimeOnly(nameParts[2]);
+                Utility.getDateOnly(separateDate[0]) + "  " +
+                Utility.getTimeOnly(separateDate[0]);
     }
 
     private String getStatusName(FinishProcesStatus status) {
@@ -154,7 +167,9 @@ public class JournalItemController {
 
     private void refreshErrorContentList() {
         lvJournalContainer.getItems().clear();
-        lvJournalContainer.getItems().addAll(copyOfEditedJournal);
+        List<JournalItemDataPack> reversedList = new ArrayList<>(copyOfEditedJournal);
+        Collections.reverse(reversedList);
+        lvJournalContainer.getItems().addAll(reversedList);
     }
 
     public void setCopyOfEditedJournal(List<JournalItemDataPack> copyOfEditedJournal) {

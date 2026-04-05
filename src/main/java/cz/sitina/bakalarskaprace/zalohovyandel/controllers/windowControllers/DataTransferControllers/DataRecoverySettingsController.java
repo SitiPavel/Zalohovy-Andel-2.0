@@ -2,6 +2,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.Da
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.DatabaseManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
@@ -46,6 +47,7 @@ public class DataRecoverySettingsController {
     private String selectedPackage;
 
     private SecretKey secretKey;
+    private EncryptedBackupTask encryptedBackupTask;
 
 
     private int maxLettersCount = 150;
@@ -95,7 +97,8 @@ public class DataRecoverySettingsController {
             loader.setController(controller);
             loader.load(); // Toto zavolá metodu inicialize a nastaví controler podle FXML
             controller.setFullRestoreTarget(fullRestoreTarget.toString());
-            controller.executeProcess(originBackupTask, editedBackupTask, secretKey,
+            controller.executeProcess(originBackupTask, editedBackupTask,
+                    encryptedBackupTask, secretKey,
                     foundDtoItems, userSelectedPath, selectedPackage);
 
 
@@ -216,9 +219,11 @@ public class DataRecoverySettingsController {
         return  (guiName + "   " + guiDate + "   " + guiTime);
     }
 
-    public void setTasks(BackupTask originBackupTask, BackupTask editedTaskModel, SecretKey secretKey) {
+    public void setTasks(BackupTask originBackupTask, BackupTask editedTaskModel,
+                         EncryptedBackupTask encryptedBackupTask, SecretKey secretKey) {
         this.originBackupTask = originBackupTask;
         this.editedBackupTask = editedTaskModel;
+        this.encryptedBackupTask = encryptedBackupTask;
         this.secretKey = secretKey;
     }
 

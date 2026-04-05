@@ -71,7 +71,11 @@ public class JournalController {
                 if (empty) {
                     setGraphic(null);
                 } else {
+
                     if (this.getItem() instanceof JournalBackupItemDataPack backupReport){
+                        if (backupReport.getLeftRootPath() == null) {
+                            backupReport.setLeftRootPath("Plná obnova dat");
+                        }
                         itemController.setItem(backupReport);
                     } else {
                         itemController.setItem(this.getItem());

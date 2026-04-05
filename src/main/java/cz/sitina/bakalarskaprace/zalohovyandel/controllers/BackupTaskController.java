@@ -522,7 +522,7 @@ public class BackupTaskController implements TaskController {
         try {
             FXMLLoader loader  = loadFXML("BackupPackagesOverview.fxml");
             BackupPackagesOverviewController controller = loader.getController();
-            controller.setTasks(originBackupTask, originBackupTask, sessionKey);
+            controller.setTasks(originBackupTask, editableBackupTask, encryptedBackupTask, sessionKey);
 
 
             WindowManager.openNewWindowAutoSized(loader, "Přehled datových balíčků");

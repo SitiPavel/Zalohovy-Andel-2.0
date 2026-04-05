@@ -5,6 +5,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BackupDatabaseDTO
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.JournalBackupItemDataPack;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.FinishProcesStatus;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.DataTransferService.RecoveryProcessService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.FilesUtility;
 import javafx.animation.KeyFrame;
@@ -35,9 +36,13 @@ public class RecoveryCopyProcessController extends CopyProcessController{
     private BackupTask originTaskModel;
     private BackupTask editedTaskModel;
     private String selectedPackage;
+    private SecretKey secretKey;
+    private EncryptedBackupTask encryptedBackupTask;
 
 
-    public void executeProcess(BackupTask originTaskModel, BackupTask editedTaskModel, SecretKey secretKey,
+
+    public void executeProcess(BackupTask originTaskModel, BackupTask editedTaskModel,
+                               EncryptedBackupTask encryptedBackupTask, SecretKey secretKey,
                                List<BackupDatabaseDTO> foundDtoItems, Path targetDirectory,
                                String selectedPackage) {
 
@@ -46,6 +51,8 @@ public class RecoveryCopyProcessController extends CopyProcessController{
         this.targetDirectory = targetDirectory;
         this.totalFilesToProcess = foundDtoItems.size();
         this.selectedPackage = selectedPackage;
+        this.encryptedBackupTask = encryptedBackupTask;
+        this.secretKey = secretKey;
 
         speedSeries.getData().clear();
         speedSeries.getData().add(new XYChart.Data<>(0, 0));
@@ -167,6 +174,11 @@ public class RecoveryCopyProcessController extends CopyProcessController{
         long durationMillis = System.currentTimeMillis() - startTime;
         LocalTime processDuration = LocalTime.ofSecondOfDay(durationMillis / 1000);
 
+        //Jesrliže je selectedPackage null = je vybraná plná obnova
+        if (selectedPackage == null) {
+            selectedPackage = "Plná obnova dat";
+        }
+
         // Tvorba žurnálu pro obnovu. Odvozuji parametry podle toho, co vyžaduje tvůj JournalItemDataPack.
         JournalBackupItemDataPack reportData = new JournalBackupItemDataPack(
                 dateTimeOfStart, processDuration, editedTaskModel.getCompareStrategy(),
@@ -177,7 +189,18 @@ public class RecoveryCopyProcessController extends CopyProcessController{
 
         editedTaskModel.getJurnalInfoList().add(reportData);
         originTaskModel.getJurnalInfoList().add(reportData);
-        jsonService.updateTask_saveOldSave(originTaskModel);
+        if (originTaskModel.isEncrypted()) {
+            try {
+                encryptedBackupTask.updateEncryptedTask(originTaskModel, secretKey);
+                jsonService.updateTask_saveOldSave(encryptedBackupTask);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            jsonService.updateTask_saveOldSave(originTaskModel);
+        }
+
+        secretKey = null;
 
         if (canBeResetTreeTable != null) {
             canBeResetTreeTable.run();

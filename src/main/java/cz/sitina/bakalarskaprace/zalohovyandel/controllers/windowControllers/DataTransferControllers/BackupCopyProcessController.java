@@ -176,6 +176,7 @@ public class BackupCopyProcessController extends CopyProcessController{
         if (originTaskModel.isEncrypted()) {
             try {
                 encryptedTask.updateEncryptedTask(originTaskModel, secretKey);
+                jsonService.updateTask_saveOldSave(encryptedTask);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -183,6 +184,7 @@ public class BackupCopyProcessController extends CopyProcessController{
             jsonService.updateTask_saveOldSave(originTaskModel);
         }
         canBeResetTreeTable.run();
+        secretKey = null;
     }
 
     @FXML

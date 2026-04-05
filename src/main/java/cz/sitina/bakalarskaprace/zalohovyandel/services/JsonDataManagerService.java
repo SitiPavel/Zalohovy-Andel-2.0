@@ -95,11 +95,14 @@ public class JsonDataManagerService {
     public void updateTask_saveOldSave(TaskModel updatedTask) {
         List<TaskModel> taskList = loadAllTasks();
         boolean found = false;
-        for (TaskModel taskModel : taskList) {
-            if (taskModel.getId() == updatedTask.getId()) {
-                taskModel.updateTaskModel(updatedTask);
-                found = true;
+        // najdeme index a vyměníme starý za zcela nový objekt
+        for (int i = 0; i < taskList.size(); i++) {
+            if (taskList.get(i).getId() == updatedTask.getId()) {
 
+                taskList.set(i, updatedTask);
+
+                found = true;
+                break; // Už jsme ho našli, nemusíme prohledávat zbytek
             }
         }
         if (found) {

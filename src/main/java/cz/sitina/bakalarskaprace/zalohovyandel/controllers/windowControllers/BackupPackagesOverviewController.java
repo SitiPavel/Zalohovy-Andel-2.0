@@ -3,6 +3,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.components.BackupPackageToggleButtonController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.DataTransferControllers.DataRecoverySettingsController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.DatabaseManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
@@ -34,6 +35,7 @@ public class BackupPackagesOverviewController {
     private BackupTask editedBackupTask;
     private String selectedPackage;
 
+    private EncryptedBackupTask encryptedBackupTask;
     private SecretKey secretKey;
 
     @FXML
@@ -67,11 +69,13 @@ public class BackupPackagesOverviewController {
         WindowManager.findByActionAndClose(event);
     }
 
-    public void setTasks(BackupTask originBackupTask, BackupTask editedTaskModel, SecretKey secretKey) {
+    public void setTasks(BackupTask originBackupTask, BackupTask editedTaskModel,
+                         EncryptedBackupTask encryptedBackupTask, SecretKey secretKey) {
         this.originalBackupTask = originBackupTask;
         this.editedBackupTask = editedTaskModel;
         this.absolutDatabasePath = originBackupTask.getBackupDatabasePath();
         this.absolutRootFolder = originBackupTask.getRootBackupPath();
+        this.encryptedBackupTask = encryptedBackupTask;
         this.secretKey = secretKey;
 
         try (DatabaseManager databaseManager = new DatabaseManager(absolutDatabasePath,null)) {
@@ -175,7 +179,7 @@ public class BackupPackagesOverviewController {
             FXMLLoader loader = WindowManager.loadFXML("DataRecaverySetWindow.fxml");
             DataRecoverySettingsController controller = loader.getController();
             controller.loadWindow(packageName, isFullRecovery, absolutRootFolder, absolutDatabasePath,selectedPackage);
-            controller.setTasks(originalBackupTask,editedBackupTask, secretKey);
+            controller.setTasks(originalBackupTask,editedBackupTask, encryptedBackupTask, secretKey);
 
             WindowManager.openNewWindowAutoSized(loader, "DataRecaverySetWindow");
         } catch (IOException e) {

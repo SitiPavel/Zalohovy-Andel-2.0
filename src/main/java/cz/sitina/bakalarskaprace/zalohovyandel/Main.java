@@ -116,7 +116,10 @@ public class Main extends Application {
         jsonManager.saveAllTasks_rewriteOldSave(cistyList);
     }
 
+
     public static void main(String[] args) {
+        java.util.logging.Logger.getLogger("javafx.fxml").setLevel(java.util.logging.Level.SEVERE);
+
         launch();
     }
 }
