@@ -124,9 +124,7 @@ public class BackupCopyProcessController extends CopyProcessController{
         long now = System.currentTimeMillis();
         boolean isFinished = (totalBytes > 0) && (bytesProcessed == totalBytes);
 
-        Platform.runLater(() -> lbFileInProcess.setText(currentFile));
         if (now - lastTime > 250 || isFinished) {
-            Platform.runLater(() -> lbFileInProcess.setText(currentFile));
 
             double timeDelta = (now - lastTime) / 1000.0;
 
@@ -135,12 +133,20 @@ public class BackupCopyProcessController extends CopyProcessController{
                 double speedPerSecond = (deltaData / 1024.0 / 1024.0) / timeDelta;
                 double percentDone = ((double) bytesProcessed / totalBytes) * 100;
 
+                if (smoothedSpeedPerSecond == 0) {
+                    smoothedSpeedPerSecond = speedPerSecond;
+                } else {
+                    // Váhy: 10 % nová okamžitá rychlost, 90 % stará stabilní rychlost
+                    smoothedSpeedPerSecond = (0.10 * speedPerSecond) + (0.90 * smoothedSpeedPerSecond);
+                }
+
                 long remainingBytes = totalBytes - bytesProcessed;
-                double expectedTime = (speedPerSecond > 0) ? (remainingBytes / 1024.0 / 1024.0) / speedPerSecond : 0;
+                double expectedTime = (smoothedSpeedPerSecond > 0) ? (remainingBytes / 1024.0 / 1024.0) / smoothedSpeedPerSecond : 0;
 
                 Platform.runLater(() -> {
+                    lbFileInProcess.setText(currentFile);
                     lbProcessedCount.setText(String.valueOf(processedFileCount));
-                    speedSeries.getData().add(new XYChart.Data<>(percentDone, speedPerSecond));
+                    speedSeries.getData().add(new XYChart.Data<>(percentDone, smoothedSpeedPerSecond));
                     lbExpectedTime.setText(utility.formatDuration((long) expectedTime * 1000));
                 });
             }

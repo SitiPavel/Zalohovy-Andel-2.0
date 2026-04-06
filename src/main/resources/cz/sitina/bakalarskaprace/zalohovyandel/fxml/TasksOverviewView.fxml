@@ -35,7 +35,7 @@
                   <HBox alignment="CENTER" prefHeight="59.0" prefWidth="120.0" styleClass="layout_justifyContent">
                      <children>
                         <Label styleClass="coloredBoltHeader0" text="Nová úloha &gt;&gt; " />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createManualSync" prefHeight="50.0" prefWidth="50.0">
+                        <Button fx:id="btnManualSync" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createManualSync" prefHeight="50.0" prefWidth="50.0">
                            <styleClass>
                               <String fx:value="toolBarButton" />
                               <String fx:value="modificator_snychronizationButton" />
@@ -51,7 +51,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createBackup" prefHeight="50.0" prefWidth="50.0">
+                        <Button fx:id="btnBackup" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createBackup" prefHeight="50.0" prefWidth="50.0">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -109,42 +109,6 @@
                </columnResizePolicy>
             </TableView>
             <HBox alignment="CENTER" prefHeight="240.0" prefWidth="70.0" styleClass="bottomBar" GridPane.columnSpan="3" GridPane.rowIndex="2">
-               <children>
-                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
-                     <children>
-                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../images/iconsSmall/manualSync_TabbleIcon.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                        <Label fx:id="lbLeftAddCount1" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
-                     </children>
-                     <padding>
-                        <Insets right="5.0" />
-                     </padding>
-                  </VBox>
-                  <VBox alignment="CENTER" prefHeight="47.0" prefWidth="16.0">
-                     <children>
-                        <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../images/iconsSmall/backupTask_TableIcon.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                        <Label fx:id="lbLeftAddCount2" alignment="CENTER" prefHeight="17.0" prefWidth="46.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
-                     </children>
-                     <padding>
-                        <Insets right="5.0" />
-                     </padding>
-                  </VBox>
-               </children>
                <padding>
                   <Insets top="5.0" />
                </padding>

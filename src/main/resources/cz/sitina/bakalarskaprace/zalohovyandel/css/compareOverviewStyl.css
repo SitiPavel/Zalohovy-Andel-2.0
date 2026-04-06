@@ -145,7 +145,7 @@
     -fx-background-color: -fx-colorFilter-Lite-25; /* Klasická modrá barva výběru */
     -fx-control-inner-background: -fx-color-primary2;
     -fx-border-color: -fx-color-textDark;
-    -fx-border-width: 2 0 2 0;
+    -fx-border-width: 1 0 1 0;
     -fx-border-style: solid;
 }
 .fileItemTable .tree-table-row-cell:selected .text {

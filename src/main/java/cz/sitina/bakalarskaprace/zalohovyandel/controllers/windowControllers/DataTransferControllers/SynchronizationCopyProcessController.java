@@ -73,6 +73,7 @@ public class SynchronizationCopyProcessController {
     private int errorCount = 0;
     private boolean isChartConfigured;
     int totalFilesToProcess = 0;
+    double smoothedSpeedPerSecond =0;
 
     /// žurnál info
     private LocalDateTime dateTimeOfStart = LocalDateTime.now();
@@ -199,6 +200,7 @@ public class SynchronizationCopyProcessController {
     // Pomocná metoda pro čistý kód (počítá rychlost a updatuje grafy)
     private boolean handleProgressUpdate(long bytesProcessed, long totalBytes, String currentFile, int processedFileCount,
                                          long lastTime, long lastBytes, int lastProcessedFileCount) {
+
         if (!isChartConfigured) {
             Platform.runLater(() -> {
                 if (totalBytes == 0) {
@@ -214,38 +216,53 @@ public class SynchronizationCopyProcessController {
         boolean isFinished = (totalBytes > 0) ? (bytesProcessed == totalBytes) : (processedFileCount == totalFilesToProcess);
 
         if (now - lastTime > 250 || isFinished) {
-            Platform.runLater(() -> lbFileInProcess.setText(currentFile));
-
             double timeDelta = (now - lastTime) / 1000.0;
 
             if (timeDelta > 0.001) {
-                double speedPerSecond;
+                double currentInstantSpeed;
                 double percentDone;
                 double expectedTime;
 
+                // 1. VÝPOČET SUROVÉ OKAMŽITÉ RYCHLOSTI (pro data nebo pro položky)
                 if (totalBytes > 0) {
                     long deltaData = bytesProcessed - lastBytes;
-                    speedPerSecond = (deltaData / 1024.0 / 1024.0) / timeDelta;
+                    currentInstantSpeed = (deltaData / 1024.0 / 1024.0) / timeDelta;
                     percentDone = ((double) bytesProcessed / totalBytes) * 100;
-                    long remainingBytes = totalBytes - bytesProcessed;
-                    expectedTime = (speedPerSecond > 0) ? (remainingBytes / 1024.0 / 1024.0) / speedPerSecond : 0;
                 } else {
                     long deltaData = processedFileCount - lastProcessedFileCount;
-                    speedPerSecond = deltaData / timeDelta;
-                    if (speedPerSecond > 0) {
-                        percentDone = ((double) processedFileCount / totalFilesToProcess) * 100;
-                        long remainingFiles = totalFilesToProcess - processedFileCount;
-                        expectedTime = remainingFiles / speedPerSecond;
-                    } else {
-                        percentDone = 100;
-                        expectedTime = 0;
-                    }
+                    currentInstantSpeed = deltaData / timeDelta;
+                    percentDone = (totalFilesToProcess > 0) ? ((double) processedFileCount / totalFilesToProcess) * 100 : 100;
                 }
 
+                // 2. MAGIE VYHLAZENÍ (EMA - klouzavý průměr)
+                if (smoothedSpeedPerSecond == 0.0 && currentInstantSpeed > 0) {
+                    smoothedSpeedPerSecond = currentInstantSpeed; // Při prvním průchodu vezmeme surovou hodnotu
+                } else {
+                    // 10 % váha aktuálního výkyvu, 90 % váha stabilní historie
+                    smoothedSpeedPerSecond = (0.10 * currentInstantSpeed) + (0.90 * smoothedSpeedPerSecond);
+                }
+
+                // 3. VÝPOČET ODHADOVANÉHO ČASU Z VYHLAZENÉ RYCHLOSTI
+                if (smoothedSpeedPerSecond > 0) {
+                    if (totalBytes > 0) {
+                        long remainingBytes = totalBytes - bytesProcessed;
+                        expectedTime = (remainingBytes / 1024.0 / 1024.0) / smoothedSpeedPerSecond;
+                    } else {
+                        long remainingFiles = totalFilesToProcess - processedFileCount;
+                        expectedTime = remainingFiles / smoothedSpeedPerSecond;
+                    }
+                } else {
+                    expectedTime = 0;
+                }
+
+                // 4. JEDINÉ VOLÁNÍ UI VLÁKNA - Vše posíláme najednou a plynule!
                 Platform.runLater(() -> {
+                    lbFileInProcess.setText(currentFile); // Přesunuto sem z vršku
                     lbProcessedCount.setText(String.valueOf(processedFileCount));
                     successCount = processedFileCount;
-                    updateSpeedChart(speedPerSecond, percentDone, expectedTime);
+
+                    // Do grafu posíláme vyhlazenou rychlost!
+                    updateSpeedChart(smoothedSpeedPerSecond, percentDone, expectedTime);
                 });
             }
 
@@ -273,9 +290,8 @@ public class SynchronizationCopyProcessController {
 
         speedSeries.getData().add(new XYChart.Data<>(percentDone, speedPerSecond));
         lbExpectedTime.setText(formatDuration((long) expectedTime * 1000));
-
-
     }
+
     private String formatDuration(long durationMillis) {
         long s = durationMillis / 1000;
         return String.format("%02d:%02d:%02d", s/3600, (s % 3600) / 60,  s % 60);

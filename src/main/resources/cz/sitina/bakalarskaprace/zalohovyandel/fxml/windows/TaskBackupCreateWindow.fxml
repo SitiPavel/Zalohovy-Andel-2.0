@@ -182,7 +182,7 @@
                               <Insets bottom="5.0" top="10.0" />
                            </VBox.margin>
                         </VBox>
-                        <VBox fx:id="vbPasswordContainer" prefHeight="200.0" prefWidth="100.0">
+                        <VBox fx:id="vbPasswordContainer" disable="true" prefHeight="200.0" prefWidth="100.0">
                            <children>
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
                                  <children>

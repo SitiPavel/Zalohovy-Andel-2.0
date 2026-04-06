@@ -26,8 +26,11 @@
                            <VBox.margin>
                               <Insets bottom="10.0" />
                            </VBox.margin>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
                         </Label>
-                        <HBox alignment="CENTER_RIGHT">
+                        <HBox alignment="CENTER_LEFT">
                            <children>
                               <Button mnemonicParsing="false" onAction="#deleteAllItems" text="Smazat vše">
                                  <styleClass>
@@ -38,7 +41,7 @@
                               </Button>
                            </children>
                            <VBox.margin>
-                              <Insets bottom="5.0" />
+                              <Insets bottom="5.0" left="10.0" />
                            </VBox.margin>
                         </HBox>
                         <ListView fx:id="lvJournalContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="300.0">

@@ -13,6 +13,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -47,6 +48,9 @@ public class TaskOverviewController {
     @FXML private TableColumn<TaskModel, String> taskColCreatedDate;
     @FXML private TableColumn<TaskModel, String> taskColDescription;
 
+    @FXML private Button btnManualSync;
+    @FXML private Button btnBackup;
+
 
 
 
@@ -57,6 +61,10 @@ public class TaskOverviewController {
         Label tablePlaceholder = new Label("Nejsou vytvořené úlohy!");
         tablePlaceholder.getStyleClass().add("DarkBoltHeader1");
         taskTable.setPlaceholder(tablePlaceholder);
+
+        btnManualSync.setTooltip(Utility.createToolTip_600ms("Vytvořit novou manuální synchronizaci."));
+        btnBackup.setTooltip(Utility.createToolTip_600ms("Vytvořit novou zálohovací úlohu."));
+
 
         // nastavení řádků
         taskTable.setRowFactory(tableView -> {

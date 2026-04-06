@@ -60,6 +60,7 @@ public abstract class CopyProcessController {
     protected int errorCount = 0;
     protected int totalFilesToProcess = 0;
     protected Task<Void> backupProcessTask;
+    protected double smoothedSpeedPerSecond = 0;
 
 
     protected Runnable canBeResetTreeTable;

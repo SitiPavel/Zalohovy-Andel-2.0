@@ -138,8 +138,41 @@ public class BackupTaskController implements TaskController {
     @FXML private Label lbPieChar_Right;
     @FXML private Label lbDestinationFolderPathContent;
 
+    @FXML private Button btnLeftRootFilter;
+    @FXML private Button btnShowOverview;
+    @FXML private Button btnStartRecapitulationForCopy;
+    @FXML private Button btnShowJurnal;
+    @FXML private Button btnShowBlockList;
+    @FXML private Button btnShowPackages;
+
+
     @FXML
     private void initialize() {
+        btnLeftRootFilter.setTooltip(Utility.createToolTip_600ms("Vyberte složky které má aplikace úplně přeskočit. " +
+                "Nebudou se skenovat ani porovnávat, což zrychlí proces. "));
+
+        btnCompareFolders.setTooltip(Utility.createToolTip_600ms("Porovnat zdrojovou s cílovou složku."));
+        btnSaveTask.setTooltip(Utility.createToolTip_600ms("Uložit nastavení této úlohy."));
+        btnShowOverview.setTooltip(Utility.createToolTip_600ms("Odejít zpět na přehled synchronizačních a zálohových " +
+                "úloh."));
+        btnStartRecapitulationForCopy.setTooltip(Utility.createToolTip_600ms("zálohovat porovnané složky."));
+        btnShowJurnal.setTooltip(Utility.createToolTip_600ms("Souhrn výsledků dokončených záloh."));
+        btnShowBlockList.setTooltip(Utility.createToolTip_600ms("Menu pro nastavení ignorovaných souborů. " +
+                "Tyto soubory budou v porovnání zobrazeny jako blokované a nebudou zahrnuty do synchronizace."));
+        btnShowPackages.setTooltip(Utility.createToolTip_600ms("Zobrazit historii záloh"));
+        lbPieChar_Right.setTooltip(Utility.createToolTip_600ms("Celková velikost dat k zápisu na pravou stranu."));
+
+
+        btnBlock.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení ignorovaných souborů. Tyto soubory" +
+                " nebudou zálohovány!"));
+        btnEqual.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení totožných souborů."));
+        btnUnknown.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení soborů u kterých aplikace nerozeznala vhodnou operaci."));
+
+        btnModified_right.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení upravených soborů které budou zálohovány jako nová verze. "));
+        btnAddItem_right.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení souborů které budou " +
+                "zálohovány."));
+
+
         leftColName.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getLeftItem().getFormatedName());
         leftColSize.setCellValueFactory(cellData ->

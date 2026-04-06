@@ -279,9 +279,22 @@
 }
 
 
+/* --------
+   toot tip
+-------*/
 
-
-
+.toolTip_Style1 {
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-color-textLight;
+    -fx-font-weight: bold;
+    -fx-background-color: -fx-color-darkBackground;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: -fx-color-primary1;
+    -fx-border-style: solid;
+    -fx-padding: 4px 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 7, 0, 0, 4);
+}
 
 /* --------
    styly sloupce

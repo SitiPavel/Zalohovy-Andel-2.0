@@ -37,7 +37,7 @@
                <children>
                   <HBox nodeOrientation="LEFT_TO_RIGHT" prefHeight="31.0" prefWidth="258.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sourceRootFilter" prefHeight="25.0" prefWidth="25.0" styleClass="FilterFolderPatchBtn">
+                        <Button fx:id="btnLeftRootFilter" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sourceRootFilter" prefHeight="25.0" prefWidth="25.0" styleClass="FilterFolderPatchBtn">
                            <graphic>
                               <ImageView fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -125,7 +125,7 @@
             </VBox>
             <VBox alignment="CENTER" minWidth="-Infinity" prefHeight="115.0" prefWidth="70.0" styleClass="CenterPanel" GridPane.columnIndex="2" GridPane.vgrow="NEVER">
                <children>
-                  <Button maxHeight="35.0" maxWidth="40.0" minHeight="35.0" minWidth="40.0" mnemonicParsing="false" onAction="#showTaskOverviewGUI" prefHeight="35.0" prefWidth="41.0" styleClass="modificator-hiden">
+                  <Button fx:id="btnShowOverview" maxHeight="35.0" maxWidth="40.0" minHeight="35.0" minWidth="40.0" mnemonicParsing="false" onAction="#showTaskOverviewGUI" prefHeight="35.0" prefWidth="41.0" styleClass="modificator-hiden">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -221,7 +221,7 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="120.0" styleClass="layout_justifyContent">
                      <children>
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startRecapitulationForCopy" prefHeight="50.0" prefWidth="50.0">
+                        <Button fx:id="btnStartRecapitulationForCopy" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startRecapitulationForCopy" prefHeight="50.0" prefWidth="50.0">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -238,7 +238,7 @@
                            </HBox.margin>
                         </Button>
                         <Region prefHeight="200.0" prefWidth="200.0" />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showJournal" prefHeight="50.0" prefWidth="50.0">
+                        <Button fx:id="btnShowJurnal" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showJournal" prefHeight="50.0" prefWidth="50.0">
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -261,7 +261,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="102.0" styleClass="layout_justifyContent">
                      <children>
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showBlockList" prefHeight="50.0" prefWidth="50.0">
+                        <Button fx:id="btnShowBlockList" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showBlockList" prefHeight="50.0" prefWidth="50.0">
                            <styleClass>
                               <String fx:value="toolBarButton" />
                               <String fx:value="toolBarButtonLite" />
@@ -275,7 +275,7 @@
                            </graphic>
                         </Button>
                         <Region prefHeight="200.0" prefWidth="200.0" />
-                        <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showPackages" prefHeight="50.0" prefWidth="50.0">
+                        <Button fx:id="btnShowPackages" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showPackages" prefHeight="50.0" prefWidth="50.0">
                            <styleClass>
                               <String fx:value="toolBarButton" />
                               <String fx:value="modificator_RestoreData" />
@@ -477,26 +477,6 @@
                   </VBox>
                   <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="47.0">
                      <children>
-                        <Button fx:id="btnEqual" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
-                           <graphic>
-                              <ImageView fx:id="imgEqual" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../images/icons/equal.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Label fx:id="lbEqualsCount" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="46.0" prefHeight="17.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
-                     </children>
-                     <HBox.margin>
-                        <Insets right="5.0" />
-                     </HBox.margin>
-                  </VBox>
-                  <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="47.0">
-                     <children>
                         <Button fx:id="btnModified_right" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
                            <graphic>
                               <ImageView fx:id="imgModified_right" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
@@ -510,6 +490,26 @@
                            </cursor>
                         </Button>
                         <Label fx:id="lbRightUpdateCount" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="46.0" prefHeight="17.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
+                     </children>
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="47.0" prefHeight="47.0">
+                     <children>
+                        <Button fx:id="btnEqual" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFastFilter" prefHeight="30.0" prefWidth="40.0" styleClass="bottomBarButton" textAlignment="CENTER">
+                           <graphic>
+                              <ImageView fx:id="imgEqual" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/icons/equal.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Label fx:id="lbEqualsCount" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="46.0" prefHeight="17.0" styleClass="lightMidText" text="0" VBox.vgrow="ALWAYS" />
                      </children>
                      <HBox.margin>
                         <Insets right="5.0" />

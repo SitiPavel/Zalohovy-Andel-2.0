@@ -2,6 +2,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -62,6 +63,7 @@ public class RootFolderFilterController {
     public void setRootPath(String path) {
         this.rootPath = path;
         lbRootPath.setText(rootPath);
+        lbRootPath.setTooltip(Utility.createToolTip_600ms(rootPath));
 
         // zíkání cest k souboru
         foundedFolders = fileScannerService.loadDirectSubfolders(Path.of(rootPath));

@@ -8,6 +8,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.BlockedTre
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableGuiModify;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -29,6 +30,9 @@ public class BlockedFoldersFilesOverviewController {
     @FXML private TreeTableColumn<BlockedFileTreeRow, Boolean> isExistPath;
     @FXML private TreeTableColumn<BlockedFileTreeRow, String> blockedFileClose;
 
+    @FXML private Button btnFindFolderPath;
+    @FXML private Button btnFindFilePath;
+
     private TaskModel taskModel;
     private TreeItem<BlockedFileTreeRow> rootItem;
     private Set<String> editableBlockList;
@@ -40,6 +44,9 @@ public class BlockedFoldersFilesOverviewController {
 
 
     public void initialize() {
+        btnFindFolderPath.setTooltip(Utility.createToolTip_600ms("Vyhledat složku"));
+        btnFindFilePath.setTooltip(Utility.createToolTip_600ms("Vyhledat soubor"));
+
         treeTableBlockedFiles.setShowRoot(false);
         treeTableBlockedFiles.setTreeColumn(blockedFileName);
         blockedFileName.setCellValueFactory(celldata ->

@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
@@ -162,11 +163,56 @@ public class ManualSyncController implements TaskController {
     @FXML private Label lbPieChar_Right;
 
 
+    @FXML private Button btnLeftRootFilter;
+    @FXML private Button btnSetingForFoldersCompare;
+    @FXML private Button btnShowOverview;
+    @FXML private Button btnStartSynchronization;
+    @FXML private Button btnShowJurnal;
+    @FXML private Button btnShowBlockList;
+    @FXML private Button btnRightRootFilter;
+
+
+
+
+
 
     public ManualSyncController(){}
 
     @FXML
     public void initialize() {
+        btnLeftRootFilter.setTooltip(Utility.createToolTip_600ms("Vyberte složky z levé strany, které má aplikace úplně přeskočit. " +
+                "Nebudou se skenovat ani porovnávat, což zrychlí proces. "));
+        btnLeftFileChoiser.setTooltip(Utility.createToolTip_600ms("Vyhledat složku pro levou stranu."));
+        lbPieChar_Left.setTooltip(Utility.createToolTip_600ms("Celková velikost dat k zápisu na levou stranu."));
+
+        btnSetingForFoldersCompare.setTooltip(Utility.createToolTip_600ms("Nastavení synchronizace."));
+        btnCompareFolders.setTooltip(Utility.createToolTip_600ms("Porovnat levou a pravou složku."));
+        btnSaveTask.setTooltip(Utility.createToolTip_600ms("Uložit nastavení této úlohy."));
+        btnShowOverview.setTooltip(Utility.createToolTip_600ms("Odejít zpět na přehled synchronizačních a zálohových " +
+                "úloh."));
+        btnStartSynchronization.setTooltip(Utility.createToolTip_600ms("Synchronizovat porovnané složky."));
+        btnShowJurnal.setTooltip(Utility.createToolTip_600ms("Souhrn výsledků dokončených synchronizací."));
+        btnShowBlockList.setTooltip(Utility.createToolTip_600ms("Menu pro nastavení ignorovaných souborů. " +
+                "Tyto soubory budou v porovnání zobrazeny jako blokované a nebudou zahrnuty do synchronizace."));
+
+        lbPieChar_Right.setTooltip(Utility.createToolTip_600ms("Celková velikost dat k zápisu na pravou stranu."));
+        btnRightRootFilter.setTooltip(Utility.createToolTip_600ms("Vyberte složky z pravé strany, " +
+                "které má aplikace úplně přeskočit. Nebudou se skenovat ani porovnávat, což zrychlí proces."));
+        btnRightFileChoiser.setTooltip(Utility.createToolTip_600ms("Vyhledat složku pro pravou stranu."));
+
+
+        btnAddItem_Left.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení souborů které budou přidány na levou stranu."));
+        btnModified_left.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení neaktualizovaných souborů na levé straně které budou přepsány!"));
+        btnDelete_left.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení souborů které budou smazány na levé straně."));
+
+        btnBlock.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení ignorovaných souborů. Tyto soubory nebudou synchronizovány!"));
+        btnEqual.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení totožných souborů."));
+        btnUnknown.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení soborů u kterých aplikace nerozeznala vhodnou operaci."));
+
+        btnDelete_right.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení souborů které budou smazány na pravé straně."));
+        btnModified_right.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení neaktualizovaných souborů na pravé straně které budou přepsány!"));
+        btnAddItem_right.setTooltip(Utility.createToolTip_600ms("Zapnout/vypnout zobrazení souborů které budou přidány na pravou stranu."));
+
         //Definování obsahu sloupců ve filesTreeTable
         leftColName.setCellValueFactory(cellData ->
                 cellData.getValue().getValue().getLeftItem().getFormatedName());

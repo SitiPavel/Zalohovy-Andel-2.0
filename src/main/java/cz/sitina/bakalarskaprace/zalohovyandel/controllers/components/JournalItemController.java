@@ -48,6 +48,7 @@ public class JournalItemController {
 
     @FXML
     private void initialize() {
+
         rootTitlePain.setExpanded(false);
 
         errorPathsContent.setStyle(
@@ -84,6 +85,8 @@ public class JournalItemController {
             errorPathsContent.getItems().add(path);
         }
 
+        lbLeftRootPath.setTooltip(Utility.createToolTip_600ms(dataPack.getLeftRootPath()));
+        lbLeftRootPath.setTooltip(Utility.createToolTip_600ms(dataPack.getRightRootPath()));
     }
 
     public void setItem(JournalBackupItemDataPack dataPack) {
@@ -127,6 +130,9 @@ public class JournalItemController {
         for (String path : dataPack.getFailPathList()) {
             errorPathsContent.getItems().add(path);
         }
+
+        lbLeftRootPath.setTooltip(Utility.createToolTip_600ms(dataPack.getLeftRootPath()));
+        lbLeftRootPath.setTooltip(Utility.createToolTip_600ms(dataPack.getRightRootPath()));
 
     }
 

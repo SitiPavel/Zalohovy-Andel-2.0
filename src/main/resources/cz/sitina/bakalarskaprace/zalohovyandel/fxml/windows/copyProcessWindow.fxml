@@ -98,20 +98,6 @@
                                  </children>
                               </HBox>
                               <Region prefWidth="30.0" />
-                              <HBox fx:id="containerProcessed">
-                                 <children>
-                                    <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../images/visualObjects/successfullyFinish.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets right="5.0" />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label fx:id="lbProcessedCount" styleClass="WindowTitle_L1_Dark" text="0" />
-                                 </children>
-                              </HBox>
-                              <Region prefWidth="30.0" />
                               <HBox fx:id="containerError">
                                  <children>
                                     <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
@@ -140,6 +126,19 @@
             <String fx:value="conteinerModify_Radius15" />
          </styleClass>
       </AnchorPane>
+      <HBox fx:id="containerProcessed" visible="false">
+         <children>
+            <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/visualObjects/successfullyFinish.png" />
+               </image>
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </ImageView>
+            <Label fx:id="lbProcessedCount" styleClass="WindowTitle_L1_Dark" text="0" />
+         </children>
+      </HBox>
       <Button fx:id="btnCancel" layoutX="652.0" layoutY="334.0" mnemonicParsing="false" onAction="#cancelByButton" text="Zrušit">
          <styleClass>
             <String fx:value="button_Primary1" />
