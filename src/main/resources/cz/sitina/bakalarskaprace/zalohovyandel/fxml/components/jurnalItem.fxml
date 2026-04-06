@@ -144,22 +144,22 @@
             </HBox>
             <HBox>
                <children>
-                  <Label fx:id="lbHeaderLeft" styleClass="darkBoltText" text="Levá: ">
+                  <Label fx:id="lbHeaderLeft" minWidth="55.0" styleClass="darkBoltText" text="Levá: ">
                      <padding>
                         <Insets right="5.0" />
                      </padding>
                   </Label>
-                  <Label fx:id="lbLeftRootPath" styleClass="darkBoltText" text="\\cesta\" />
+                  <Label fx:id="lbLeftRootPath" styleClass="darkBoltText" text="\\cesta\" wrapText="true" />
                </children>
             </HBox>
             <HBox>
                <children>
-                  <Label fx:id="lbHeaderRight" styleClass="darkBoltText" text="Pravá: ">
+                  <Label fx:id="lbHeaderRight" minWidth="55.0" styleClass="darkBoltText" text="Pravá: ">
                      <padding>
                         <Insets right="5.0" />
                      </padding>
                   </Label>
-                  <Label fx:id="lbRightRootPath" styleClass="darkBoltText" text="\\Cesta\" />
+                  <Label fx:id="lbRightRootPath" styleClass="darkBoltText" text="\\Cesta\" wrapText="true" />
                </children>
             </HBox>
             <TitledPane fx:id="errorPathsContainer" maxHeight="250.0" maxWidth="1.7976931348623157E308" minHeight="60.0" minWidth="200.0" styleClass="titlePain_styl2" text="Nepodařilo se zpracovat" VBox.vgrow="ALWAYS">
