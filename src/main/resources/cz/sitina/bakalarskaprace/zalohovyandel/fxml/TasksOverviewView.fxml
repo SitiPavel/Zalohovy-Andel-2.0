@@ -94,7 +94,7 @@
                   <TableColumn fx:id="taskColEntry" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Detaily" />
                 <TableColumn fx:id="taskColName" minWidth="200.0" prefWidth="-1.0" text="Název úlohy" />
                   <TableColumn fx:id="taskColType" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Typ" />
-                <TableColumn fx:id="taskColStatus" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Stav" />
+                <TableColumn fx:id="taskColStatus" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Stav" visible="false" />
                   <TableColumn fx:id="taskColRepeatIntervals" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" text="Interval opakování" visible="false" />
                   <TableColumn fx:id="taskColCompression" maxWidth="80.0" minWidth="80.0" text="Komprese" />
                   <TableColumn fx:id="taskColEncryption" maxWidth="80.0" minWidth="80.0" text="Šifrování" />

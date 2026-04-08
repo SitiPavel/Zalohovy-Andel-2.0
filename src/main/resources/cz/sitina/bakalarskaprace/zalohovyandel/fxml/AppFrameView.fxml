@@ -11,11 +11,11 @@
    <children>
       <HBox maxHeight="30.0" minHeight="30.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" styleClass="menuConteiner" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="lblTaskName" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="30.0" maxWidth="500.0" minHeight="30.0" minWidth="100.0" styleClass="coloredBoltText" text="Název úlohy:  " HBox.hgrow="NEVER">
+            <Label fx:id="lblTaskNameHeader" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="30.0" maxWidth="500.0" minHeight="30.0" minWidth="100.0" styleClass="coloredBoltText" text="Název úlohy:  " HBox.hgrow="NEVER">
                <padding>
                   <Insets right="10.0" />
                </padding></Label>
-            <Label fx:id="lblTaskName1" contentDisplay="RIGHT" maxHeight="30.0" maxWidth="500.0" minHeight="30.0" minWidth="100.0" prefHeight="30.0" prefWidth="498.0" styleClass="coloredBoltText" text="nazevUlohy">
+            <Label fx:id="lblTaskName" contentDisplay="RIGHT" maxHeight="30.0" maxWidth="500.0" minHeight="30.0" minWidth="100.0" prefHeight="30.0" prefWidth="498.0" styleClass="coloredBoltText" text="nazevUlohy">
                <padding>
                   <Insets right="10.0" />
                </padding>

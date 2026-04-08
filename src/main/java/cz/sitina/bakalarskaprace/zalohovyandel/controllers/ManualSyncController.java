@@ -474,16 +474,15 @@ public class ManualSyncController implements TaskController {
                 protected ComparedDataAndStatisticsForCompereOverview call() throws Exception {
 
 
-                    Platform.runLater(()->{
-                        progressWindowController.setLbHeader("Skenuji soubory levé strany... 1/3");});
+                    Platform.runLater(()->{progressWindowController.setLbHeader("Skenuji soubory levé strany... 1/3");});
+
                     Map<String, FileItemModel> mapLeft = fileScannerService.scanFolder(
                                                                 editableManualTask.getLeftPath(),
                                                                 editableManualTask.getRootFilteredFolders_Left(),
                                                         false);
 
 
-                    Platform.runLater(()->{
-                        progressWindowController.setLbHeader("Skenuji soubory pravé strany... 2/3");});
+                    Platform.runLater(()->{progressWindowController.setLbHeader("Skenuji soubory pravé strany... 2/3");});
                     Map<String, FileItemModel> mapRight = fileScannerService.scanFolder(
                                                                 editableManualTask.getRightPath(),
                                                                 editableManualTask.getRootFilteredFolders_Right(),

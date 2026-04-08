@@ -321,4 +321,5 @@ public class TaskOverviewController {
     public void setAppFrameController(AppFrameController appFrameController) {
         this.appFrameController = appFrameController;
     }
+
 }

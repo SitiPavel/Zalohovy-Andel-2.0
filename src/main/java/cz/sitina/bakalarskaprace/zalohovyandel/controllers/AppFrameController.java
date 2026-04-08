@@ -24,6 +24,7 @@ public class AppFrameController {
 
     @FXML private AnchorPane contentArea;
     @FXML private Label lblTaskName;
+    @FXML private Label lblTaskNameHeader;
 
     // definice objektů
     private TaskRepository taskRepository;
@@ -101,9 +102,15 @@ public class AppFrameController {
             // uložíme spuštěný controller
             if (subController instanceof TaskController) {
                 this.curentController = (TaskController) subController;
+                lblTaskNameHeader.setText("Název úlohy:");
+
             } else if (subController instanceof BackupTaskController) {
                 this.curentController = (BackupTaskController) subController;
-            } else {
+                lblTaskNameHeader.setText("Název úlohy:");
+
+            } else if (subController instanceof TaskOverviewController) {
+                lblTaskNameHeader.setText("Přehled synchronizačních/zálohových úloh");
+            }else {
                 this.curentController = null;
             }
 
@@ -116,6 +123,7 @@ public class AppFrameController {
 
             if (taskModel != null) {
                 lblTaskName.setText(taskModel.getName());
+
             } else {
                 lblTaskName.setText("");
             }

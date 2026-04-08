@@ -34,7 +34,7 @@ public abstract class TaskModel {
     protected String status;
     protected LocalDate creationDate;
     protected Set<String> blockList = new LinkedHashSet<>();
-    protected List<JournalItemDataPack> jurnalInfoList = new ArrayList<>();;
+    protected List<JournalItemDataPack> jurnalInfoList = new ArrayList<>();
 
     protected GuiOperationFilters_TaskData guiOperationFilters;
 
