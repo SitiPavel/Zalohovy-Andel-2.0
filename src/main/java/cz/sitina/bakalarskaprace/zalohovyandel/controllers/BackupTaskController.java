@@ -232,10 +232,14 @@ public class BackupTaskController implements TaskController {
                             tooltip.setText(item);
                             setTooltip(tooltip);
 
-                            view = treeTableGuiModify.getIconByRowFormat(
-                                    getTreeTableRow().getItem().getOperation()
-                            );
-                            setGraphic(view);
+                            TreeTableRow<ComparedItemOperItemRowModel> row = getTreeTableRow();
+                            if (row != null && row.getItem() != null) {
+                                view = treeTableGuiModify.getIconByRowFormat(row.getItem().getOperation());
+                                setGraphic(view);
+                            } else {
+                                // Pokud data ještě nejsou načtena (nebo jde o kořenový uzel), grafiku skryjeme
+                                setGraphic(null);
+                            }
                         }
 
                     }
@@ -373,7 +377,6 @@ public class BackupTaskController implements TaskController {
                         Files.createDirectories(rootDirectory);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        System.out.println("Nepodařilo se vytvořit složku");
                     }
                     String dbPath = editableBackupTask.getBackupDatabasePath();
 
@@ -695,7 +698,6 @@ public class BackupTaskController implements TaskController {
     private void markAsDirty() {
         if (!isDirtyFlag.get()) {
             isDirtyFlag.set(true);
-            System.out.println("nastaveno true");
         }
     }
 

@@ -273,10 +273,14 @@ public class ManualSyncController implements TaskController {
                     tooltip.setText(item);
                     setTooltip(tooltip);
 
-                     view = treeTableGuiModify.getIconByRowFormat(
-                            getTreeTableRow().getItem().getOperation()
-                    );
-                    setGraphic(view);
+                    TreeTableRow<ComparedItemOperItemRowModel> row = getTreeTableRow();
+                    if (row != null && row.getItem() != null) {
+                        view = treeTableGuiModify.getIconByRowFormat(row.getItem().getOperation());
+                        setGraphic(view);
+                    } else {
+                        // Pokud data ještě nejsou načtena (nebo jde o kořenový uzel), grafiku skryjeme
+                        setGraphic(null);
+                    }
                 }
 
             }
@@ -358,10 +362,15 @@ public class ManualSyncController implements TaskController {
                     // Nastavení ikony podle formátu
                     myTooltip.setText(item);
                     setTooltip(myTooltip);
-                    view = treeTableGuiModify.getIconByRowFormat(
-                            getTreeTableRow().getItem().getOperation()
-                    );
-                    setGraphic(view);
+
+                    TreeTableRow<ComparedItemOperItemRowModel> row = getTreeTableRow();
+                    if (row != null && row.getItem() != null) {
+                        view = treeTableGuiModify.getIconByRowFormat(row.getItem().getOperation());
+                        setGraphic(view);
+                    } else {
+                        // Pokud data ještě nejsou načtena (nebo jde o kořenový uzel), grafiku skryjeme
+                        setGraphic(null);
+                    }
 
                     //nastavení odsazení podle zanoření v TreeTable
                     treeTableGuiModify.setIndentByDeepForCell(getIndex(), getTreeTableView(), this);
