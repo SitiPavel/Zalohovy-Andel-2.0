@@ -12,4 +12,5 @@ public interface TaskController {
     void setTaskModel(TaskModel taskModel);
 
     void setTaskRepository(TaskRepository repository);
+
 }

@@ -24,12 +24,12 @@ public class EncryptedBackupTask extends TaskModel {
     private byte[] cryptoIv;
     private String passwordHash;
 
+    // zašifrovaný objekt task
+    private String encryptedPayloadBase64;
+
     private JsonDataManagerService jsonManager = JsonDataManagerService.getInstance();
     private EncryptionConfigFileManager encryptConfigManager = new EncryptionConfigFileManager(jsonManager.getMapper());
 
-
-    // zašifrovaný objekt task
-    private String encryptedPayloadBase64;
 
     // prázdný pro json
     public EncryptedBackupTask()  {

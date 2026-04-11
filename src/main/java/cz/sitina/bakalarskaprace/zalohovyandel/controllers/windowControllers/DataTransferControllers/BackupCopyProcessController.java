@@ -66,10 +66,8 @@ public class BackupCopyProcessController extends CopyProcessController{
                                 updateProgress(bytesProcessed, totalBytes);
                                 updateMessage(currentFile);
 
-                                // 2. Voláme update a ZACHYTÍME, jestli se reálně něco stalo
                                 boolean didUpdate = handleProgressUpdate(bytesProcessed, totalBytes, currentFile, processedFileCount, lastTime, lastBytes);
 
-                                // 3. KLÍČOVÁ OPRAVA: Musíme aktualizovat lokální stopky, jinak bude if v handleProgressUpdate příště zase true
                                 if (didUpdate) {
                                     lastTime = System.currentTimeMillis();
                                     lastBytes = bytesProcessed;
@@ -136,8 +134,8 @@ public class BackupCopyProcessController extends CopyProcessController{
                 if (smoothedSpeedPerSecond == 0) {
                     smoothedSpeedPerSecond = speedPerSecond;
                 } else {
-                    // Váhy: 10 % nová okamžitá rychlost, 90 % stará stabilní rychlost
-                    smoothedSpeedPerSecond = (0.10 * speedPerSecond) + (0.90 * smoothedSpeedPerSecond);
+                    // Váhy: 30 % nová okamžitá rychlost, 70 % stará stabilní rychlost
+                    smoothedSpeedPerSecond = (0.30 * speedPerSecond) + (0.70 * smoothedSpeedPerSecond);
                 }
 
                 long remainingBytes = totalBytes - bytesProcessed;

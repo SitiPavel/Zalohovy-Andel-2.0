@@ -131,7 +131,7 @@ public class DatabaseManager implements AutoCloseable {
         }
     }
 
-    // najde ty nejaktuálnější data a ty nyčte do paměti
+    // najde ty nejaktuálnější data a ty načte do paměti
     public Map<String, FileItemModel> loadLatestIndexToMemory() throws SQLException {
         Map<String, FileItemModel> map = new HashMap<>();
 

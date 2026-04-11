@@ -577,7 +577,7 @@ public class BackupTaskController implements TaskController {
     }
 
     private void applyCurrentFiltersToTable() {
-        // kdyby nebylo co filtrovate
+        // kdyby nebylo co filtrovat
         if (masterRoot == null || editableBackupTask == null) return;
 
         TreeItem<ComparedItemOperItemRowModel> filteredRoot =

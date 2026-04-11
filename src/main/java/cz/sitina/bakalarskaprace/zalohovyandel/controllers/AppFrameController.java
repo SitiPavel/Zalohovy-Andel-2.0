@@ -40,22 +40,19 @@ public class AppFrameController {
 
     @FXML
     public void showCompareOverview(TaskModel taskModel) {
-        if (checkAndSaveUnsavedChanges()) {
             loadView("compareOverviewView.fxml", taskModel, null, null);
-        }
+
     }
 
     @FXML
     public void showBackupOverview(TaskModel taskModel) {
-        if (checkAndSaveUnsavedChanges()) {
             loadView("backupOverviewView.fxml", taskModel, null, null);
-        }
+
     }
 
     public void showBackupOverview_Encrypt(TaskModel taskModel, SecretKey key, EncryptedBackupTask encryptedBackupTask) {
-        if (checkAndSaveUnsavedChanges()) {
             loadView("backupOverviewView.fxml", taskModel, key, encryptedBackupTask);
-        }
+
     }
 
 
@@ -156,6 +153,7 @@ public class AppFrameController {
                     curentController.saveChanges(); // Zavolá logiku uvnitř ManualSyncControlleru
                     return true; // Uloženo, můžeme odejít
                 } else if (result.get() == btnDiscard) {
+//                    curentController.setis
                     return true; // Neuloženo, ale uživatel chce i tak odejít
                 } else {
                     return false; // Uživatel klikl na Zrušit, ZŮSTÁVÁME v okně

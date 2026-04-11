@@ -17,7 +17,7 @@ import java.util.Base64;
 public class CryptoManager {
 
     // 600 000 iterací pro PBKDF2
-    private static final int ITERATIONS = 100000;
+    private static final int ITERATIONS = 600000;
     private static final int KEY_LENGTH = 256;
     private static final String KDF_ALGORITHM = "PBKDF2WithHmacSHA256";
 

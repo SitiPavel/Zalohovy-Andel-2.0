@@ -145,6 +145,9 @@
                                 callback.onItemCompleted(false, row);
                             }
                         }
+                /*----------------------------------
+                         pouze kopírování
+                ------------------------------------*/
                     } catch (Exception e) {
                         e.printStackTrace();
                         Platform.runLater(() -> {

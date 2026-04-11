@@ -73,7 +73,7 @@ public class ComparisonService {
             FileItemModel rightItem = rightFilesMap.get(relativePath);
 
             Path relativePathObject = Paths.get(relativePath);
-            // zjisštění zda je v seznamu blokovaných = nutno porovnat cesty aby nebyly naopak lomítka / a \
+
             Boolean isBlocked = taskModel.getBlockSet().stream()
                     .anyMatch(blockedStr -> relativePathObject.startsWith(Path.of(blockedStr)));
 
@@ -100,7 +100,6 @@ public class ComparisonService {
             }else {
                 operation = UNKNOWN;
             }
-            /* ✪ */
 
             // zaznamenává počet jednotlivích operací pro statistiky do GUI
             TreeTableUtility.countFiltersAndSizePie( new ComparedItemOperItemRowModel(leftItem,operation,rightItem)
