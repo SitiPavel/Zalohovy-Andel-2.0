@@ -808,9 +808,9 @@ public class BackupTaskController implements TaskController {
 
         imgTypeOfBackup.setImage(setRightBackupTypeIcon());
 
-        Tooltip ttSourcePath = utility.createToolTip_300ms(lbSourceFolderPath.getText());
+        Tooltip ttSourcePath = utility.createToolTip_300ms(originBackupTask.getLeftPath());
         lbSourceFolderPath.setTooltip(ttSourcePath);
-        Tooltip ttDestinationPath = utility.createToolTip_300ms(lbDestinationFolderPath.getText());
+        Tooltip ttDestinationPath = utility.createToolTip_300ms(originBackupTask.getRightPath());
         lbDestinationFolderPath.setTooltip(ttDestinationPath);
 
         setFastFiltersImg();
