@@ -696,4 +696,76 @@
     -fx-text-fill: -fx-color-textDark;
 }
 
+/* =========================================
+   6. STROM SLOŽEK (TreeView) PRO FILTR KOŘENOVÉ SLOŽKY
+========================================== */
+
+.folderTreeViewStyle {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.folderTreeViewStyle .virtual-flow {
+    -fx-background-color: transparent;
+}
+
+.folderTreeViewStyle .tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-color-textDark;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 3px 0 3px 0;
+}
+
+.folderTreeViewStyle .tree-cell:filled:hover {
+    -fx-background-color: -fx-colorFilter-Dark-25;
+    -fx-background-radius: 5px;
+}
+
+.folderTreeViewStyle .tree-cell:filled:selected {
+    -fx-background-color: -fx-colorFilter-Lite-25;
+    -fx-background-radius: 5px;
+}
+
+.folderTreeViewStyle .tree-cell .tree-disclosure-node .arrow {
+    -fx-background-color: -fx-color-textDark;
+}
+
+.folderTreeViewStyle .tree-cell:expanded .tree-disclosure-node .arrow {
+    -fx-background-color: -fx-color-textDark;
+}
+
+/* Posuvníky pro folderTreeViewStyle */
+.folderTreeViewStyle .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12px;
+}
+
+.folderTreeViewStyle .scroll-bar:vertical .track {
+    -fx-background-color: -fx-color-primary2;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+}
+
+.folderTreeViewStyle .scroll-bar:vertical .thumb {
+    -fx-background-color: -fx-color-primary1;
+    -fx-background-radius: 6px;
+}
+
+.folderTreeViewStyle .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: -fx-color-mark2;
+}
+
+.folderTreeViewStyle .scroll-bar:vertical .thumb:pressed {
+    -fx-background-color: -fx-color-textLight;
+}
+
+.folderTreeViewStyle .scroll-bar:vertical .increment-button,
+.folderTreeViewStyle .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-pref-height: 0px;
+    -fx-padding: 0;
+}
+
+
 

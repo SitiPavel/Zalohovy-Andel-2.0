@@ -81,6 +81,10 @@ public class Utility {
         return createToolTip(null, 600);
     }
 
+    public static Tooltip createToolTip1500( String text) {
+        return createToolTip(text, 1500);
+    }
+
     public static Tooltip createToolTip(String text, long miliSeconds) {
         Tooltip tooltip = new Tooltip(text);
 

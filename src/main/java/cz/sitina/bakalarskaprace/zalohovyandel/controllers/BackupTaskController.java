@@ -319,7 +319,7 @@ public class BackupTaskController implements TaskController {
             controller.setEditedPath(editableBackupTask.getLeftPath());
             controller.setEditFilteredFolders(editableBackupTask.getRootFilteredFolders_Source());
             controller.setOriginFilteredFolders(originBackupTask.getRootFilteredFolders_Source());
-            controller.setRootPath(editableBackupTask.getLeftPath());
+            controller.setRootPathTree(editableBackupTask.getLeftPath());
             controller.setIsChanged(() -> {
                 markAsDirty();
                 resetWindow();

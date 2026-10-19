@@ -161,36 +161,58 @@ public class FileScannerService {
 
     }
 
-    // najde použe složky v zadané cestě
-    public List<String> loadDirectSubfolders(Path rootPath) {
-
+    // najde pouze složky v zadané cestě
+     public Map<String, String> loadDirectSubfolders(Path rootPath) {
         if (!isExistsFolderPath(rootPath)) {
             ErrorUtility.getInstance("Chyba cesty",
                     "Zadaná cesta neexistuje nebo není složka",
                     "Cesta: " + rootPath.toString());
-            return new ArrayList<>();
+            return new HashMap<>();
         }
 
 
-        List<String> result = new ArrayList<>();
+        Map<String, String> folderTreeData = new LinkedHashMap<>();
+        ArrayList result = new ArrayList();
 
-        try (Stream<Path> paths = Files.list(rootPath)) {
-            paths.filter(Files::isDirectory)
-                    .forEach(path -> {
-                        if (!skippedFolders.contains(path.getFileName().toString().toLowerCase())) {
-                            String fullPath = path.toAbsolutePath().toString();
-                            result.add(fullPath);
+
+        folderTreeData.put(rootPath.toString(), "ROOT");
+
+        try {
+            Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
+
+                // odchycení systémových složek a taky kořenové složky (nechceme ukládat kořenovou složku)
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    if (dir.getFileName() != null) {
+                        String dirName = dir.getFileName().toString().toLowerCase();
+                        if (skippedFolders.contains(dirName)) {
+                            return FileVisitResult.SKIP_SUBTREE;
                         }
-                    });
+                    }
+                    if (!dir.equals(rootPath)) {
+                        String relativePath = dir.toRealPath().toString();
+                        String dirName = dir.getFileName().toString();
+                        folderTreeData.put(relativePath, dirName);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
 
-
+                // Odchycení odepření přístupu k systémovým složkám
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                    if (exc instanceof AccessDeniedException) {
+                        return FileVisitResult.SKIP_SUBTREE;
+                    }
+                    return super.visitFileFailed(file, exc);
+                }
+            });
         }catch (IOException e) {
             e.printStackTrace();
             ErrorUtility.getInstance("Chyba souboru",
                     "Nepodařilo se načíst soubory",
                     "Cesta: " + rootPath.toString());
         }
-        return result;
+        return folderTreeData;
     }
 
     /// kontroluje zda cesta existuje a jestli je to složka

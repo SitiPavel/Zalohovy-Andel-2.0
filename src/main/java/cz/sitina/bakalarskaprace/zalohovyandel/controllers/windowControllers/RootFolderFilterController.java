@@ -2,18 +2,19 @@ package cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.services.FileScannerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.TreeBuilderUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.TreeBuilderUtility.FolderNode;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import javafx.scene.control.TreeView;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RootFolderFilterController {
     private String rootPath;
@@ -22,32 +23,28 @@ public class RootFolderFilterController {
     private List<String> originFilteredFolders;
     // od editable task
     private List<String> editFilteredFolders;
-    private List<String> foundedFolders;
-    // list pro zjištění odšktrnutých polí
-    private List<CheckBox> chackBoxList = new ArrayList<>();
-    private FileScannerService fileScannerService =  new FileScannerService();
-
-
+    private Map<String, String> foundedFolders;
+    // list položek stromu pro zjištění odškrtnutých položek
+    private final List<CheckBoxTreeItem<FolderNode>> treeItemList = new ArrayList<>();
+    private FileScannerService fileScannerService = new FileScannerService();
 
     // cesty
     private String originalPath;
     private String editedPath;
 
-    //callBack
+    // callBack
     private Runnable isChanged;
 
-   @FXML private Label lbRootPath;
-   @FXML private VBox childConteiner;
+    @FXML private Label lbRootPath;
+    @FXML private TreeView<FolderNode> folderTreeView;
 
     @FXML
     public void setChanges(ActionEvent event) {
-
-
-
         editFilteredFolders.clear();
-        for (CheckBox checkBox : chackBoxList) {
-            if (!checkBox.isSelected()) {
-                editFilteredFolders.add(checkBox.getUserData().toString());
+        // OPRAVENO: Procházíme položky stromu a nezaškrtnuté ukládáme do seznamu filtrovaných (vynechaných) složek
+        for (CheckBoxTreeItem<FolderNode> item : treeItemList) {
+            if (!item.isSelected()) {
+                editFilteredFolders.add(item.getValue().getAbsolutePath());
             }
         }
         if (!originFilteredFolders.equals(editFilteredFolders) && isChanged != null) {
@@ -57,51 +54,27 @@ public class RootFolderFilterController {
         WindowManager.findByActionAndClose(event);
     }
 
-
-
-
-    public void setRootPath(String path) {
+    public void setRootPathTree(String path) {
         this.rootPath = path;
         lbRootPath.setText(rootPath);
         lbRootPath.setTooltip(Utility.createToolTip_600ms(rootPath));
 
-        // zíkání cest k souboru
+        // získání cest ke složkám
         foundedFolders = fileScannerService.loadDirectSubfolders(Path.of(rootPath));
-        loadData();
 
-    }
-
-    private void loadData() {
-        for (String absolutPath : foundedFolders) {
-            // nastavení chackboxu
-            String folderName = Path.of(absolutPath).getFileName().toString();
-
-            CheckBox chkBox = new CheckBox(folderName);
-            chkBox.setUserData(absolutPath);
-            chkBox.getStyleClass().add("checkBox_styl2");
-
-
-            // pokud se originální cesta rovná te editované tak zjistíme jestli jí zobrazit jako on/off
-            boolean isfiltred = false;
-            if (originalPath.equals(editedPath)) {
-                for (String path : editFilteredFolders) {
-                    if (absolutPath.equals(path)) {
-                        isfiltred = true;
-                        break;
-                    }
-                }
-            }
-            // nastavení zaškrtnutí, je zaškrtnut pokud isfiltred = false
-            chkBox.setSelected(!isfiltred);
-
-            chackBoxList.add(chkBox);
-            childConteiner.getChildren().add(chkBox);
+        // Určení aktuálně filtrovaných složek s ohledem na shodu původní a editované cesty
+        List<String> activeFilteredList = new ArrayList<>();
+        if (originalPath != null && originalPath.equals(editedPath) && editFilteredFolders != null) {
+            activeFilteredList = editFilteredFolders;
         }
-        if (childConteiner.getChildren().isEmpty()) {
-            Label label = new Label("Složka neobsahuje podsložky");
-            label.getStyleClass().add("darkBoltText");
-            childConteiner.getChildren().add(label);
-        }
+
+        TreeBuilderUtility.buildChackBoxDirTree(
+                folderTreeView,
+                rootPath,
+                foundedFolders,
+                activeFilteredList,
+                treeItemList
+        );
     }
 
     public void setOriginalPath(String originalPath) {

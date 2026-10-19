@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
@@ -433,7 +432,7 @@ public class ManualSyncController implements TaskController {
             controller.setEditedPath(editableManualTask.getLeftPath());
             controller.setEditFilteredFolders(editableManualTask.getRootFilteredFolders_Left());
             controller.setOriginFilteredFolders(originalManualTask.getRootFilteredFolders_Left());
-            controller.setRootPath(editableManualTask.getLeftPath());
+            controller.setRootPathTree(editableManualTask.getLeftPath());
             controller.setIsChanged(() -> {
                 markAsDirty();
                 resetWindow();
@@ -660,7 +659,7 @@ public class ManualSyncController implements TaskController {
             controller.setEditedPath(editableManualTask.getRightPath());
             controller.setEditFilteredFolders(editableManualTask.getRootFilteredFolders_Right());
             controller.setOriginFilteredFolders(originalManualTask.getRootFilteredFolders_Right());
-            controller.setRootPath(editableManualTask.getRightPath());
+            controller.setRootPathTree(editableManualTask.getRightPath());
             controller.setIsChanged(() -> {
                 markAsDirty();
                 resetWindow();
