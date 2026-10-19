@@ -27,6 +27,15 @@ public class CompareProgresController {
         lbAllFiles.textProperty().bind(task.titleProperty());
     }
 
+    // Spuštění neurčitého načítání bez číselných hodnot s plynulou animací progressBaru
+    public void startIndeterminateTask(Task<?> task, String headerText) {
+        this.runningTask = task;
+        lbHeader.setText(headerText);
+        lbComparedFiles.setText("");
+        lbAllFiles.setText("");
+        progressBar.setProgress(-1.0);
+    }
+
     public void setLbHeader(String header) {
         lbHeader.setText(header);
     }

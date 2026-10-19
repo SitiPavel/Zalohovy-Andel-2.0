@@ -55,12 +55,17 @@ public class RootFolderFilterController {
     }
 
     public void setRootPathTree(String path) {
+        // získání cest ke složkám (pokud nebyly předem načteny na pozadí)
+        setRootPathTree(path, fileScannerService.loadDirectSubfolders(Path.of(path)));
+    }
+
+    // Metoda přijímající přednačtená data z background Tasku bez zablokování UI vlákna
+    public void setRootPathTree(String path, Map<String, String> preloadedFolders) {
         this.rootPath = path;
         lbRootPath.setText(rootPath);
         lbRootPath.setTooltip(Utility.createToolTip_600ms(rootPath));
 
-        // získání cest ke složkám
-        foundedFolders = fileScannerService.loadDirectSubfolders(Path.of(rootPath));
+        this.foundedFolders = preloadedFolders != null ? preloadedFolders : Map.of();
 
         // Určení aktuálně filtrovaných složek s ohledem na shodu původní a editované cesty
         List<String> activeFilteredList = new ArrayList<>();
@@ -71,7 +76,7 @@ public class RootFolderFilterController {
         TreeBuilderUtility.buildChackBoxDirTree(
                 folderTreeView,
                 rootPath,
-                foundedFolders,
+                this.foundedFolders,
                 activeFilteredList,
                 treeItemList
         );

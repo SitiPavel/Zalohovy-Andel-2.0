@@ -312,28 +312,77 @@ public class BackupTaskController implements TaskController {
     /// definování akcí tlačítek
     @FXML
         private void sourceRootFilter(ActionEvent event) {
+        String targetPath = editableBackupTask.getLeftPath();
+        if (targetPath == null || targetPath.isBlank()) {
+            return;
+        }
+
         try {
-            FXMLLoader loader = loadFXML("RootFolderFilterWindow.fxml");
-            RootFolderFilterController controller = loader.getController();
-            controller.setOriginalPath(originBackupTask.getLeftPath());
-            controller.setEditedPath(editableBackupTask.getLeftPath());
-            controller.setEditFilteredFolders(editableBackupTask.getRootFilteredFolders_Source());
-            controller.setOriginFilteredFolders(originBackupTask.getRootFilteredFolders_Source());
-            controller.setRootPathTree(editableBackupTask.getLeftPath());
-            controller.setIsChanged(() -> {
-                markAsDirty();
-                resetWindow();
+            FXMLLoader progressLoader = loadFXML("compareProgresWindow.fxml");
+            CompareProgresController progressController = progressLoader.getController();
+            Stage progressStage = WindowManager.openRunningWindow(progressLoader, "Hledání složek", 420, 240);
+
+            Task<Map<String, String>> loadFoldersTask = new Task<>() {
+                @Override
+                protected Map<String, String> call() {
+                    return fileScannerService.loadDirectSubfolders(Path.of(targetPath));
+                }
+            };
+
+            // OPRAVENO: Reakce na zavření křížkem načítacího okna
+            progressStage.setOnCloseRequest(e -> {
+                if (loadFoldersTask.isRunning()) {
+                    loadFoldersTask.cancel();
+                }
             });
 
+            progressController.startIndeterminateTask(loadFoldersTask, "Hledají se složky...");
 
-            WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
+            loadFoldersTask.setOnSucceeded(e -> {
+                progressStage.close();
+                Map<String, String> loadedFolders = loadFoldersTask.getValue();
+
+                try {
+                    FXMLLoader loader = loadFXML("RootFolderFilterWindow.fxml");
+                    RootFolderFilterController controller = loader.getController();
+                    controller.setOriginalPath(originBackupTask.getLeftPath());
+                    controller.setEditedPath(editableBackupTask.getLeftPath());
+                    controller.setEditFilteredFolders(editableBackupTask.getRootFilteredFolders_Source());
+                    controller.setOriginFilteredFolders(originBackupTask.getRootFilteredFolders_Source());
+                    controller.setRootPathTree(targetPath, loadedFolders);
+                    controller.setIsChanged(() -> {
+                        markAsDirty();
+                        resetWindow();
+                    });
+
+                    WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
+                } catch (IOException ex) {
+                    ErrorUtility.showError_WindowLoading();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+            loadFoldersTask.setOnCancelled(e -> {
+                progressStage.close();
+            });
+
+            loadFoldersTask.setOnFailed(e -> {
+                progressStage.close();
+                Throwable ex = loadFoldersTask.getException();
+                String message = (ex != null) ? ex.getMessage() : "Neznámá chyba";
+                ErrorUtility.getInstance("Chyba při načítání", "Nepodařilo se načíst podsložky.", message);
+            });
+
+            Thread thread = new Thread(loadFoldersTask);
+            thread.setDaemon(true);
+            thread.start();
 
         } catch (IOException e) {
             ErrorUtility.showError_WindowLoading();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @FXML // nastavení porovnání

@@ -28,6 +28,8 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+
+import java.nio.file.Path;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -425,25 +427,75 @@ public class ManualSyncController implements TaskController {
 
     @FXML
     public void leftRootFilter(ActionEvent event) {
+        String targetPath = editableManualTask.getLeftPath();
+        if (targetPath == null || targetPath.isBlank()) {
+            return;
+        }
+
         try {
-            FXMLLoader loader = WindowManager.loadFXML("RootFolderFilterWindow.fxml");
-            RootFolderFilterController controller = loader.getController();
-            controller.setOriginalPath(originalManualTask.getLeftPath());
-            controller.setEditedPath(editableManualTask.getLeftPath());
-            controller.setEditFilteredFolders(editableManualTask.getRootFilteredFolders_Left());
-            controller.setOriginFilteredFolders(originalManualTask.getRootFilteredFolders_Left());
-            controller.setRootPathTree(editableManualTask.getLeftPath());
-            controller.setIsChanged(() -> {
-                markAsDirty();
-                resetWindow();
+            FXMLLoader progressLoader = loadFXML("compareProgresWindow.fxml");
+            CompareProgresController progressController = progressLoader.getController();
+            Stage progressStage = WindowManager.openRunningWindow(progressLoader, "Hledání složek", 420, 240);
+
+            Task<Map<String, String>> loadFoldersTask = new Task<>() {
+                @Override
+                protected Map<String, String> call() {
+                    return fileScannerService.loadDirectSubfolders(Path.of(targetPath));
+                }
+            };
+
+            // Reakce na zavření křížkem načítacího okna
+            progressStage.setOnCloseRequest(e -> {
+                if (loadFoldersTask.isRunning()) {
+                    loadFoldersTask.cancel();
+                }
             });
 
+            progressController.startIndeterminateTask(loadFoldersTask, "Hledají se složky...");
 
-            WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
+            loadFoldersTask.setOnSucceeded(e -> {
+                progressStage.close();
+                Map<String, String> loadedFolders = loadFoldersTask.getValue();
+
+                try {
+                    FXMLLoader loader = WindowManager.loadFXML("RootFolderFilterWindow.fxml");
+                    RootFolderFilterController controller = loader.getController();
+                    controller.setOriginalPath(originalManualTask.getLeftPath());
+                    controller.setEditedPath(editableManualTask.getLeftPath());
+                    controller.setEditFilteredFolders(editableManualTask.getRootFilteredFolders_Left());
+                    controller.setOriginFilteredFolders(originalManualTask.getRootFilteredFolders_Left());
+                    controller.setRootPathTree(targetPath, loadedFolders);
+                    controller.setIsChanged(() -> {
+                        markAsDirty();
+                        resetWindow();
+                    });
+
+                    WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
+                } catch (IOException ex) {
+                    ErrorUtility.showError_WindowLoading();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+            loadFoldersTask.setOnCancelled(e -> {
+                progressStage.close();
+            });
+
+            loadFoldersTask.setOnFailed(e -> {
+                progressStage.close();
+                Throwable ex = loadFoldersTask.getException();
+                String message = (ex != null) ? ex.getMessage() : "Neznámá chyba";
+                ErrorUtility.getInstance("Chyba při načítání", "Nepodařilo se načíst podsložky.", message);
+            });
+
+            Thread thread = new Thread(loadFoldersTask);
+            thread.setDaemon(true);
+            thread.start();
 
         } catch (IOException e) {
             ErrorUtility.showError_WindowLoading();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -652,27 +704,77 @@ public class ManualSyncController implements TaskController {
 
     @FXML
     public void RightRootFilter(ActionEvent event ){
+        String targetPath = editableManualTask.getRightPath();
+        if (targetPath == null || targetPath.isBlank()) {
+            return;
+        }
+
         try {
-            FXMLLoader loader = WindowManager.loadFXML("RootFolderFilterWindow.fxml");
-            RootFolderFilterController controller = loader.getController();
-            controller.setOriginalPath(originalManualTask.getRightPath());
-            controller.setEditedPath(editableManualTask.getRightPath());
-            controller.setEditFilteredFolders(editableManualTask.getRootFilteredFolders_Right());
-            controller.setOriginFilteredFolders(originalManualTask.getRootFilteredFolders_Right());
-            controller.setRootPathTree(editableManualTask.getRightPath());
-            controller.setIsChanged(() -> {
-                markAsDirty();
-                resetWindow();
+            FXMLLoader progressLoader = loadFXML("compareProgresWindow.fxml");
+            CompareProgresController progressController = progressLoader.getController();
+            Stage progressStage = WindowManager.openRunningWindow(progressLoader, "Hledání složek", 420, 240);
+
+            Task<Map<String, String>> loadFoldersTask = new Task<>() {
+                @Override
+                protected Map<String, String> call() {
+                    return fileScannerService.loadDirectSubfolders(Path.of(targetPath));
+                }
+            };
+
+            // Reakce na zavření křížkem načítacího okna
+            progressStage.setOnCloseRequest(e -> {
+                if (loadFoldersTask.isRunning()) {
+                    loadFoldersTask.cancel();
+                }
             });
 
-            WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
+            progressController.startIndeterminateTask(loadFoldersTask, "Hledají se složky...");
+
+            loadFoldersTask.setOnSucceeded(e -> {
+                progressStage.close();
+                Map<String, String> loadedFolders = loadFoldersTask.getValue();
+
+                try {
+                    FXMLLoader loader = WindowManager.loadFXML("RootFolderFilterWindow.fxml");
+                    RootFolderFilterController controller = loader.getController();
+                    controller.setOriginalPath(originalManualTask.getRightPath());
+                    controller.setEditedPath(editableManualTask.getRightPath());
+                    controller.setEditFilteredFolders(editableManualTask.getRootFilteredFolders_Right());
+                    controller.setOriginFilteredFolders(originalManualTask.getRootFilteredFolders_Right());
+                    controller.setRootPathTree(targetPath, loadedFolders);
+                    controller.setIsChanged(() -> {
+                        markAsDirty();
+                        resetWindow();
+                    });
+
+                    WindowManager.openNewWindowAutoSized(loader, "Nastavení filtru kořenové složky");
+                } catch (IOException ex) {
+                    ErrorUtility.showError_WindowLoading();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+            loadFoldersTask.setOnCancelled(e -> {
+                progressStage.close();
+            });
+
+            loadFoldersTask.setOnFailed(e -> {
+                progressStage.close();
+                Throwable ex = loadFoldersTask.getException();
+                String message = (ex != null) ? ex.getMessage() : "Neznámá chyba";
+                ErrorUtility.getInstance("Chyba při načítání", "Nepodařilo se načíst podsložky.", message);
+            });
+
+            Thread thread = new Thread(loadFoldersTask);
+            thread.setDaemon(true);
+            thread.start();
 
         } catch (IOException e) {
             ErrorUtility.showError_WindowLoading();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @FXML
