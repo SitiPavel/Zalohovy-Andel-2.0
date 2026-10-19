@@ -1,0 +1,35 @@
+Aplikace při zapnutí zobrazí přehled Úloh (Zálohova, synchronizační) - Obsahuje data jako popis, natev zda je šifrovaná nebo Zipovaná a typ úlohy
+přehled umožňuje vytvořit oba typy úloh a taky je mazat
+Po rozkliknutí ulohy se zobrazí přehled nastavení konkrétní úlohy
+  -  v přehledu se nastaví dvě kořenové cesty:
+     - synchronizace - Adresř pro levou a pravou stranu
+     - záloha Zdroj a cíl
+  -Hl cílem je oprovnat změny v těchto dvou adresářích a vyzualizovat je uživateli
+     - obsahuje ozančení pro každý typ změny v adresáři  (odlišeny ikonou a barvou) a jsou 2 skupiny: složky, soubory
+     - odlišuje soubory a složky od sebe a zobrazuje je ve stromové tabulce
+     - dole jsou zobrazeny jednotlivé operace a jejich počty
+  - funkce
+    - vynechané složky:  Oba kořenové adresáře mají vlastní list vynechaných složek. Ty aplikace zcela přezkočí
+    - Blokované soubory a složky: aplikaace o nich vý zobrazuje je ale není zahrnuto do operace při přenosu/mazání dat (spúolečné pro oba kořenové adresáře)
+    - Nastavení porovnání (synchronizační úloha): mirroring, jednosměrná, obousměrná
+    - Přehled balíčků (zálohová úloha): přehled balíčků zálohy,
+        - po rozklitknutí balíčku zorazí soubory.
+        - umožňuje obnovit ze zálohy celou historii (obnový vždy nejnovější) nebo jeden balíček
+        - veškeré přidané soubory a ve kterém balíku se nachází je evidováno pomocí SQLlite
+    - žurnal: obsahuje data o provedených operacích
+  - Pro synchronizaci je možné měnit kořenové adresáře
+  - funkce pro ukládání změn v nastavení
+aplikace ukládá 4 zálohové soubory úloh, aby bylo možné nastavení vráti kdyby - chybí iplementace obnovy
+
+
+
+
+
+Synchronizační umožňuje nastavit
+
+ uživatel nastaví dvě cesty ke složkám (pc a zálohový disk) a aplikace mezi složkama
+ porovná změny a které soubory chybí, tito operace může měnit, může si taky nastavyt tip jako je synchronizace a zálohování (oba směry, jeden směr)
+ synchronizace dělá rovnou operace jedním nebo obějma směry a taky jestli chceme mazat soubory které se v té hlavní nenachází.
+ Záloha funguje jen jedním směrem a neumoňuje mazat soubory v záloze. Každou novou zálohu ukládá do dávek a tím zachovává historii souboru.
+ Tato historie je ukládána SQLlite a jde zobrazit v přehledu
+ Zálohy jsdou zazipovat a šifrovat.
