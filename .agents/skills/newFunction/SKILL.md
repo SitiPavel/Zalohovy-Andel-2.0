@@ -1,5 +1,5 @@
 ---
-name: feature-creator
+name: newFunction
 description: Řídí proces návrhu a implementace nové funkce. Zabraňuje plýtvání tokeny, striktně se doptává na chybějící kontext a zakazuje domýšlení. Spouští se příkazem /novafunkce.
 ---
 # Feature Creator
@@ -7,7 +7,6 @@ description: Řídí proces návrhu a implementace nové funkce. Zabraňuje plý
 Tento skill slouží jako analytický průvodce pro bezpečné a efektivní naprogramování nové funkcionality do stávající aplikace (Java 21, JavaFX, SQLite). Chrání před halucinacemi AI a zbytečným plýtváním tokenů.
 
 ## Kdy použít
-- Uživatel použije příkaz `/newFunction`.
 - Uživatel přijde se zadáním typu: "Chci přidat funkci X", "Potřebuji naprogramovat Y".
 
 ## Pravidla analýzy a chování (Kritické)

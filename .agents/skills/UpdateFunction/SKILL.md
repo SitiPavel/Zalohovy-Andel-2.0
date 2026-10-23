@@ -1,5 +1,5 @@
 ---
-name: function-refactor
+name: updateFunction
 description: Přepisuje, rozšiřuje a optimalizuje existující funkce. Striktně se doptává na kontext, neplýtvá tokeny a dodržuje pravidla původní architektury. Spouští se příkazem /prepis.
 ---
 # Function Refactor
@@ -7,7 +7,6 @@ description: Přepisuje, rozšiřuje a optimalizuje existující funkce. Striktn
 Tento skill slouží pro bezpečnou úpravu, rozšíření nebo optimalizaci stávajícího kódu. Zajišťuje, že úpravy budou efektivní, nerozbijí MVC architekturu a nezablokují UI vlákno. Chrání před halucinacemi AI a plýtváním tokenů.
 
 ## Kdy použít
-- Uživatel použije příkaz `/updateFunction`.
 - Uživatel vloží stávající kód s požadavkem na vylepšení, zrychlení, refaktoring nebo přidání dílčí úpravy do již fungující metody.
 
 ## Pravidla analýzy a chování (Kritické)
