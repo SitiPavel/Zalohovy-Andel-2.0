@@ -18,6 +18,7 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableB
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFilterService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFolderOperationMakerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableGuiModify;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.popupSevice.PopupDialogService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.TreeTableUtility;
@@ -336,7 +337,7 @@ public class BackupTaskController implements TaskController {
                 }
             });
 
-            progressController.startIndeterminateTask(loadFoldersTask, "Hledají se složky...");
+            progressController.startIndeterminateTask(loadFoldersTask, "Hledají se složky levé strany...");
 
             loadFoldersTask.setOnSucceeded(e -> {
                 progressStage.close();

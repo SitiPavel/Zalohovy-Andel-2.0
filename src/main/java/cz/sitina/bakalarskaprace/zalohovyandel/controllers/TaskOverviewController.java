@@ -9,8 +9,10 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.BackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.EncryptedBackupTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.ManualSyncTask;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.RightClickMenuItem;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.JsonDataManagerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.WindowManager;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.popupSevice.RightClickMenuService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.Utility;
@@ -34,6 +36,7 @@ public class TaskOverviewController {
     private AppFrameController appFrameController;
     private final IconManagerUtility iconManager = new IconManagerUtility();
     private JsonDataManagerService jsonManager = JsonDataManagerService.getInstance();
+    private final RightClickMenuService rightClickMenuService = new RightClickMenuService();
 
 
     //Definování tabulky a sloupců
@@ -69,43 +72,14 @@ public class TaskOverviewController {
         // nastavení řádků
         taskTable.setRowFactory(tableView -> {
             final TableRow<TaskModel> row = new TableRow<>();
-            final ContextMenu contextMenu = new ContextMenu();
 
-            MenuItem deleteItem = new MenuItem("Smazat úlohu");
-            deleteItem.setOnAction(event -> {
-                TaskModel selectedTask = row.getItem();
-
-                // 1. Vytvoření potvrzovacího dialogu
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Potvrzení smazání");
-                alert.setHeaderText("Opravdu chcete smazat tuto úlohu?");
-                alert.setContentText("Úloha: " + selectedTask.getName() + "\n\nTato akce je nevratná a data budou trvale smazána.");
-
-                // 2. Zobrazení okna a čekání na reakci uživatele
-                Optional<ButtonType> result = alert.showAndWait();
-
-                // 3. Rozhodnutí podle toho, na co uživatel klikl
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    // Smazání v datech (JSON)
-                    jsonManager.deleteTask_SaveOldSave(selectedTask);
-
-                    // AKTUALIZACE GUI: Aby řádek zmizel z obrazovky hned po smazání
-                    taskTable.getItems().remove(selectedTask);
-
-                    System.out.println("Úloha byla úspěšně smazána.");
-                } else {
-                    System.out.println("Smazání bylo zrušeno uživatelem.");
+            row.setOnContextMenuRequested(event -> {
+                if (!row.isEmpty()) {
+                    TaskModel selectedTask = row.getItem();
+                    showTaskContextMenu(selectedTask, event.getScreenX(), event.getScreenY());
+                    event.consume();
                 }
             });
-
-            // Přidání položky do menu
-            contextMenu.getItems().add(deleteItem);
-
-            row.contextMenuProperty().bind(
-                    javafx.beans.binding.Bindings.when(row.emptyProperty())
-                            .then((ContextMenu) null)
-                            .otherwise(contextMenu)
-            );
 
             return row;
         });
@@ -127,29 +101,7 @@ public class TaskOverviewController {
 
                 btn.setOnAction(event -> {
                     TaskModel taskModel = getTableView().getItems().get(getIndex());
-
-                    if (taskModel instanceof ManualSyncTask mst) {
-                        appFrameController.showCompareOverview(mst);
-
-                    } else if (taskModel instanceof BackupTask bt) {
-                        appFrameController.showBackupOverview(bt);
-
-                    } else if (taskModel instanceof EncryptedBackupTask ebt) {
-                        try {
-                            FXMLLoader loader = WindowManager.loadFXML("EntryPasswordWindow.fxml");
-                            EntryPasswordController controller = loader.getController();
-                            controller.loadWindow(ebt, appFrameController);
-                            WindowManager.openNewWindowAutoSized(loader, "Přehled zálohovací úlohy");
-                        } catch (IOException e) {
-                            ErrorUtility.showError_WindowLoading();
-                        } catch (Exception e) {e.printStackTrace();}
-
-                    }
-                    else {
-                        ErrorUtility.getInstance("Kritická chyba",
-                                "Neznámý typ úlohy",
-                                "Aplikace nezná vybraný typ úlohy!");
-                    }
+                    openTask(taskModel);
                 });
             }
 
@@ -311,6 +263,66 @@ public class TaskOverviewController {
     }
 
 
+    private void openTask(TaskModel taskModel) {
+        if (taskModel == null) return;
+
+        if (taskModel instanceof ManualSyncTask mst) {
+            appFrameController.showCompareOverview(mst);
+        } else if (taskModel instanceof BackupTask bt) {
+            appFrameController.showBackupOverview(bt);
+        } else if (taskModel instanceof EncryptedBackupTask ebt) {
+            try {
+                FXMLLoader loader = WindowManager.loadFXML("EntryPasswordWindow.fxml");
+                EntryPasswordController controller = loader.getController();
+                controller.loadWindow(ebt, appFrameController);
+                WindowManager.openNewWindowAutoSized(loader, "Přehled zálohovací úlohy");
+            } catch (IOException e) {
+                ErrorUtility.showError_WindowLoading();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            ErrorUtility.getInstance("Kritická chyba",
+                    "Neznámý typ úlohy",
+                    "Aplikace nezná vybraný typ úlohy!");
+        }
+    }
+
+    private void showTaskContextMenu(TaskModel task, double screenX, double screenY) {
+        java.util.List<RightClickMenuItem> items = new java.util.ArrayList<>();
+
+        // 1. Vstoupit do úlohy
+        items.add(new RightClickMenuItem("Vstoupit do úlohy", iconManager.getEntryIcon(), () -> {
+            openTask(task);
+        }));
+
+        // 2. Upravit úlohu (příprava, zatím bez těla akce)
+        items.add(new RightClickMenuItem("Upravit", iconManager.getIcon_modified_left(), () -> {
+            System.out.println("Úprava úlohy: " + task.getName());
+        }));
+
+        // 3. Smazat úlohu
+        items.add(new RightClickMenuItem("Smazat úlohu", iconManager.getIconDeleteBoth(), () -> {
+            deleteTask(task);
+        }));
+
+        rightClickMenuService.showRightClickMenu(items, screenX, screenY);
+    }
+
+    private void deleteTask(TaskModel task) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Potvrzení smazání");
+        alert.setHeaderText("Chcete úlohu \"" + task.getName() + "\" trvale smazat?");
+        alert.setContentText("Tato akce je nevratná a data budou trvale smazána.");
+
+        java.util.Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            jsonManager.deleteTask_SaveOldSave(task);
+            taskTable.getItems().remove(task);
+            System.out.println("Úloha byla úspěšně smazána.");
+        }
+    }
+
     ///  setry
     public void setTaskRepository(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
@@ -323,3 +335,4 @@ public class TaskOverviewController {
     }
 
 }
+

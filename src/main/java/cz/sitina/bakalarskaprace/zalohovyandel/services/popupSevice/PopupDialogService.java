@@ -1,4 +1,4 @@
-package cz.sitina.bakalarskaprace.zalohovyandel.services;
+package cz.sitina.bakalarskaprace.zalohovyandel.services.popupSevice;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.popupControllers.ChangeFolderOrFileOperationController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.popupControllers.ChangeGroupOperationController;
@@ -11,7 +11,6 @@ import javafx.scene.control.TreeItem;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.io.IOException;
 import java.util.List;
 
 public class PopupDialogService {
