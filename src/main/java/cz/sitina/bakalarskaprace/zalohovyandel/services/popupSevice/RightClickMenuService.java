@@ -3,13 +3,16 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services.popupSevice;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.popupControllers.RightClickMenuController;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.RightClickMenuItem;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -45,41 +48,45 @@ public class RightClickMenuService {
             Scene scene = new Scene(root);
             stage.setScene(scene);
 
-            // Zavření při ztrátě fokusu
-            stage.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-                if (!isNowFocused) {
+            // OPRAVENO: Aktivní periodické sledování kurzoru myši přes Timeline (řeší selhání MOUSE_EXITED při toleranci 10px)
+            Timeline mouseTracker = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+                try {
+                    Point p = MouseInfo.getPointerInfo().getLocation();
+                    double cursorX = p.getX();
+                    double cursorY = p.getY();
+
+                    double minX = stage.getX() - TOLERANCE_PX;
+                    double maxX = stage.getX() + stage.getWidth() + TOLERANCE_PX;
+                    double minY = stage.getY() - TOLERANCE_PX;
+                    double maxY = stage.getY() + stage.getHeight() + TOLERANCE_PX;
+
+                    if (cursorX < minX || cursorX > maxX || cursorY < minY || cursorY > maxY) {
+                        stage.close();
+                    }
+                } catch (Exception e) {
                     stage.close();
                 }
-            });
+            }));
+            mouseTracker.setCycleCount(Animation.INDEFINITE);
 
-            // Sledování pohybu myši pro toleranci 10px při opuštění okna
-            // 1. Lokální kontrola přes MouseEvent
-            scene.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
-                checkMouseBoundsAndClose(stage);
-            });
-
-            scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
-                double mouseX = event.getSceneX();
-                double mouseY = event.getSceneY();
-                double width = scene.getWidth();
-                double height = scene.getHeight();
-
-                if (mouseX < -TOLERANCE_PX || mouseX > width + TOLERANCE_PX
-                        || mouseY < -TOLERANCE_PX || mouseY > height + TOLERANCE_PX) {
-                    stage.close();
-                }
-            });
-
-            // Zobrazení a nastavení přesné pozice:
-            // "střed horního okraje se dotýká špičky kurzoru a 10px nad kurzorem"
-            // -> X = screenX - width / 2
-            // -> Y = screenY - 10
+            // OPRAVENO: Spuštění trackeru až po korektním napozicování okna
             stage.setOnShown(event -> {
                 Platform.runLater(() -> {
                     double width = stage.getWidth();
                     stage.setX(screenX - (width / 2.0));
                     stage.setY(screenY - 10.0);
+                    mouseTracker.play();
                 });
+            });
+
+            // OPRAVENO: Zastavení trackeru při zavření okna nebo ztrátě fokusu (prevence memory leaků)
+            stage.setOnHidden(event -> mouseTracker.stop());
+
+            stage.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+                if (!isNowFocused) {
+                    mouseTracker.stop();
+                    stage.close();
+                }
             });
 
             stage.show();
@@ -89,25 +96,6 @@ public class RightClickMenuService {
             ErrorUtility.getInstance("Kritická chyba při načítání menu",
                     "Nepodařilo se zobrazit kontextové menu.",
                     e.getMessage());
-        }
-    }
-
-    private void checkMouseBoundsAndClose(Stage stage) {
-        try {
-            Point p = MouseInfo.getPointerInfo().getLocation();
-            double cursorX = p.getX();
-            double cursorY = p.getY();
-
-            double minX = stage.getX() - TOLERANCE_PX;
-            double maxX = stage.getX() + stage.getWidth() + TOLERANCE_PX;
-            double minY = stage.getY() - TOLERANCE_PX;
-            double maxY = stage.getY() + stage.getHeight() + TOLERANCE_PX;
-
-            if (cursorX < minX || cursorX > maxX || cursorY < minY || cursorY > maxY) {
-                stage.close();
-            }
-        } catch (Exception e) {
-            stage.close();
         }
     }
 }

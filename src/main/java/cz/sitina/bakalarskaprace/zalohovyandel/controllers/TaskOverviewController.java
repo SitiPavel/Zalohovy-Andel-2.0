@@ -301,8 +301,8 @@ public class TaskOverviewController {
             System.out.println("Úprava úlohy: " + task.getName());
         }));
 
-        // 3. Smazat úlohu
-        items.add(new RightClickMenuItem("Smazat úlohu", iconManager.getIconDeleteBoth(), () -> {
+        // OPRAVENO: Nastavena ikona icons/delete_right místo původní DELETE_BOTH
+        items.add(new RightClickMenuItem("Smazat úlohu", iconManager.getIcon_delete_right(), () -> {
             deleteTask(task);
         }));
 
@@ -335,4 +335,3 @@ public class TaskOverviewController {
     }
 
 }
-
