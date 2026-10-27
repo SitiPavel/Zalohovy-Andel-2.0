@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="liteDarkConteiner" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateManualSyncController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="liteDarkConteiner" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateManualSyncController">
    <stylesheets>
       <URL value="@../../css/globlCss.css" />
       <URL value="@../../css/windowsStyle.css" />
@@ -30,7 +30,7 @@
                <children>
                   <VBox alignment="TOP_CENTER" layoutX="146.0" layoutY="56.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Label styleClass="DarkBoltHeader0" text="Nová manuální synchronizace">
+                        <Label fx:id="hlHeader" styleClass="DarkBoltHeader0" text="Nová manuální synchronizace">
                            <VBox.margin>
                               <Insets bottom="15.0" />
                            </VBox.margin>
@@ -68,7 +68,7 @@
                               <Insets bottom="15.0" />
                            </VBox.margin>
                         </HBox>
-                        <Label maxWidth="1.7976931348623157E308" styleClass="darkBoltText" text="Najdi složky které chceš synchronizovat" VBox.vgrow="ALWAYS">
+                        <Label fx:id="folderLabel" maxWidth="1.7976931348623157E308" styleClass="darkBoltText" text="Najdi složky které chceš synchronizovat" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" />
                            </VBox.margin>
@@ -76,7 +76,7 @@
                               <Label styleClass="formRequiredMark_Red" text="✱" />
                            </graphic>
                         </Label>
-                        <HBox alignment="CENTER">
+                        <HBox fx:id="leftPathInputConteiner" alignment="CENTER">
                            <children>
                               <Button minHeight="0.0" minWidth="75.0" mnemonicParsing="false" onAction="#findLeftPath" text="Levá">
                                  <graphic>
@@ -96,6 +96,9 @@
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
                               </Button>
                               <TextField fx:id="tfLeftPath" maxHeight="30.0" maxWidth="600.0" minHeight="30.0" minWidth="250.0" prefHeight="30.0" promptText="C:\ceta\ke\Složce\levá..." HBox.hgrow="ALWAYS">
                                  <styleClass>
@@ -110,7 +113,7 @@
                               </TextField>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER">
+                        <HBox fx:id="rightPathInputConteiner" alignment="CENTER">
                            <children>
                               <Button minWidth="75.0" mnemonicParsing="false" onAction="#findRightPath" text="Pravá">
                                  <graphic>
@@ -130,6 +133,9 @@
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
+                                 <HBox.margin>
+                                    <Insets top="2.0" />
+                                 </HBox.margin>
                               </Button>
                               <TextField fx:id="tfRightPath" maxHeight="30.0" maxWidth="600.0" minHeight="30.0" minWidth="250.0" prefHeight="30.0" promptText="D:\ceta\ke\Složce\Pravá..." HBox.hgrow="ALWAYS">
                                  <styleClass>
@@ -147,7 +153,7 @@
                               <Insets top="15.0" />
                            </VBox.margin>
                            <padding>
-                              <Insets bottom="5.0" left="5.0" />
+                              <Insets bottom="5.0" />
                            </padding>
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0">
@@ -187,7 +193,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#closeWindow_Create" text="Vytvořit">
+                  <Button fx:id="submitBtn" mnemonicParsing="false" onAction="#closeWindow_Create" text="Vytvořit">
                      <styleClass>
                         <String fx:value="WindowTitle_L1_Dark" />
                         <String fx:value="button_Primary1" />

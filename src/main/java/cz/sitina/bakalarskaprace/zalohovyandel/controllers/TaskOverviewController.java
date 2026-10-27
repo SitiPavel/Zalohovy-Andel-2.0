@@ -1,6 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.EntryPasswordController;
+import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.TaskEditController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateBackupTaskController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateManualSyncController;
 import cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.createTaskController.CreateTaskController;
@@ -296,9 +297,9 @@ public class TaskOverviewController {
             openTask(task);
         }));
 
-        // 2. Upravit úlohu (příprava, zatím bez těla akce)
+        // 2. Upravit úlohu
         items.add(new RightClickMenuItem("Upravit", iconManager.getIcon_modified_left(), () -> {
-            System.out.println("Úprava úlohy: " + task.getName());
+            openTaskEditWindow(task);
         }));
 
         // OPRAVENO: Nastavena ikona icons/delete_right místo původní DELETE_BOTH
@@ -307,6 +308,23 @@ public class TaskOverviewController {
         }));
 
         rightClickMenuService.showRightClickMenu(items, screenX, screenY);
+    }
+
+    private void openTaskEditWindow(TaskModel task) {
+        if (task == null) return;
+
+        try {
+            FXMLLoader loader = WindowManager.loadFXML("TaskEditWindow.fxml");
+            TaskEditController controller = loader.getController();
+            controller.setTask(task, () -> taskTable.refresh());
+
+            WindowManager.openNewWindowAutoSized(loader, "Upravit úlohu");
+        } catch (IOException e) {
+            ErrorUtility.showError_WindowLoading();
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void deleteTask(TaskModel task) {
