@@ -34,18 +34,19 @@ metody porovnání.
     - Chybové stavy a UI Alert: Nepolykej výjimky prázdným blokem catch. I/O a DB chyby musí probublat do vrstvy, která chybu zaloguje a pomocí Platform.runLater() zobrazí uživateli srozumitelný JavaFX Alert (využívej existující ErrorUtility, pokud je k dispozici).
     - PopupDialogService a WindowManager.java se starají o otevírání oken nebo popap oken (bez křížku)
     - třída Utility obsahuje velmi obecné metody jako převod bitů ná čitelné velikosti, nastavení tooltipů atd...
+    - Při změně názvu souboru musíš zkontrolovat veškeré možné závislosti. Všechny soubory na které obsahují odkaz na tento soubor musí být taky změněny.
     - ZÁKAZ používání PowerShellu pro běžné operace se soubory:
       - Pro čtení, prohlížení kódu, počítání řádků a vyhledávání textu VŽDY používej nativní nástroje (read_file, edit_file), NIKDY nespouštěj PowerShell skripty (Get-Content, [System.IO.File], Select-String, Get-ChildItem).
       - PowerShell (run_command) používej POUZE v nevyhnutelných případech: Maven build (`mvn clean compile`, `mvn test`), bezpečné Git příkazy a spuštění aplikace.
     - Pracovní a dočasná složka (.agents/Temp/):
-             - Složka `.agents/Temp/` je tvůj výhradní pracovní prostor (scratchpad / playground).
-             - Máš plné oprávnění si zde kdykoliv BEZ PTÁNÍ vytvářet, upravovat a mazat jakékoliv dočasné soubory (např. testovací skripty, mezivýsledky analýz, dočasné texty).
-             - Kód a soubory z této složky nikdy nepovažuj za součást produkčního kódu aplikace.
-             - Po dokončení komplexního úkolu dočasné soubory v `.agents/Temp/` smaž, ať nezůstává zbytečný odpad.
+      - Složka `.agents/Temp/` je tvůj výhradní pracovní prostor (scratchpad / playground).
+      - Máš plné oprávnění si zde kdykoliv BEZ PTÁNÍ vytvářet, upravovat a mazat jakékoliv dočasné soubory (např. testovací skripty, mezivýsledky analýz, dočasné texty).
+      - Kód a soubory z této složky nikdy nepovažuj za součást produkčního kódu aplikace.
+      - Po dokončení komplexního úkolu dočasné soubory v `.agents/Temp/` smaž, ať nezůstává zbytečný odpad.
 - **Čtení projektu a bezpečné příkazy (ZÁKAZ zbytečného ptaní):**
   - Máš plné povolení ČÍST veškeré soubory v projektu (kód, resources, konfigurace, texty) bez jakéhokoliv dotazování uživatele.
   - Máš plné povolení spouštět bez ptaní bezpečné čtecí Git příkazy: `git status`, `git diff`, `git log`, `git branch`, `git show`. Na tyto operace se NIKDY neptej.
   - ZÁKAZ platí POUZE pro destruktivní a zapisovací Git operace: `git commit`, `git push`, `git reset`, `git checkout .`, `git rebase`, `git clean`. Tyto operace nesmíš spustit bez výslovného schválení. 
   -  Pro čtení souborů, zjišťování počtu řádků nebo vyhledávání používej primárně své interní čtecí nástroje (read_file, search), nespouštěj zbytečně externí PowerShell skripty.
-    - 
+ 
   
