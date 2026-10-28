@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="liteDarkConteiner" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.sitina.bakalarskaprace.zalohovyandel.controllers.windowControllers.TaskEditController">
+   <stylesheets>
+      <URL value="@../../css/globlCss.css" />
+      <URL value="@../../css/windowsStyle.css" />
+   </stylesheets>
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane VBox.vgrow="ALWAYS">
+               <styleClass>
+                  <String fx:value="mainConteinerStyle" />
+                  <String fx:value="conteinerModify_Radius15" />
+               </styleClass>
+               <children>
+                  <VBox alignment="TOP_CENTER" layoutX="146.0" layoutY="56.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label fx:id="hlHeader" styleClass="DarkBoltHeader0" text="Upravit úlohu">
+                           <VBox.margin>
+                              <Insets bottom="15.0" />
+                           </VBox.margin>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT" maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" minWidth="350.0" prefHeight="35.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="darkBoltText" text="Název: ">
+                                 <graphic>
+                                    <Label styleClass="formRequiredMark_Red" text="✱" />
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="tfName" maxHeight="30.0" maxWidth="400.0" minHeight="30.0" minWidth="250.0" prefHeight="30.0" promptText="Nazev..." HBox.hgrow="ALWAYS">
+                                 <styleClass>
+                                    <String fx:value="textField_Styl1" />
+                                    <String fx:value="borderModifi_primary1" />
+                                    <String fx:value="borderModify_Radius15" />
+                                    <String fx:value="conteinerModify_Radius10" />
+                                    <String fx:value="shadow_1" />
+                                    <String fx:value="WindowTitle_L1_Colored" />
+                                 </styleClass>
+                                 <cursor>
+                                    <Cursor fx:constant="TEXT" />
+                                 </cursor>
+                              </TextField>
+                              <Label fx:id="lbNameLettersCount" styleClass="darkBoltText" text="000">
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="15.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <Label fx:id="folderLabel" maxWidth="1.7976931348623157E308" styleClass="darkBoltText" text="Složky úlohy" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" />
+                           </VBox.margin>
+                           <graphic>
+                              <Label styleClass="formRequiredMark_Red" text="✱" />
+                           </graphic>
+                        </Label>
+                        <HBox fx:id="leftPathInputConteiner" alignment="CENTER">
+                           <children>
+                              <Button fx:id="btnLeftPath" minHeight="0.0" minWidth="75.0" mnemonicParsing="false" onAction="#findLeftPath" text="Levá">
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/icons/magnifie.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <padding>
+                                    <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />
+                                 </padding>
+                                 <styleClass>
+                                    <String fx:value="button_Primary1_Radius1001" />
+                                    <String fx:value="WindowTitle_L1_Dark" />
+                                 </styleClass>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Button>
+                              <TextField fx:id="tfLeftPath" maxHeight="30.0" maxWidth="600.0" minHeight="30.0" minWidth="250.0" prefHeight="30.0" promptText="C:\ceta\ke\Složce\levá..." HBox.hgrow="ALWAYS">
+                                 <styleClass>
+                                    <String fx:value="textField_Styl1_noRadius" />
+                                    <String fx:value="borderBackgroundModify_Only0110_Radius10" />
+                                    <String fx:value="conteinerModify_Radius10" />
+                                    <String fx:value="WindowTitle_L1_Colored" />
+                                 </styleClass>
+                                 <cursor>
+                                    <Cursor fx:constant="TEXT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <HBox fx:id="rightPathInputConteiner" alignment="CENTER">
+                           <children>
+                              <Button fx:id="btnRightPath" minWidth="75.0" mnemonicParsing="false" onAction="#findRightPath" text="Pravá">
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/icons/magnifie.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <padding>
+                                    <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />
+                                 </padding>
+                                 <styleClass>
+                                    <String fx:value="button_Primary1_Radius1001" />
+                                    <String fx:value="WindowTitle_L1_Dark" />
+                                 </styleClass>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <HBox.margin>
+                                    <Insets top="2.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <TextField fx:id="tfRightPath" maxHeight="30.0" maxWidth="600.0" minHeight="30.0" minWidth="250.0" prefHeight="30.0" promptText="D:\ceta\ke\Složce\Pravá..." HBox.hgrow="ALWAYS">
+                                 <styleClass>
+                                    <String fx:value="textField_Styl1_noRadius" />
+                                    <String fx:value="borderBackgroundModify_Only0110_Radius10" />
+                                    <String fx:value="conteinerModify_Radius10" />
+                                    <String fx:value="WindowTitle_L1_Colored" />
+                                 </styleClass>
+                                 <cursor>
+                                    <Cursor fx:constant="TEXT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="15.0" />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label maxWidth="1.7976931348623157E308" styleClass="darkBoltText" text="Popis:" />
+                              <Label fx:id="lbDescriptLettersCount" styleClass="darkBoltText" text="000">
+                                 <HBox.margin>
+                                    <Insets left="15.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <TextArea fx:id="taDescription" maxHeight="800.0" maxWidth="1000.0" minHeight="120.0" minWidth="250.0" prefHeight="100.0" prefWidth="250.0" promptText="Popis..." styleClass="textArea_Styl1" wrapText="true" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </TextArea>
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </AnchorPane>
+            <HBox alignment="CENTER_RIGHT">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#closeWindow_Cancel" text="Zrušit">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                     <styleClass>
+                        <String fx:value="WindowTitle_L1_Dark" />
+                        <String fx:value="button_NonBackground" />
+                        <String fx:value="buttonModify_backgroundBrown" />
+                     </styleClass>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button fx:id="submitBtn" mnemonicParsing="false" onAction="#saveAndClose" text="Upravit">
+                     <styleClass>
+                        <String fx:value="WindowTitle_L1_Dark" />
+                        <String fx:value="button_Primary1" />
+                     </styleClass>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="15.0" left="25.0" right="25.0" top="25.0" />
+   </padding>
+</AnchorPane>
