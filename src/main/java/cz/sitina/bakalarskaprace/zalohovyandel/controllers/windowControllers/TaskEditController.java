@@ -155,7 +155,7 @@ public class TaskEditController {
             syncTask.setRightPath(newRight);
 
         } else if (task instanceof EncryptedBackupTask encryptedTask) {
-            // Kontrola dostupnosti cílové složky před aktualizací config.json
+            // Kontrola dostupnosti cílové složky před aktualizací taskConfig.json
             String rootPathStr = encryptedTask.getRootFolderPathStr();
             if (rootPathStr == null || rootPathStr.isBlank() || !Files.exists(Path.of(rootPathStr))) {
                 ErrorUtility.getInstance("Cílová složka nedostupná",
@@ -168,7 +168,7 @@ public class TaskEditController {
             encryptedTask.setName(newName);
             encryptedTask.setDescription(newDesc);
 
-            // Aktualizace config.json v cíli
+            // Aktualizace taskConfig.json v cíli
             encryptConfigManager.makeConfigUpToDate(encryptedTask, Path.of(rootPathStr));
 
         } else if (task instanceof BackupTask backupTask) {

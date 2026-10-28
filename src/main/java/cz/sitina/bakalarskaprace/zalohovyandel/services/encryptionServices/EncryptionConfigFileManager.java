@@ -10,7 +10,7 @@ import java.nio.file.Path;
 
 public class EncryptionConfigFileManager {
 
-    private static final String CONFIG_FILE_NAME = "config.json";
+    private static final String CONFIG_FILE_NAME = "taskConfig.json";
     private final ObjectMapper objectMapper;
 
     public EncryptionConfigFileManager(ObjectMapper objectMapper) {
@@ -29,15 +29,20 @@ public class EncryptionConfigFileManager {
 
         Path configAbsolutPath = rootPackageFilePath.resolve(CONFIG_FILE_NAME);
         try {
+            // Pokud soubor existuje a je skrytý (např. z předchozích verzí), zrušíme skrytí pro bezproblémový přepis ve Windows
             if (Files.exists(configAbsolutPath)) {
+                try {
+                    Files.setAttribute(configAbsolutPath, "dos:hidden", false);
+                } catch (Exception ignored) {
+                    // Ignorujeme na systémech, které nepodporují dos:hidden (např. Linux)
+                }
+
                 if (isConfigUpToDate(configAbsolutPath, encryptedBackupTask)) {
                     return;
                 }
             }
 
             writeConfig(configAbsolutPath, encryptedBackupTask);
-            // Volitelné: Nastavení souboru jako "Skrytý" ve Windows (aby to uživatele nerušilo)
-            Files.setAttribute(configAbsolutPath, "dos:hidden", true);
 
         } catch (IOException e ) {
             System.err.println("I/O Chyba při práci se soubory: " + e.getMessage());
@@ -65,4 +70,3 @@ public class EncryptionConfigFileManager {
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(configAbsolutPath.toFile(), task);
     }
 }
-

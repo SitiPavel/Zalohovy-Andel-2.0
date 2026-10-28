@@ -111,7 +111,7 @@ public class CreateBackupTaskController extends CreateTaskController {
     }
 
     /**
-     * Inicializace počátečních souborů zálohy (cílový adresář, SQLite databáze index.db a config.json).
+     * Inicializace počátečních souborů zálohy (cílový adresář, SQLite databáze index.db a taskConfig.json).
      * V případě selhání provede rollback smazáním nově vytvořeného adresáře.
      */
     private void backupInitialization(BackupTask task, EncryptedBackupTask encryptedTask, SecretKey secretKey) throws Exception {
@@ -119,18 +119,18 @@ public class CreateBackupTaskController extends CreateTaskController {
         boolean folderCreatedByUs = false;
 
         try {
-            // 1. Krok: Vytvoření kořenové složky zálohy
+            // Vytvoření kořenové složky zálohy
             if (!Files.exists(rootDir)) {
                 Files.createDirectories(rootDir);
                 folderCreatedByUs = true;
             }
 
-            // 2. Krok: Inicializace a případné zašifrování SQLite databáze index.db
+            // Inicializace a případné zašifrování SQLite databáze index.db
             try (DatabaseManager dbManager = new DatabaseManager(task.getBackupDatabasePath(), secretKey)) {
                 // DatabaseManager automaticky zajistí schéma tabulky backup_catalog
             }
 
-            // 3. Krok: Uložení config.json pro šifrovanou zálohu
+            // Uložení taskConfig.json pro šifrovanou zálohu
             if (encryptedTask != null) {
                 EncryptionConfigFileManager configManager = new EncryptionConfigFileManager(jsonService.getMapper());
                 configManager.makeConfigUpToDate(encryptedTask, rootDir);
