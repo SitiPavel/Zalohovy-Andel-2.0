@@ -10,93 +10,111 @@ import java.util.*;
 
 public class BlockedTreeTableService {
 
-    public static void  buildTreeTableBlockedFiles(TreeItem<BlockedFileTreeRow> root, Set<String> blockedFilesList,
-                                           String leftRootString, String rightRootString) {
+    public static void buildTreeTableBlockedFiles(TreeItem<BlockedFileTreeRow> root, Set<String> blockedFilesList,
+                                           String leftRootString, String rightRootString, boolean isBackup) {
         if (root == null || blockedFilesList == null || blockedFilesList.isEmpty()) {
-            System.out.println("buildTreeTableBlockedFiles: root nebo blockedFilesList je null, popřípadě je " +
-                    "blockedFilesList prázdný");
             return;
         }
 
-        HashMap<String,TreeItem<BlockedFileTreeRow>> blockedFileTreeMap = new HashMap<>();
+        HashMap<String, TreeItem<BlockedFileTreeRow>> blockedFileTreeMap = new HashMap<>();
         blockedFileTreeMap.put("", root);
-        Path leftRootPath = Path.of(leftRootString);
-        Path rightRootPath = Path.of(rightRootString);
-
+        Path leftRootPath = (leftRootString != null && !leftRootString.isEmpty()) ? Path.of(leftRootString) : null;
+        Path rightRootPath = (!isBackup && rightRootString != null && !rightRootString.isEmpty()) ? Path.of(rightRootString) : null;
 
         for (String blockedFile : blockedFilesList) {
             Path blockedPath = Paths.get(blockedFile);
             int pathLength = blockedPath.getNameCount();
-
             String currentDir = "";
 
-
             for (int i = 0; i < pathLength; i++) {
-
-
                 String iFolderInPath = blockedPath.getName(i).toString();
+                boolean isLeaf = (i == pathLength - 1);
 
-                boolean isFile = (i == pathLength - 1);
-
-                if (isFile) {
+                if (isLeaf) {
                     boolean isExist = false;
                     boolean isFolder = false;
-                    // zjištění zda ten soboru byl nalezen pokud jo tak zobrazíme jako nalezen
-                    Path exactLeftPath = leftRootPath.resolve(blockedFile);
-                    Path exactRightPath = rightRootPath.resolve(blockedFile);
-                    if (Files.exists(exactLeftPath)) {
-                        isExist= true;
-                        isFolder = Files.isDirectory(exactLeftPath);
 
-                    }
-                    if (Files.exists(exactRightPath)) {
-                        isExist = true;
-                        isFolder = Files.isDirectory(exactRightPath);
+                    // OPRAVENO: 1) Kontrola v levé kořenové složce
+                    if (leftRootPath != null) {
+                        Path exactLeftPath = leftRootPath.resolve(blockedFile);
+                        if (Files.exists(exactLeftPath)) {
+                            isExist = true;
+                            isFolder = Files.isDirectory(exactLeftPath);
+                        }
                     }
 
-                    // vytvoření a přidání itemu do stromu
+                    // OPRAVENO: 2) Pokud neexistuje a jde o synchronizaci, kontrola v pravé kořenové složce
+                    if (!isExist && !isBackup && rightRootPath != null) {
+                        Path exactRightPath = rightRootPath.resolve(blockedFile);
+                        if (Files.exists(exactRightPath)) {
+                            isExist = true;
+                            isFolder = Files.isDirectory(exactRightPath);
+                        }
+                    }
+
+                    // Pokud položka na disku vůbec neexistuje, odhad typu: pokud nemá příponu, považujeme ji za složku
+                    if (!isExist) {
+                        isFolder = !iFolderInPath.contains(".");
+                    }
+
                     TreeItem<BlockedFileTreeRow> parentNode = blockedFileTreeMap.get(currentDir);
                     BlockedFileTreeRow row = new BlockedFileTreeRow(blockedFile, isFolder, isExist, false);
                     TreeItem<BlockedFileTreeRow> fileNode = new TreeItem<>(row);
 
-                    parentNode.getChildren().add(fileNode);
+                    if (parentNode != null) {
+                        parentNode.getChildren().add(fileNode);
+                    }
 
                 } else {
-
-                    /// uložení rodičovské cesty
                     String parentKey = currentDir;
-
-                    if (currentDir.isEmpty()) {
-                        currentDir = iFolderInPath;
-                    } else {
-                        currentDir = currentDir + "/" + iFolderInPath;
-                    }
+                    currentDir = currentDir.isEmpty() ? iFolderInPath : currentDir + "/" + iFolderInPath;
 
                     if (!blockedFileTreeMap.containsKey(currentDir)) {
                         boolean isExist = false;
-                        // zjištění zda ten soboru byl nalezen pokud jo tak zobrazíme jako nalezen
-                        Path exactLeftPath = leftRootPath.resolve(currentDir);
-                        Path exactRightPath = rightRootPath.resolve(currentDir);
-                        if (Files.exists(exactLeftPath) || Files.exists(exactRightPath)) {
-                            isExist= true;
+
+                        if (leftRootPath != null && Files.exists(leftRootPath.resolve(currentDir))) {
+                            isExist = true;
+                        }
+                        if (!isExist && !isBackup && rightRootPath != null && Files.exists(rightRootPath.resolve(currentDir))) {
+                            isExist = true;
                         }
 
-                        // vytvoření a přidání nového itemu složky do stromu
-                        BlockedFileTreeRow fileNode = new BlockedFileTreeRow(currentDir, true, isExist, true);
-                        TreeItem<BlockedFileTreeRow> newFileNode = new TreeItem<>(fileNode);
-                        newFileNode.setExpanded(true);
+                        BlockedFileTreeRow folderRow = new BlockedFileTreeRow(currentDir, true, isExist, true);
+                        TreeItem<BlockedFileTreeRow> newFolderNode = new TreeItem<>(folderRow);
+                        newFolderNode.setExpanded(true);
 
-                        blockedFileTreeMap.put(currentDir, newFileNode);
+                        blockedFileTreeMap.put(currentDir, newFolderNode);
 
                         TreeItem<BlockedFileTreeRow> parentNode = blockedFileTreeMap.get(parentKey);
-                        parentNode.getChildren().add(newFileNode);
-
+                        if (parentNode != null) {
+                            parentNode.getChildren().add(newFolderNode);
+                        }
                     }
-
                 }
-
             }
         }
+    }
+
+    // Přetížení pro zpětnou kompatibilitu
+    public static void buildTreeTableBlockedFiles(TreeItem<BlockedFileTreeRow> root, Set<String> blockedFilesList,
+                                           String leftRootString, String rightRootString) {
+        buildTreeTableBlockedFiles(root, blockedFilesList, leftRootString, rightRootString, false);
+    }
+
+    // Zjistí, zda je zadaná relativní cesta zanořena pod některou z již existujících blokovaných složek
+    public static Optional<String> findParentBlockedFolder(String newPathStr, Set<String> blockedFilesList) {
+        if (newPathStr == null || blockedFilesList == null || blockedFilesList.isEmpty()) {
+            return Optional.empty();
+        }
+        Path newPath = Paths.get(newPathStr);
+        for (String blockedItem : blockedFilesList) {
+            Path blockedPath = Paths.get(blockedItem);
+            // Je zanořena, pokud začíná blokovanou cestou a není s ní totožná
+            if (newPath.startsWith(blockedPath) && !newPath.equals(blockedPath)) {
+                return Optional.of(blockedItem);
+            }
+        }
+        return Optional.empty();
     }
 
     // metoda nám pročistí duplicity a zbytečné itemy v listu, když se nově vloží složka /dokumenty tak
@@ -107,13 +125,13 @@ public class BlockedTreeTableService {
         }
         Set<String> toRemove = new LinkedHashSet<>();
 
-        // aktuální cesta kterou porovnáváme
         for (String currentPathString : blockPaths) {
             Path currentPath = Path.of(currentPathString);
 
-            // ostatní cesty které porovnáváme s tou currentPath
             for (String othersPathString : blockPaths) {
-                if (currentPathString.equals(othersPathString)) {continue;} // nehceme porovnávat stejnou se stejnou cestou
+                if (currentPathString.equals(othersPathString)) {
+                    continue;
+                }
 
                 Path otherPath = Path.of(othersPathString);
 
@@ -129,8 +147,6 @@ public class BlockedTreeTableService {
     // odstraní ze String listu vše co začíná @deletedPath
     public static void removeItemAndChildren(String deletedPathStr, Set<String> blockSet) {
         Path deletedPath = Path.of(deletedPathStr);
-
-        // FAKTA: Převedeme oba texty na Path a necháme Javu porovnat celé uzly cesty
         blockSet.removeIf(pathStr -> Path.of(pathStr).startsWith(deletedPath));
     }
 }

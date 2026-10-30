@@ -7,8 +7,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.image.ImageView;
 
-import javax.sound.sampled.Line;
-import java.util.List;
 import java.util.Set;
 
 public class BlockedTreeTableGuiService {
@@ -18,11 +16,9 @@ public class BlockedTreeTableGuiService {
     // získání ikon na řádek podle typu položky
     public ImageView getIcon_BlockRow(BlockedFileTreeRow blockedRow) {
         ImageView imageView = new ImageView();
-        {
-            imageView.setFitWidth(20);
-            imageView.setFitHeight(20);
-            imageView.setPreserveRatio(true);
-        }
+        imageView.setFitWidth(20);
+        imageView.setFitHeight(20);
+        imageView.setPreserveRatio(true);
 
         if (blockedRow.isOrganizationFolder()) {
             imageView.setImage(iconManager.getFolder20x20());
@@ -38,23 +34,29 @@ public class BlockedTreeTableGuiService {
     }
 
     // získání tlačítka na odstranení položky z listu
-    public void getButtonDeleteListItem( Button button,
+    public void getButtonDeleteListItem(Button button,
+                                        TreeItem<BlockedFileTreeRow> rootItem,
+                                        String leftRootPath, String rightRootPath,
+                                        boolean isBackup,
+                                        TreeTableCell<BlockedFileTreeRow, String> cell,
+                                        Set<String> blockList) {
+        button.setText("✘");
+        button.getStyleClass().addAll("WindowTitle_L1_Dark", "button_NonBackground", "buttonModify_backgroundRed");
+
+        button.setOnAction(event -> {
+            String deletedPath = cell.getTableRow().getTreeItem().getValue().getPath();
+            BlockedTreeTableService.removeItemAndChildren(deletedPath, blockList);
+            rootItem.getChildren().clear();
+            BlockedTreeTableService.buildTreeTableBlockedFiles(rootItem, blockList, leftRootPath, rightRootPath, isBackup);
+        });
+    }
+
+    // Pro zpětnou kompatibilitu
+    public void getButtonDeleteListItem(Button button,
                                         TreeItem<BlockedFileTreeRow> rootItem,
                                         String leftRootPath, String rightRootPath,
                                         TreeTableCell<BlockedFileTreeRow, String> cell,
                                         Set<String> blockList) {
-
-        {
-            button.setText("✘");
-            button.getStyleClass().addAll("WindowTitle_L1_Dark", "button_NonBackground", "buttonModify_backgroundRed");
-
-
-            button.setOnAction(event -> {
-                String deletedPath = cell.getTableRow().getTreeItem().getValue().getPath();
-                BlockedTreeTableService.removeItemAndChildren(deletedPath, blockList);
-                rootItem.getChildren().clear();
-                BlockedTreeTableService.buildTreeTableBlockedFiles(rootItem, blockList, leftRootPath, rightRootPath);
-            });
-        }
+        getButtonDeleteListItem(button, rootItem, leftRootPath, rightRootPath, false, cell, blockList);
     }
 }
