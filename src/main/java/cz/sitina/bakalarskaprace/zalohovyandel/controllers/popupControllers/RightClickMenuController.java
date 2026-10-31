@@ -13,11 +13,11 @@ import java.util.List;
 public class RightClickMenuController {
 
     @FXML
-    private VBox menuItemKonteiner;
+    private VBox menuItemContainer;
 
     public void setMenuItems(List<RightClickMenuItem> items, Stage stage) {
-        menuItemKonteiner.getChildren().clear();
-        menuItemKonteiner.setSpacing(4);
+        menuItemContainer.getChildren().clear();
+        menuItemContainer.setSpacing(4);
 
         for (RightClickMenuItem item : items) {
             Button btn = new Button(item.getText());
@@ -43,7 +43,7 @@ public class RightClickMenuController {
                 }
             });
 
-            menuItemKonteiner.getChildren().add(btn);
+            menuItemContainer.getChildren().add(btn);
         }
     }
 }

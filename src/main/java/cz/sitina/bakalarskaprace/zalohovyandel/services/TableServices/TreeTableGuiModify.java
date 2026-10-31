@@ -3,6 +3,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BlockedFileTreeRow;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.popupSevice.TreeTableContextMenuService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class TreeTableGuiModify {
     private final IconManagerUtility iconManager = new IconManagerUtility();
+    private final TreeTableContextMenuService treeTableContextMenuService = new TreeTableContextMenuService();
 
 
     private static final List<String> listOfRowStyle = List.of(
@@ -30,45 +32,69 @@ public class TreeTableGuiModify {
      *  metoda - setRowFactory
      * */
 
-    /// nastaví barvu řádku podle operace
+    // OPRAVENO: Původní metoda s 1 parametrem zachována kvůli zpětné kompatibilitě (např. BackupTaskController)
     public void rowFormatingByOperation(TreeTableView<ComparedItemOperItemRowModel> treeTable) {
+        rowFormatingByOperation(treeTable, null, null, null, null, null, null, null);
+    }
 
-        treeTable.setRowFactory(tv -> new TreeTableRow<ComparedItemOperItemRowModel>() {
-            private String currentCssClass = null;
+    /// nastaví barvu řádku podle operace a přidá obsluhu kontextového menu
+    public void rowFormatingByOperation(TreeTableView<ComparedItemOperItemRowModel> treeTable,
+                                        TreeTableColumn<?, ?> leftColName,
+                                        TreeTableColumn<?, ?> leftColSize,
+                                        TreeTableColumn<?, ?> leftColLastModify,
+                                        TreeTableColumn<?, ?> operationCol,
+                                        TreeTableColumn<?, ?> rightColName,
+                                        TreeTableColumn<?, ?> rightColSize,
+                                        TreeTableColumn<?, ?> rightColLastModify) {
 
-            @Override
-            protected void updateItem(ComparedItemOperItemRowModel item, boolean empty) {
-                super.updateItem(item, empty);
+        treeTable.setRowFactory(tv -> {
+            TreeTableRow<ComparedItemOperItemRowModel> row = new TreeTableRow<ComparedItemOperItemRowModel>() {
+                private String currentCssClass = null;
 
-                // 1. ZÁSADNÍ KROK: Než cokoliv uděláme, vymažeme VŠECHNY naše vlastní třídy.
-                // Tím zajistíme, že zrecyklovaný řádek je úplně čistý.
-                getStyleClass().removeAll(listOfRowStyle);
+                @Override
+                protected void updateItem(ComparedItemOperItemRowModel item, boolean empty) {
+                    super.updateItem(item, empty);
 
-                // 2. Ošetření prázdného řádku nebo složky
-                if (item == null || empty || item.getOperation() == null) {
-                    return; // Řádek je teď čistý a prázdný, končíme.
+                    // 1. ZÁSADNÍ KROK: Než cokoliv uděláme, vymažeme VŠECHNY naše vlastní třídy.
+                    // Tím zajistíme, že zrecyklovaný řádek je úplně čistý.
+                    getStyleClass().removeAll(listOfRowStyle);
+
+                    // 2. Ošetření prázdného řádku nebo složky
+                    if (item == null || empty || item.getOperation() == null) {
+                        return; // Řádek je teď čistý a prázdný, končíme.
+                    }
+
+
+                    // 3. Přidání správné třídy podle operace
+                    switch (item.getOperation()) {
+                        case EQUALS -> getStyleClass().add("row-equals");
+                        case IGNORE -> getStyleClass().add("row-ignore");
+                        case DELETE_LEFT, DELETE_RIGHT, DELETE_BOTH -> getStyleClass().add("row-delete");
+                        case UPDATE_LEFT, UPDATE_RIGHT -> getStyleClass().add("row-update");
+                        case ADD_LEFT, ADD_RIGHT -> getStyleClass().add("row-add");
+                        case UNKNOWN -> getStyleClass().add("row-uknow");
+
+                        case FOLDER_UNEVEN -> getStyleClass().add("row-FOLDER_UNEVEN");
+                        case FOLDER_DELETE_LEFT, FOLDER_DELETE_RIGHT, FOLDER_DELETE_BOTH ->
+                                getStyleClass().add("row-FOLDER_DELETE");
+                        case FOLDER_UPDATE_LEFT, FOLDER_UPDATE_RIGHT -> getStyleClass().add("row-FOLDER_UPDATE");
+                        case FOLDER_ADD_LEFT, FOLDER_ADD_RIGHT -> getStyleClass().add("row-FOLDER_ADD");
+                        case FOLDER_UNKNOWN -> getStyleClass().add("row-FOLDER_UNKNOWN");
+                        case FOLDER_IGNORE -> getStyleClass().add("row-FOLDER_IGNORE");
+                    }
                 }
 
+            };
 
-                // 3. Přidání správné třídy podle operace
-                switch (item.getOperation()) {
-                    case EQUALS -> getStyleClass().add("row-equals");
-                    case IGNORE -> getStyleClass().add("row-ignore");
-                    case DELETE_LEFT, DELETE_RIGHT, DELETE_BOTH -> getStyleClass().add("row-delete");
-                    case UPDATE_LEFT, UPDATE_RIGHT -> getStyleClass().add("row-update");
-                    case ADD_LEFT, ADD_RIGHT -> getStyleClass().add("row-add");
-                    case UNKNOWN -> getStyleClass().add("row-uknow");
+            // OPRAVENO: Napojení kontextového menu na řádek TreeTableView
+            row.setOnContextMenuRequested(event -> {
+                treeTableContextMenuService.handleContextMenu(event, row, treeTable,
+                        leftColName, leftColSize, leftColLastModify,
+                        operationCol,
+                        rightColName, rightColSize, rightColLastModify);
+            });
 
-                    case FOLDER_UNEVEN -> getStyleClass().add("row-FOLDER_UNEVEN");
-                    case FOLDER_DELETE_LEFT, FOLDER_DELETE_RIGHT, FOLDER_DELETE_BOTH ->
-                            getStyleClass().add("row-FOLDER_DELETE");
-                    case FOLDER_UPDATE_LEFT, FOLDER_UPDATE_RIGHT -> getStyleClass().add("row-FOLDER_UPDATE");
-                    case FOLDER_ADD_LEFT, FOLDER_ADD_RIGHT -> getStyleClass().add("row-FOLDER_ADD");
-                    case FOLDER_UNKNOWN -> getStyleClass().add("row-FOLDER_UNKNOWN");
-                    case FOLDER_IGNORE -> getStyleClass().add("row-FOLDER_IGNORE");
-                }
-            }
-
+            return row;
         });
     }
 

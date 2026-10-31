@@ -69,7 +69,7 @@ public class RightClickMenuService {
             }));
             mouseTracker.setCycleCount(Animation.INDEFINITE);
 
-            // OPRAVENO: Spuštění trackeru až po korektním napozicování okna
+            // Spuštění trackeru až po korektním napozicování okna
             stage.setOnShown(event -> {
                 Platform.runLater(() -> {
                     double width = stage.getWidth();
@@ -79,7 +79,7 @@ public class RightClickMenuService {
                 });
             });
 
-            // OPRAVENO: Zastavení trackeru při zavření okna nebo ztrátě fokusu (prevence memory leaků)
+            // Zastavení trackeru při zavření okna nebo ztrátě fokusu (prevence memory leaků)
             stage.setOnHidden(event -> mouseTracker.stop());
 
             stage.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {

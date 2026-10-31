@@ -18,8 +18,13 @@ public class ComparedItemOperItemRowModel {
         this.rightItem = new SimpleObjectProperty<>(rightItem);
     }
 
+    // OPRAVENO: Správná detekce všech typů operací složky (FOLDER, FOLDER_UNEVEN, FOLDER_ADD_*, FOLDER_DELETE_* atd.)
     public boolean isFolder() {
-        return this.operation.getValue() == CompareOperations.FOLDER;
+        CompareOperations op = this.operation.getValue();
+        if (op == null) {
+            return false;
+        }
+        return op == CompareOperations.FOLDER || op.name().startsWith("FOLDER_");
     }
 
     public Path getNotNullPath() {

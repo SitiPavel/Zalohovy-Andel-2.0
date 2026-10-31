@@ -384,8 +384,11 @@ public class ManualSyncController implements TaskController {
 
         filesTreeTable.setShowRoot(false);
 
-        // nastavení generování Obarvených řádků podle operace
-        treeTableGuiModify.rowFormatingByOperation(filesTreeTable);
+        // předáváme sloupce pro spolehlivou detekci strany v kontextovém menu bez závislosti na souřadnicích
+        treeTableGuiModify.rowFormatingByOperation(filesTreeTable,
+                leftColName, leftColSize, leftColLastModify,
+                operationCol,
+                rightColName, rightColSize, rightColLastModify);
 
         setIsDirtyFlagListener();
 
@@ -1101,5 +1104,3 @@ public class ManualSyncController implements TaskController {
         this.appFrameController = appFrameController;
     }
 }
-
-

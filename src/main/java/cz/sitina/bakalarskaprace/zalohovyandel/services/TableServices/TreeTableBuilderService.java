@@ -85,27 +85,38 @@ public class TreeTableBuilderService {
                         currentDir = currentDir + "/" + iFolderInPath;
                     }
 
+                    Path folderRelativeSubPath = notNullPath.subpath(0, i + 1);
+
                     if (!treeFilesList.containsKey(currentDir)) {
 
-                        // 1. Vytvoříme model pro složku (jen název, zbytek null)
-                        FileItemModel folderInfo = new FileItemModel();
-                        folderInfo.setFileName(iFolderInPath);
-
+                        // Složka dostane plnohodnotné modely s relativePath a odvozenou fileAbsolutePath
                         ComparedItemOperItemRowModel folderRow = new ComparedItemOperItemRowModel(
                                 new FileItemModel(),
                                 CompareOperations.FOLDER,
                                 new FileItemModel()   // Pravá strana
                         );
 
-                        if (whereIsntNullPath == 01 ) {
-                            folderRow.getLeftItem().setFileName(iFolderInPath);
-                        } else if (whereIsntNullPath == 10) {
-                            folderRow.getRightItem().setFileName(iFolderInPath);
-                        } else {
-                            folderRow.getLeftItem().setFileName(iFolderInPath);
-                            folderRow.getRightItem().setFileName(iFolderInPath);
+                        // Nastavíme relativní cesty a názvy složky
+                        folderRow.getLeftItem().setFileName(iFolderInPath);
+                        folderRow.getLeftItem().setRelativePath(folderRelativeSubPath);
+                        folderRow.getRightItem().setFileName(iFolderInPath);
+                        folderRow.getRightItem().setRelativePath(folderRelativeSubPath);
+
+                        // Pokud má levý soubor absolutní kořen, odvodíme z něj absolutní cestu pro složku vlevo
+                        if (row.getLeftItem() != null && row.getLeftItem().getFileAbsolutePath() != null && row.getLeftItem().getRelativePath() != null) {
+                            Path rootLeft = deriveRootPath(row.getLeftItem().getFileAbsolutePath(), row.getLeftItem().getRelativePath());
+                            if (rootLeft != null) {
+                                folderRow.getLeftItem().setFileAbsolutePath(rootLeft.resolve(folderRelativeSubPath));
+                            }
                         }
 
+                        // Pokud má pravý soubor absolutní kořen, odvodíme z něj absolutní cestu pro složku vpravo
+                        if (row.getRightItem() != null && row.getRightItem().getFileAbsolutePath() != null && row.getRightItem().getRelativePath() != null) {
+                            Path rootRight = deriveRootPath(row.getRightItem().getFileAbsolutePath(), row.getRightItem().getRelativePath());
+                            if (rootRight != null) {
+                                folderRow.getRightItem().setFileAbsolutePath(rootRight.resolve(folderRelativeSubPath));
+                            }
+                        }
 
                         // 3. Vytvoříme TreeItem a propojíme s rodičem
                         TreeItem<ComparedItemOperItemRowModel> newFolderNode = new TreeItem<>(folderRow);
@@ -114,10 +125,28 @@ public class TreeTableBuilderService {
                         TreeItem<ComparedItemOperItemRowModel> parentNode = treeFilesList.get(parentKey);
                         parentNode.getChildren().add(newFolderNode);
 
-
-
                         // 4. Uložíme do cache, abychom ji příště našli
                         treeFilesList.put(currentDir, newFolderNode);
+                    } else {
+                        // OPRAVENO: Pokud už uzel složky v cache existuje (např. z jiné větve), doplníme chybějící absolutní cestu druhé strany
+                        TreeItem<ComparedItemOperItemRowModel> existingFolderNode = treeFilesList.get(currentDir);
+                        ComparedItemOperItemRowModel existingModel = existingFolderNode.getValue();
+
+                        if (existingModel.getLeftItem().getFileAbsolutePath() == null &&
+                                row.getLeftItem() != null && row.getLeftItem().getFileAbsolutePath() != null && row.getLeftItem().getRelativePath() != null) {
+                            Path rootLeft = deriveRootPath(row.getLeftItem().getFileAbsolutePath(), row.getLeftItem().getRelativePath());
+                            if (rootLeft != null) {
+                                existingModel.getLeftItem().setFileAbsolutePath(rootLeft.resolve(folderRelativeSubPath));
+                            }
+                        }
+
+                        if (existingModel.getRightItem().getFileAbsolutePath() == null &&
+                                row.getRightItem() != null && row.getRightItem().getFileAbsolutePath() != null && row.getRightItem().getRelativePath() != null) {
+                            Path rootRight = deriveRootPath(row.getRightItem().getFileAbsolutePath(), row.getRightItem().getRelativePath());
+                            if (rootRight != null) {
+                                existingModel.getRightItem().setFileAbsolutePath(rootRight.resolve(folderRelativeSubPath));
+                            }
+                        }
                     }
 
                 }
@@ -128,6 +157,23 @@ public class TreeTableBuilderService {
         sortChildrenRecursively(root);
         //Nastavení funkcí
 
+    }
+
+    // Pomocná metoda pro výpočet kořenového adresáře z absolutní a relativní cesty
+    private Path deriveRootPath(Path absolutePath, Path relativePath) {
+        if (absolutePath == null || relativePath == null) {
+            return null;
+        }
+        int relCount = relativePath.getNameCount();
+        int absCount = absolutePath.getNameCount();
+        if (absCount >= relCount) {
+            Path root = absolutePath;
+            for (int k = 0; k < relCount; k++) {
+                root = root.getParent();
+            }
+            return root;
+        }
+        return null;
     }
 
 
