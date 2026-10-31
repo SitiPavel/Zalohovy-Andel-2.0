@@ -10,7 +10,7 @@ import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperat
 
 public class PopupUtility {
 
-    // podle id tlačítka nám tjistí kterou operaci chce uživatel nastavit
+    // podle id tlačítka nám zjistí kterou operaci chce uživatel nastavit
     public static CompareOperations getOperationToSett(String btnId, boolean isFolder,
                                                        ComparedItemOperItemRowModel item) {
         CompareOperations operd;
@@ -18,9 +18,15 @@ public class PopupUtility {
         // a zkontrolovali zda operace může být přidělena
         if (isFolder) {
             operd = getOperationByBtnID_Folder(btnId);
+
+            // OPRAVENO: U fialové složky FOLDER_UNEVEN neprovádíme předběžné zamítnutí, validaci dětí provede setAllChildrenOfFolder
+            if (item != null && item.getOperation() == CompareOperations.FOLDER_UNEVEN) {
+                return operd;
+            }
+
             // převedeme jen pro kontrolu smysluplnosti operace
             CompareOperations basicOperation = TreeTableUtility.getBaseOperation(operd);
-            if (TreeTableUtility.cenBeOperationUsed(basicOperation,item)) {
+            if (TreeTableUtility.cenBeOperationUsed(basicOperation, item)) {
                 return operd;
             } else {
                 return null;
@@ -28,12 +34,11 @@ public class PopupUtility {
 
         } else {
             operd = getOperationByBtnID_File(btnId);
-            if (TreeTableUtility.cenBeOperationUsed(operd,item) && operd != null ) {
+            if (TreeTableUtility.cenBeOperationUsed(operd, item) && operd != null) {
                 return operd;
             } else {
                 return null;
             }
-
         }
     }
 

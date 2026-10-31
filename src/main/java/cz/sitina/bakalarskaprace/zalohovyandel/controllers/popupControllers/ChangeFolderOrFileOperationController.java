@@ -1,9 +1,7 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.controllers.popupControllers;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.ComparedDataAndStatisticsForCompereOverview;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFilterService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFolderOperationMakerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.PopupUtility;
@@ -18,11 +16,10 @@ import javafx.stage.Stage;
 
 
 public class ChangeFolderOrFileOperationController {
-    // Proměnná pro uložení příkazu k přepořítání statistik z venčí
+    // Proměnná pro uložení příkazu k přepočítání statistik z venčí
     private Runnable onUpdateSuccess;
 
-
-    private Boolean isFolder= false;
+    private Boolean isFolder = false;
     private ComparedItemOperItemRowModel rowItem;
     private TreeItem<ComparedItemOperItemRowModel> treeItem;
 
@@ -39,12 +36,11 @@ public class ChangeFolderOrFileOperationController {
     @FXML private Button btnSetOperEqals;
     @FXML private Button btnSetOperUnknow;
 
-
-
     @FXML
     public void initialize() {
 
     }
+
     /// callBack
     public void setOnUpdateSuccess(Runnable onUpdateSuccess) {
         this.onUpdateSuccess = onUpdateSuccess;
@@ -54,11 +50,12 @@ public class ChangeFolderOrFileOperationController {
     @FXML
     public void setOperByBtnId(ActionEvent event) {
         String buttonId = ((Node) event.getSource()).getId();
-        CompareOperations oper =   PopupUtility.getOperationToSett(buttonId, isFolder, treeItem.getValue());
+        CompareOperations oper = PopupUtility.getOperationToSett(buttonId, isFolder, treeItem.getValue());
 
         if (oper != null) {
 
-            if (oper.toString().contains("FOLDER")) {
+            // OPRAVENO: Kontrola zda jde o složku pomocí isDirectory()
+            if (rowItem != null && rowItem.isDirectory()) {
                 // pokud uživatel nastaví stejnou operaci
                 if (oper == treeItem.getValue().getOperation()) {
                 } // true když se dokáže na všechny děti (soubory/složky) nastavit vybraná operace
@@ -69,7 +66,6 @@ public class ChangeFolderOrFileOperationController {
                     ErrorUtility.showError_pointlessCompareOperation("Složka obsahuje soubor, " +
                             "na který nelze aplikovat tuto operaci! ");
                 }
-
 
             } else {
                 rowItem.setOperation(oper);
@@ -88,10 +84,12 @@ public class ChangeFolderOrFileOperationController {
         close(event);
     }
 
-
-
-
     private void disableInvalidButtons() {
+        // OPRAVENO: U fialové složky (FOLDER_UNEVEN) povolujeme všechna tlačítka, detailní kontrolu provede až rekurzivní validace dětí
+        if (isFolder && rowItem != null && rowItem.getOperation() == CompareOperations.FOLDER_UNEVEN) {
+            return;
+        }
+
         Button[] allButtons = {
                 btnSetOperAddLeft, btnSetOperAddRight,
                 btnSetOperUpdateLeft, btnSetOperUpdateRight,
@@ -111,13 +109,13 @@ public class ChangeFolderOrFileOperationController {
                 CompareOperations folderOper = PopupUtility.getOperationByBtnID_Folder(btn.getId());
                 operationForButton = TreeTableUtility.getBaseOperation(folderOper);
             } else {
-                operationForButton =  PopupUtility.getOperationByBtnID_File(btn.getId());
+                operationForButton = PopupUtility.getOperationByBtnID_File(btn.getId());
             }
 
             // Pokud metodu nelze spárovat s tlačítkem (nemělo by nastat), přeskočíme
             if (operationForButton == null) continue;
 
-            // ZAVOLÁME TVOU METODU PRO KONTROLU LOGIKY
+            // ZAVOLÁME METODU PRO KONTROLU LOGIKY
             boolean canBeUsed = TreeTableUtility.cenBeOperationUsed(operationForButton, rowItem);
 
             // Pokud operace nedává smysl, tlačítko deaktivujeme (zprůhlední se a nepůjde kliknout)
@@ -126,9 +124,6 @@ public class ChangeFolderOrFileOperationController {
             }
         }
     }
-
-
-
 
     public void setComparedItemOperItemRowModel(TreeItem<ComparedItemOperItemRowModel> treeItem, boolean isBackupTask) {
         this.rowItem = treeItem.getValue();
@@ -147,8 +142,8 @@ public class ChangeFolderOrFileOperationController {
 
         // nastavení aktivní operace do GUI
         Button activeButton = getActiveButton(rowItem.getOperation());
-        if (treeItem.getValue().getOperation() != CompareOperations.FOLDER &&
-                treeItem.getValue().getOperation() != CompareOperations.FOLDER_UNEVEN ) {
+        if (activeButton != null && treeItem.getValue().getOperation() != CompareOperations.FOLDER &&
+                treeItem.getValue().getOperation() != CompareOperations.FOLDER_UNEVEN) {
             activeButton.getStyleClass().add("modificator_save");
         }
 
@@ -159,20 +154,18 @@ public class ChangeFolderOrFileOperationController {
         isFolder = folder;
     }
 
-
-
     private Button getActiveButton(CompareOperations oper)  {
         return switch (oper) {
-            case ADD_LEFT, FOLDER_ADD_LEFT-> btnSetOperAddLeft;
-            case ADD_RIGHT, FOLDER_ADD_RIGHT-> btnSetOperAddRight;
-            case UPDATE_LEFT, FOLDER_UPDATE_LEFT-> btnSetOperUpdateLeft;
-            case UPDATE_RIGHT, FOLDER_UPDATE_RIGHT-> btnSetOperUpdateRight;
-            case DELETE_LEFT, FOLDER_DELETE_LEFT-> btnSetOperDeleteLeft;
+            case ADD_LEFT, FOLDER_ADD_LEFT -> btnSetOperAddLeft;
+            case ADD_RIGHT, FOLDER_ADD_RIGHT -> btnSetOperAddRight;
+            case UPDATE_LEFT, FOLDER_UPDATE_LEFT -> btnSetOperUpdateLeft;
+            case UPDATE_RIGHT, FOLDER_UPDATE_RIGHT -> btnSetOperUpdateRight;
+            case DELETE_LEFT, FOLDER_DELETE_LEFT -> btnSetOperDeleteLeft;
             case DELETE_BOTH, FOLDER_DELETE_BOTH -> btnSetOperDeleteBoth;
-            case DELETE_RIGHT, FOLDER_DELETE_RIGHT-> btnSetOperDeleteRight;
-            case IGNORE, FOLDER_IGNORE ->btnSetOperBlock;
+            case DELETE_RIGHT, FOLDER_DELETE_RIGHT -> btnSetOperDeleteRight;
+            case IGNORE, FOLDER_IGNORE -> btnSetOperBlock;
             case EQUALS, FOLDER_EQUALS -> btnSetOperEqals;
-            case UNKNOWN, FOLDER_UNKNOWN-> btnSetOperUnknow;
+            case UNKNOWN, FOLDER_UNKNOWN -> btnSetOperUnknow;
             default -> null;
         };
     }

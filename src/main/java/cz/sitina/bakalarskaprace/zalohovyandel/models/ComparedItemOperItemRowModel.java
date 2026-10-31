@@ -1,30 +1,54 @@
 package cz.sitina.bakalarskaprace.zalohovyandel.models;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import java.nio.file.Path;
 
 public class ComparedItemOperItemRowModel {
 
-    private ObjectProperty<FileItemModel> leftItem;
-    private ObjectProperty<CompareOperations> operation;
-    private ObjectProperty<FileItemModel> rightItem;
+    private final ObjectProperty<FileItemModel> leftItem;
+    private final ObjectProperty<CompareOperations> operation;
+    private final ObjectProperty<FileItemModel> rightItem;
+    private final BooleanProperty isDirectory;
 
     public ComparedItemOperItemRowModel(FileItemModel leftItem, CompareOperations operation, FileItemModel rightItem) {
+        this(leftItem, operation, rightItem, isFolderOperation(operation));
+    }
+
+    public ComparedItemOperItemRowModel(FileItemModel leftItem, CompareOperations operation, FileItemModel rightItem, boolean isDirectory) {
         this.leftItem = new SimpleObjectProperty<>(leftItem);
         this.operation = new SimpleObjectProperty<>(operation);
         this.rightItem = new SimpleObjectProperty<>(rightItem);
+        this.isDirectory = new SimpleBooleanProperty(isDirectory);
     }
 
-    // OPRAVENO: Správná detekce všech typů operací složky (FOLDER, FOLDER_UNEVEN, FOLDER_ADD_*, FOLDER_DELETE_* atd.)
-    public boolean isFolder() {
-        CompareOperations op = this.operation.getValue();
-        if (op == null) {
-            return false;
-        }
+    private static boolean isFolderOperation(CompareOperations op) {
+        if (op == null) return false;
         return op == CompareOperations.FOLDER || op.name().startsWith("FOLDER_");
+    }
+
+    // Metoda isDirectory() a isFolder() vrací hodnotu nového atributu isDirectory
+    public boolean isDirectory() {
+        return isDirectory.get();
+    }
+
+    public BooleanProperty isDirectoryProperty() {
+        return isDirectory;
+    }
+
+    public void setIsDirectory(boolean isDirectory) {
+        this.isDirectory.set(isDirectory);
+    }
+
+    /**
+     * Zpětně kompatibilní alias k isDirectory()
+     */
+    public boolean isFolder() {
+        return isDirectory();
     }
 
     public Path getNotNullPath() {

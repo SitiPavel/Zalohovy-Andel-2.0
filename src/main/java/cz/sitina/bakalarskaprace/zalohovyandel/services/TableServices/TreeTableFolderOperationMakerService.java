@@ -15,8 +15,8 @@ public class TreeTableFolderOperationMakerService {
 
         CompareOperations finalOperation = null;
 
-        // pokud nemá operaci obsahující FOLDER tak je to soubor a vracíme operaci
-        if (!node.getValue().getOperation().name().contains("FOLDER")) {
+        // OPRAVENO: Kontrola zda je řádek složka pomocí isDirectory()
+        if (!node.getValue().isDirectory()) {
             return node.getValue().getOperation();
         }
 
@@ -150,7 +150,8 @@ public class TreeTableFolderOperationMakerService {
                                                             CompareOperations basicOper) {
         ComparedItemOperItemRowModel currentItem = treeItem.getValue();
 
-        boolean isFolder = currentItem.getOperation().toString().contains("FOLDER");
+        // OPRAVENO: Kontrola zda je řádek složka pomocí isDirectory()
+        boolean isFolder = currentItem.isDirectory();
 
         if (isFolder) {
             currentItem.setOperation(TreeTableUtility.convertBasicOnFolderOperation(basicOper));

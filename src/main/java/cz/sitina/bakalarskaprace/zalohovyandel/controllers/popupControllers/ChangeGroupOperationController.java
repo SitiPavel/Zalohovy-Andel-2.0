@@ -16,9 +16,11 @@ import javafx.scene.layout.VBox;
 import java.util.List;
 
 public class ChangeGroupOperationController {
-    @FXML
-    private VBox leftButtonPanel;
 
+    private List<TreeItem<ComparedItemOperItemRowModel>> selectedItems;
+    private Runnable isAllOperChanged;
+
+    @FXML private VBox leftButtonPanel;
     @FXML private Button btnSetOperAddLeft;
     @FXML private Button btnSetOperAddRight;
     @FXML private Button btnSetOperUpdateLeft;
@@ -30,8 +32,6 @@ public class ChangeGroupOperationController {
     @FXML private Button btnSetOperEqals;
     @FXML private Button btnSetOperUnknow;
 
-    private List<TreeItem<ComparedItemOperItemRowModel>> selectedItems;
-    private Runnable isAllOperChanged;
     private boolean isBackupTask;
 
     @FXML
@@ -46,10 +46,11 @@ public class ChangeGroupOperationController {
         CompareOperations oper = PopupUtility.getOperationByBtnID_Folder(buttonId);
         boolean isFileError = false;
         boolean isFolderError = false;
-        String errorMassage ="";
+        String errorMassage = "";
 
         for (TreeItem<ComparedItemOperItemRowModel> treeItem : selectedItems) {
-            if (oper.toString().contains("FOLDER")) {
+            // OPRAVENO: Kontrola zda jde o složku pomocí isDirectory()
+            if (treeItem.getValue().isDirectory()) {
                 // pokud uživatel nastaví stejnou operaci
                 if (oper == treeItem.getValue().getOperation()) {
                 } // true když se dokáže na všechny děti (soubory/složky) nastavit vybraná operace
@@ -60,7 +61,6 @@ public class ChangeGroupOperationController {
                     isFolderError = true;
                 }
 
-
             } else {
                 if (TreeTableUtility.cenBeOperationUsed(oper, treeItem.getValue())) {
                     treeItem.getValue().setOperation(oper);
@@ -70,15 +70,18 @@ public class ChangeGroupOperationController {
             }
         }
         if (isFileError) {
-            errorMassage = errorMassage +"Některý/některé nebylo možné použít zvolenou operaci! \n";
-        } if (isFolderError) {
-            errorMassage = errorMassage +"Na některou/některé složky nebylo možné použít zvolenou operaci, " +
+            errorMassage = errorMassage + "Některým položkám nebylo možné nastavit zvolenou operaci! \n";
+        }
+        if (isFolderError) {
+            errorMassage = errorMassage + "Na některou/některé složky nebylo možné použít zvolenou operaci, " +
                     "nejspíše obsahuje soubory které nemohou mít tuto operaci. \n";
         }
         if (isFileError || isFolderError) {
-            ErrorUtility.showError_pointlessCompareOperation("errorMassage");
+            ErrorUtility.showError_pointlessCompareOperation(errorMassage);
         }
-        isAllOperChanged.run();
+        if (isAllOperChanged != null) {
+            isAllOperChanged.run();
+        }
 
     }
 
@@ -97,11 +100,11 @@ public class ChangeGroupOperationController {
         }
     }
 
-    public void setIsAllOperChanged(Runnable isAllOperChanged) {
-        this.isAllOperChanged = isAllOperChanged;
-    }
-
     public void setSelectedItems(List<TreeItem<ComparedItemOperItemRowModel>> selectedItems) {
         this.selectedItems = selectedItems;
+    }
+
+    public void setIsAllOperChanged(Runnable isAllOperChanged) {
+        this.isAllOperChanged = isAllOperChanged;
     }
 }

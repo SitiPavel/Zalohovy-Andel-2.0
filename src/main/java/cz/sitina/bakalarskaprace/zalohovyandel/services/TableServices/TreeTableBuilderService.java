@@ -2,14 +2,10 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
-import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BlockedFileTreeRow;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
-import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
-import javafx.scene.control.*;
+import javafx.scene.control.TreeItem;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,34 +13,27 @@ public class TreeTableBuilderService {
 
     FileItemModel notNullItem;
     byte whereIsntNullPath; // říká kde byla není nalezena null cesta
-    private final IconManagerUtility iconManager = new IconManagerUtility();
-
-
-
 
     public void buildTreeTableItemOperItem(TreeItem<ComparedItemOperItemRowModel> root,
-                                           List<ComparedItemOperItemRowModel> comparedList
-                            ){
-
+                                           List<ComparedItemOperItemRowModel> comparedList) {
         // načtení do TreeTableView
         loadComparedFilesToRoot(root, comparedList);
-
     }
 
     public void loadComparedFilesToRoot(TreeItem<ComparedItemOperItemRowModel> root,
                                         List<ComparedItemOperItemRowModel> comparedFilesList) {
         // pro uložení všech větví v TreeTable
-        HashMap<String ,TreeItem<ComparedItemOperItemRowModel>> treeFilesList = new HashMap<>();
+        HashMap<String, TreeItem<ComparedItemOperItemRowModel>> treeFilesList = new HashMap<>();
         treeFilesList.put("", root);
 
         for (ComparedItemOperItemRowModel row : comparedFilesList) {
 
-            // musíne dostat cestu z nenullového objektu a zaznamenat kde je nenulová cesta
+            // Musíme dostat cestu z nenullového objektu a zaznamenat kde je nenulová cesta
             if (row.getLeftItem().getRelativePath() != null &&
-                    row.getRightItem() ==null || row.getRightItem().getRelativePath() == null) {
+                    (row.getRightItem() == null || row.getRightItem().getRelativePath() == null)) {
                 whereIsntNullPath = 01;
                 notNullItem = row.getLeftItem();
-            } else if (row.getLeftItem() == null ||row.getLeftItem().getRelativePath() == null &&
+            } else if ((row.getLeftItem() == null || row.getLeftItem().getRelativePath() == null) &&
                     row.getRightItem().getRelativePath() != null) {
                 whereIsntNullPath = 10;
                 notNullItem = row.getRightItem();
@@ -55,27 +44,22 @@ public class TreeTableBuilderService {
             }
 
             Path notNullPath = notNullItem.getRelativePath();
-
             int pathLength = notNullPath.getNameCount();
 
             // pro postupné budování větví v TreeTable
             String currentDir = "";
-            // uchovává předchozí složku
 
-
-            for (int i = 0; pathLength > i ; i++) {
-                String iFolderInPath = notNullPath.getName(i).toString(); //
+            for (int i = 0; pathLength > i; i++) {
+                String iFolderInPath = notNullPath.getName(i).toString();
 
                 boolean isFile = (i == pathLength - 1);
 
-                if (isFile) {/// zjistíme zda je program na konci relativní cesty (na souboru)
+                if (isFile) { // zjistíme zda je program na konci relativní cesty (na souboru)
                     TreeItem<ComparedItemOperItemRowModel> parentNode = treeFilesList.get(currentDir);
-
                     TreeItem<ComparedItemOperItemRowModel> fileNode = new TreeItem<>(row);
                     parentNode.getChildren().add(fileNode);
 
                 } else {
-                    /// uložení rodičovské cesty
                     String parentKey = currentDir;
 
                     // Vytvoříme klíč pro aktuální složku s přidáním lomítka
@@ -89,31 +73,29 @@ public class TreeTableBuilderService {
 
                     if (!treeFilesList.containsKey(currentDir)) {
 
-                        // Složka dostane plnohodnotné modely s relativePath a odvozenou fileAbsolutePath
+                        // OPRAVENO: Složka se vytvoří s isDirectory = true
                         ComparedItemOperItemRowModel folderRow = new ComparedItemOperItemRowModel(
                                 new FileItemModel(),
                                 CompareOperations.FOLDER,
-                                new FileItemModel()   // Pravá strana
+                                new FileItemModel(),
+                                true
                         );
 
-                        // Nastavíme relativní cesty a názvy složky
-                        folderRow.getLeftItem().setFileName(iFolderInPath);
-                        folderRow.getLeftItem().setRelativePath(folderRelativeSubPath);
-                        folderRow.getRightItem().setFileName(iFolderInPath);
-                        folderRow.getRightItem().setRelativePath(folderRelativeSubPath);
-
-                        // Pokud má levý soubor absolutní kořen, odvodíme z něj absolutní cestu pro složku vlevo
+                        // OPRAVENO: Název a cesta se nastavují POUZE na straně, kde složka skutečně existuje na disku
                         if (row.getLeftItem() != null && row.getLeftItem().getFileAbsolutePath() != null && row.getLeftItem().getRelativePath() != null) {
                             Path rootLeft = deriveRootPath(row.getLeftItem().getFileAbsolutePath(), row.getLeftItem().getRelativePath());
                             if (rootLeft != null) {
+                                folderRow.getLeftItem().setFileName(iFolderInPath);
+                                folderRow.getLeftItem().setRelativePath(folderRelativeSubPath);
                                 folderRow.getLeftItem().setFileAbsolutePath(rootLeft.resolve(folderRelativeSubPath));
                             }
                         }
 
-                        // Pokud má pravý soubor absolutní kořen, odvodíme z něj absolutní cestu pro složku vpravo
                         if (row.getRightItem() != null && row.getRightItem().getFileAbsolutePath() != null && row.getRightItem().getRelativePath() != null) {
                             Path rootRight = deriveRootPath(row.getRightItem().getFileAbsolutePath(), row.getRightItem().getRelativePath());
                             if (rootRight != null) {
+                                folderRow.getRightItem().setFileName(iFolderInPath);
+                                folderRow.getRightItem().setRelativePath(folderRelativeSubPath);
                                 folderRow.getRightItem().setFileAbsolutePath(rootRight.resolve(folderRelativeSubPath));
                             }
                         }
@@ -128,7 +110,7 @@ public class TreeTableBuilderService {
                         // 4. Uložíme do cache, abychom ji příště našli
                         treeFilesList.put(currentDir, newFolderNode);
                     } else {
-                        // OPRAVENO: Pokud už uzel složky v cache existuje (např. z jiné větve), doplníme chybějící absolutní cestu druhé strany
+                        // OPRAVENO: Pokud už uzel složky v cache existuje (např. z jiné větve), doplníme chybějící stranu
                         TreeItem<ComparedItemOperItemRowModel> existingFolderNode = treeFilesList.get(currentDir);
                         ComparedItemOperItemRowModel existingModel = existingFolderNode.getValue();
 
@@ -136,6 +118,8 @@ public class TreeTableBuilderService {
                                 row.getLeftItem() != null && row.getLeftItem().getFileAbsolutePath() != null && row.getLeftItem().getRelativePath() != null) {
                             Path rootLeft = deriveRootPath(row.getLeftItem().getFileAbsolutePath(), row.getLeftItem().getRelativePath());
                             if (rootLeft != null) {
+                                existingModel.getLeftItem().setFileName(iFolderInPath);
+                                existingModel.getLeftItem().setRelativePath(folderRelativeSubPath);
                                 existingModel.getLeftItem().setFileAbsolutePath(rootLeft.resolve(folderRelativeSubPath));
                             }
                         }
@@ -144,6 +128,8 @@ public class TreeTableBuilderService {
                                 row.getRightItem() != null && row.getRightItem().getFileAbsolutePath() != null && row.getRightItem().getRelativePath() != null) {
                             Path rootRight = deriveRootPath(row.getRightItem().getFileAbsolutePath(), row.getRightItem().getRelativePath());
                             if (rootRight != null) {
+                                existingModel.getRightItem().setFileName(iFolderInPath);
+                                existingModel.getRightItem().setRelativePath(folderRelativeSubPath);
                                 existingModel.getRightItem().setFileAbsolutePath(rootRight.resolve(folderRelativeSubPath));
                             }
                         }
@@ -155,8 +141,6 @@ public class TreeTableBuilderService {
 
         // zde daný strom rekurzivně seřadíme aby složky a soubory byly u sebe
         sortChildrenRecursively(root);
-        //Nastavení funkcí
-
     }
 
     // Pomocná metoda pro výpočet kořenového adresáře z absolutní a relativní cesty
@@ -176,17 +160,17 @@ public class TreeTableBuilderService {
         return null;
     }
 
-
     //*
-    // důležité po sestavení stromu | řazení během sestavování stromu by seřazoval algoritmus celí strom při
+    // důležité po sestavení stromu | řazení během sestavování stromu by seřazoval algoritmus celý strom při
     // každém novém prvku
     private void sortChildrenRecursively(TreeItem<ComparedItemOperItemRowModel> item) {
 
         if (item == null || item.getChildren().isEmpty()) return;
 
         item.getChildren().sort((node1, node2) -> {
-            boolean isFolder1 = node1.getValue().isFolder();
-            boolean isFolder2 = node2.getValue().isFolder();
+            // OPRAVENO: Použití isDirectory()
+            boolean isFolder1 = node1.getValue().isDirectory();
+            boolean isFolder2 = node2.getValue().isDirectory();
 
             if (isFolder1 && !isFolder2) return -1;
             if (!isFolder1 && isFolder2) return 1;
@@ -197,35 +181,27 @@ public class TreeTableBuilderService {
             return name1.compareToIgnoreCase(name2); // porovnat name1 a name2 abecedně
         });
 
-        //Rekurrzí zavoláme na ostatní děti
+        // Rekurzí zavoláme na ostatní děti
         for (TreeItem<ComparedItemOperItemRowModel> child : item.getChildren()) {
             sortChildrenRecursively(child);
         }
     }
 
-
-
-    // získáme z ComparedItemOperItemRowModel název toho soubooru, zaručuje že název nebude null
+    // získáme z ComparedItemOperItemRowModel název toho souboru/složky, zaručuje že název nebude null
     private String getNotNullName(TreeItem<ComparedItemOperItemRowModel> item) {
-        if (item == null ) return "";
+        if (item == null || item.getValue() == null) return "";
 
         if (item.getValue().getLeftItem() != null &&
-                item.getValue().getRightItem() != null ) {
+                item.getValue().getLeftItem().getFileName() != null &&
+                !item.getValue().getLeftItem().getFileName().isEmpty()) {
             return item.getValue().getLeftItem().getFileName();
 
-        } else if (item.getValue().getLeftItem() == null &&
-                   item.getValue().getRightItem() != null ) {
+        } else if (item.getValue().getRightItem() != null &&
+                item.getValue().getRightItem().getFileName() != null &&
+                !item.getValue().getRightItem().getFileName().isEmpty()) {
             return item.getValue().getRightItem().getFileName();
-
-        } else if (item.getValue().getLeftItem() != null &&
-                   item.getValue().getRightItem() == null ) {
-            return item.getValue().getLeftItem().getFileName();
         } else {
             return "";
         }
-
     }
-
-
-
 }

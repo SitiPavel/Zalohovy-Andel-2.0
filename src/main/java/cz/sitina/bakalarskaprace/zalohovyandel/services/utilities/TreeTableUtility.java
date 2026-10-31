@@ -10,20 +10,28 @@ import static cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperat
 
 public class TreeTableUtility {
 
-
-
-
-
-    // kontroluje zda operace může být použita na řádek souboru
+    // kontroluje zda operace může být použita na řádek souboru nebo složky
     public static boolean cenBeOperationUsed(CompareOperations oper, ComparedItemOperItemRowModel rowItem) {
 
-        boolean existLeft =  !rowItem.getLeftItem().getFileName().isEmpty();
-        boolean existRight =  !rowItem.getRightItem().getFileName().isEmpty();
+        // OPRAVENO: U složek určujeme existenci podle getFileAbsolutePath(), protože fileName mají nastavený z obou stran
+        boolean isFolder = rowItem.isDirectory();
+        boolean existLeft;
+        boolean existRight;
+
+        if (isFolder) {
+            existLeft = rowItem.getLeftItem() != null && rowItem.getLeftItem().getFileAbsolutePath() != null;
+            existRight = rowItem.getRightItem() != null && rowItem.getRightItem().getFileAbsolutePath() != null;
+        } else {
+            existLeft = !rowItem.getLeftItem().getFileName().isEmpty();
+            existRight = !rowItem.getRightItem().getFileName().isEmpty();
+        }
+
+        // Základní operace pro porovnání
+        CompareOperations baseOper = getBaseOperation(oper);
 
         // oba dva existují    1 <-> 1
         if (existLeft && existRight) {
-            if(oper == CompareOperations.ADD_LEFT ||
-                    oper == CompareOperations.ADD_RIGHT) {
+            if (baseOper == CompareOperations.ADD_LEFT || baseOper == CompareOperations.ADD_RIGHT) {
                 return false;
             }
             return true;
@@ -31,10 +39,10 @@ public class TreeTableUtility {
 
         // existuje jen v pravo  0 -> 1
         else if (!existLeft && existRight) {
-            if (oper == CompareOperations.ADD_LEFT ||
-                    oper == CompareOperations.DELETE_RIGHT ||
-                    oper == CompareOperations.IGNORE ||
-                    oper == CompareOperations.UNKNOWN) {
+            if (baseOper == CompareOperations.ADD_LEFT ||
+                    baseOper == CompareOperations.DELETE_RIGHT ||
+                    baseOper == CompareOperations.IGNORE ||
+                    baseOper == CompareOperations.UNKNOWN) {
                 return true;
             }
             return false;
@@ -42,15 +50,15 @@ public class TreeTableUtility {
         }
         // existuje jen v levo  1 <- 0
         else if (existLeft && !existRight) {
-            if (oper == CompareOperations.ADD_RIGHT ||
-                    oper == CompareOperations.DELETE_LEFT ||
-                    oper == CompareOperations.IGNORE ||
-                    oper == CompareOperations.UNKNOWN) {
+            if (baseOper == CompareOperations.ADD_RIGHT ||
+                    baseOper == CompareOperations.DELETE_LEFT ||
+                    baseOper == CompareOperations.IGNORE ||
+                    baseOper == CompareOperations.UNKNOWN) {
                 return true;
             }
             return false;
         }
-        //neexistuje ani jeden 0 - 0    nebo jiný případ
+        // neexistuje ani jeden 0 - 0 nebo jiný případ
         else {
             return false;
         }
@@ -96,7 +104,8 @@ public class TreeTableUtility {
             return;
         }
         ComparedItemOperItemRowModel rowItem = treeItem.getValue();
-        boolean isFolder = rowItem.getOperation().toString().contains("FOLDER");
+        // OPRAVENO: Kontrola zda je řádek složka pomocí isDirectory()
+        boolean isFolder = rowItem.isDirectory();
 
         if (!isFolder) {
             countFiltersAndSizePie(rowItem, dataModel);

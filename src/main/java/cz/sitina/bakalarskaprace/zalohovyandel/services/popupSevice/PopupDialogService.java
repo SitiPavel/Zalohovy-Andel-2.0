@@ -41,11 +41,11 @@ public class PopupDialogService {
                                          double screenX, double screenY,
                                          Runnable onSuccess) {
         String fxmlPath;
-        boolean isFolder = false;
+        // OPRAVENO: Kontrola zda je řádek složka pomocí isDirectory()
+        boolean isFolder = treeItem.getValue().isDirectory();
 
-        if (treeItem.getValue().getOperation().toString().contains("FOLDER")) {
+        if (isFolder) {
             fxmlPath = POPUP_PATH + "changeFolderOperation.fxml";
-            isFolder = true;
         } else {
             fxmlPath = POPUP_PATH + "changeFileOperation.fxml";
         }

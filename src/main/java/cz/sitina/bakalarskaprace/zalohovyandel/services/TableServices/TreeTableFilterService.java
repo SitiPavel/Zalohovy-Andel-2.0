@@ -37,8 +37,8 @@ public class TreeTableFilterService {
             return filtredNode;
         }
 
-        // Identifikace složky
-        boolean isFolder = data.getOperation()== CompareOperations.FOLDER || !originalNode.getChildren().isEmpty();
+        // OPRAVENO: Identifikace složky přímo přes data.isDirectory()
+        boolean isFolder = data.isDirectory();
         if (isFolder) {
             // pokud složka obsahuje nějaký obsah tak jí zobrazí, když je obsah vyfiltrován tak bude neviditelná
             return hasVisibleChildren ? filtredNode : null;
