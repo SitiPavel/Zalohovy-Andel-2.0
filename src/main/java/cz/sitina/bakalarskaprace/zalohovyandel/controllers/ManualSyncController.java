@@ -319,7 +319,7 @@ public class ManualSyncController implements TaskController {
                     // pokud je vybráno více tak změnu operace aplikuje na více
 
                     if (selectedItems.size() > 1){
-                        popupDialogService.showOperationPopupWindow_group(selectedItems, false,
+                        popupDialogService.showOperationPopupWindow_group(selectedItems, false, event.getScreenX(), event.getScreenY(),
                                 ()->  { TreeTableFolderOperationMakerService.getFolderOperation(masterRoot);
                                     readAndSetStatistic();
                                 });
@@ -327,7 +327,7 @@ public class ManualSyncController implements TaskController {
                         ComparedItemOperItemRowModel rowItem = cell.getTreeTableRow().getItem();
 
                         if (rowItem != null) {
-                            popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(), false,
+                            popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(), false, event.getScreenX(), event.getScreenY(),
                                     ()-> readAndSetStatistic());
                         }
                     }

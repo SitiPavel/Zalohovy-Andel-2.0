@@ -278,7 +278,7 @@ public class BackupTaskController implements TaskController {
                             filesTreeTable.getSelectionModel().getSelectedItems();
                     // pokud je vybráno více tak změnu operace aplikuje na více
                     if (selectedItems.size() > 1){
-                        popupDialogService.showOperationPopupWindow_group(selectedItems, true,
+                        popupDialogService.showOperationPopupWindow_group(selectedItems, true, event.getScreenX(), event.getScreenY(),
                                 ()->  { TreeTableFolderOperationMakerService.getFolderOperation(masterRoot);
                                         readAndSetStatistic();
                         });
@@ -286,7 +286,7 @@ public class BackupTaskController implements TaskController {
                         ComparedItemOperItemRowModel rowItem = cell.getTreeTableRow().getItem();
 
                         if (rowItem != null) {
-                            popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(), true,
+                            popupDialogService.showOperationPopupWindow(cell.getTreeTableRow().getTreeItem(), true, event.getScreenX(), event.getScreenY(),
                                     ()-> readAndSetStatistic());
                         }
                     }
