@@ -20,7 +20,8 @@ Tento skill slouží pro bezpečnou úpravu, rozšíření nebo optimalizaci st�
 ## Postup při volání příkazu
 1. **Validace pochopení:** Máš všechen potřebný kód a je jasný cíl úpravy? Pokud ne -> napiš stručný seznam chybějících informací a **ČEKEJ**.
 2. **Identifikace úzkých hrdel:** Pokud je cílem efektivita (zrychlení), velmi stručně (max 1-2 věty) analyticky popiš, v čem byl původní přístup špatný (např. chybějící dávkové zpracování v DB, zbytečné načítání do paměti místo streamu).
-3. **Výstup kódu:** Poskytni upravený kód.
+3. **Návrh kódu:** Poskytni návrh jak upravit kód a zdůvodni proč.
+4. **Výstup kódu** Pokud uživatel odsouhlasí návrh tak máš povoleno  změny implementovat.
 
 ## Závazný formát výstupu
 - Každou podstatnou změnu označ přímo v kódu komentářem: `// OPRAVENO: [krátké vysvětlení proč je to lepší/správné]`.
