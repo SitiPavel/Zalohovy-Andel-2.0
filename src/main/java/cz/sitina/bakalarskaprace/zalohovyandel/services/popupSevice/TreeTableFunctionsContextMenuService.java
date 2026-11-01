@@ -8,6 +8,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TreeTableFunctionsContextMenuService {
@@ -103,9 +104,57 @@ public class TreeTableFunctionsContextMenuService {
         }
     }
 
+    /**
+     * Rekurzivně rozbalí všechny vybrané složky včetně všech jejich vnořených podsložek.
+     */
+    public void expandSelectedFolders(List<TreeItem<ComparedItemOperItemRowModel>> selectedItems) {
+        if (selectedItems == null || selectedItems.isEmpty()) {
+            return;
+        }
+
+        // OPRAVENO: Defenzivní kopie seznamu pro stabilní iteraci při změnách stromu
+        List<TreeItem<ComparedItemOperItemRowModel>> safeCopy = new ArrayList<>(selectedItems);
+        for (TreeItem<ComparedItemOperItemRowModel> item : safeCopy) {
+            setExpandedRecursively(item, true);
+        }
+    }
+
+    /**
+     * Rekurzivně sbalí všechny vybrané složky včetně všech jejich vnořených podsložek.
+     */
+    public void collapseSelectedFolders(List<TreeItem<ComparedItemOperItemRowModel>> selectedItems) {
+        if (selectedItems == null || selectedItems.isEmpty()) {
+            return;
+        }
+
+        // OPRAVENO: Defenzivní kopie seznamu pro stabilní iteraci při změnách stromu
+        List<TreeItem<ComparedItemOperItemRowModel>> safeCopy = new ArrayList<>(selectedItems);
+        for (TreeItem<ComparedItemOperItemRowModel> item : safeCopy) {
+            setExpandedRecursively(item, false);
+        }
+    }
+
     // =========================================================================
     // ======================= POMOCNÉ INTERNÍ METODY ==========================
     // =========================================================================
+
+    /**
+     * Pomocná rekurzivní metoda pro nastavení stavu expanded pro uzel a všechny jeho poduzly.
+     * Soubory (položky které nejsou složky nebo nemají potomky) přeskočí.
+     */
+    private void setExpandedRecursively(TreeItem<ComparedItemOperItemRowModel> item, boolean expanded) {
+        if (item == null) {
+            return;
+        }
+
+        boolean isFolder = (item.getValue() != null && item.getValue().isDirectory()) || !item.isLeaf();
+        if (isFolder) {
+            item.setExpanded(expanded);
+            for (TreeItem<ComparedItemOperItemRowModel> child : item.getChildren()) {
+                setExpandedRecursively(child, expanded);
+            }
+        }
+    }
 
     /**
      * Určí absolutní cestu podle kliknuté strany s bezpečným fallbackem.

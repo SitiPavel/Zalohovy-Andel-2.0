@@ -4,7 +4,6 @@ import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowMod
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.RightClickMenuItem;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
@@ -92,7 +91,9 @@ public class TreeTableContextMenuService {
             treeTable.getSelectionModel().select(row.getIndex());
         }
 
-        ObservableList<TreeItem<ComparedItemOperItemRowModel>> selectedItems = treeTable.getSelectionModel().getSelectedItems();
+        // OPRAVENO: Vytvoření defenzivní kopie seznamu vybraných prvků (prevence IndexOutOfBoundsException při změnách stromu)
+        List<TreeItem<ComparedItemOperItemRowModel>> selectedItems =
+                new ArrayList<>(treeTable.getSelectionModel().getSelectedItems());
         boolean isMultiSelect = selectedItems.size() > 1;
 
         List<RightClickMenuItem> menuItems;
@@ -137,7 +138,7 @@ public class TreeTableContextMenuService {
                 explorerTitle = "Zobrazit v průzkumníku (vpravo)";
             }
         }
-        items.add(new RightClickMenuItem(explorerTitle, iconManager.getEntryIcon(), () -> {
+        items.add(new RightClickMenuItem(explorerTitle, iconManager.getFolder20x20(), () -> {
             // TODO: Bude implementováno v dalším kroku
             System.out.println("Akce: Zobrazit v průzkumníku pro " + item.getNotNullPath());
         }));
@@ -162,12 +163,12 @@ public class TreeTableContextMenuService {
         }
 
         // 3. Zkopírovat absolutní cestu do schránky
-        items.add(new RightClickMenuItem("Zkopírovat absolutní cestu", iconManager.getManualSync_TabbleIcon(), () -> {
+        items.add(new RightClickMenuItem("Zkopírovat absolutní cestu", iconManager.getCopyFile(), () -> {
             functionsService.copyAbsolutePath(item, clickedSide);
         }));
 
         // 4. Zkopírovat relativní cestu do schránky
-        items.add(new RightClickMenuItem("Zkopírovat relativní cestu", iconManager.getManualSync_TabbleIcon(), () -> {
+        items.add(new RightClickMenuItem("Zkopírovat relativní cestu", iconManager.getCopyFile(), () -> {
             functionsService.copyRelativePath(item);
         }));
 
@@ -179,7 +180,7 @@ public class TreeTableContextMenuService {
         }));
 
         // 6. Vlastnosti / Detail porovnání
-        items.add(new RightClickMenuItem("Vlastnosti porovnání", iconManager.getIcon_modified_left(), () -> {
+        items.add(new RightClickMenuItem("Vlastnosti porovnání", iconManager.getFileProperties(), () -> {
             // TODO: Bude implementováno v dalším kroku (otevření dvousloupcového okna)
             System.out.println("Akce: Otevřít detail porovnání");
         }));
@@ -187,7 +188,7 @@ public class TreeTableContextMenuService {
         return items;
     }
 
-    private List<RightClickMenuItem> createMultiSelectionMenu(ObservableList<TreeItem<ComparedItemOperItemRowModel>> selectedItems, ColumnSide clickedSide) {
+    private List<RightClickMenuItem> createMultiSelectionMenu(List<TreeItem<ComparedItemOperItemRowModel>> selectedItems, ColumnSide clickedSide) {
         List<RightClickMenuItem> items = new ArrayList<>();
 
         // 1. Trvale přidat do blokovaných souborů
@@ -197,24 +198,23 @@ public class TreeTableContextMenuService {
         }));
 
         // 2. Zkopírovat absolutní cesty vybraných souborů
-        items.add(new RightClickMenuItem("Zkopírovat absolutní cesty vybraných", iconManager.getManualSync_TabbleIcon(), () -> {
+        items.add(new RightClickMenuItem("Zkopírovat absolutní cesty vybraných", iconManager.getCopyFile(), () -> {
             functionsService.copyMultipleAbsolutePaths(selectedItems, clickedSide);
         }));
 
         // 3. Zkopírovat relativní cesty vybraných souborů
-        items.add(new RightClickMenuItem("Zkopírovat relativní cesty vybraných", iconManager.getManualSync_TabbleIcon(), () -> {
+        items.add(new RightClickMenuItem("Zkopírovat relativní cesty vybraných", iconManager.getCopyFile(), () -> {
             functionsService.copyMultipleRelativePaths(selectedItems);
         }));
 
         // 4. Sbalit / Rozbalit vše ve vybraných složkách
-        items.add(new RightClickMenuItem("Rozbalit vybrané složky", iconManager.getEntryIcon(), () -> {
-            // TODO: Bude implementováno v dalším kroku
-            System.out.println("Akce: Rozbalit vybrané složky");
+        // OPRAVENO: Předání stabilní kopie seznamu
+        items.add(new RightClickMenuItem("Rozbalit vybrané složky", iconManager.getFolderOpened(), () -> {
+            functionsService.expandSelectedFolders(selectedItems);
         }));
 
-        items.add(new RightClickMenuItem("Sbalit vybrané složky", iconManager.getEntryIcon(), () -> {
-            // TODO: Bude implementováno v dalším kroku
-            System.out.println("Akce: Sbalit vybrané složky");
+        items.add(new RightClickMenuItem("Sbalit vybrané složky", iconManager.getFolderClosed(), () -> {
+            functionsService.collapseSelectedFolders(selectedItems);
         }));
 
         // 5. Statistika výběru

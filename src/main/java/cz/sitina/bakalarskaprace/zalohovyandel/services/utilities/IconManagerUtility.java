@@ -121,14 +121,23 @@ public class IconManagerUtility {
             new Image(getClass().getResourceAsStream(path_visualObjects + "checkMark.png"));
     private final Image error =
             new Image(getClass().getResourceAsStream(path_visualObjects + "error.png"));
+    private final Image FolderOpened =
+            new Image(getClass().getResourceAsStream(path_visualObjects + "FolderOpened.png"));
+    private final Image FolderClosed =
+            new Image(getClass().getResourceAsStream(path_visualObjects + "FolderClosed.png"));
 
 
 
 
     //**********************************/
-    // nějaké GUI prvky - mají funkčnost
+    // nějaké GUI prvky - mají funkčnost || Menu prvky
     private final Image entryIcon =
             new Image(getClass().getResourceAsStream(path_iconsSmall + "Entry.png"));
+    private final Image CopyFile =
+            new Image(getClass().getResourceAsStream(path_visualObjects + "CopyFile.png"));
+    private final Image FileProperties =
+            new Image(getClass().getResourceAsStream(path_visualObjects + "FileProperties.png"));
+
 
     //**********************************/
     // univerzal ukazatelé a ikonky
@@ -472,4 +481,12 @@ public class IconManagerUtility {
     public Image getBackupTask_Com_Enc_200x200() {
         return backupTask_Com_Enc_200x200;
     }
+
+    public Image getCopyFile() {return CopyFile;}
+
+    public Image getFileProperties() {return FileProperties;}
+
+    public Image getFolderOpened() {return FolderOpened;}
+
+    public Image getFolderClosed() {return FolderClosed;}
 }
