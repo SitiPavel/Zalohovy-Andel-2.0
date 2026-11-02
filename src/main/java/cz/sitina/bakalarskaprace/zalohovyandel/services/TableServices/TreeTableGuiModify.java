@@ -3,6 +3,7 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.datPacks.BlockedFileTreeRow;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.popupSevice.TreeTableContextMenuService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.IconManagerUtility;
 import javafx.geometry.Insets;
@@ -11,8 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.List;
-
-
+import java.util.function.Supplier;
 
 public class TreeTableGuiModify {
     private final IconManagerUtility iconManager = new IconManagerUtility();
@@ -32,12 +32,12 @@ public class TreeTableGuiModify {
      *  metoda - setRowFactory
      * */
 
-    // OPRAVENO: Původní metoda s 1 parametrem zachována kvůli zpětné kompatibilitě (např. BackupTaskController)
+    // Zpětně kompatibilní metoda s 1 parametrem
     public void rowFormatingByOperation(TreeTableView<ComparedItemOperItemRowModel> treeTable) {
-        rowFormatingByOperation(treeTable, null, null, null, null, null, null, null);
+        rowFormatingByOperation(treeTable, null, null, null, null, null, null, null, null, null, null);
     }
 
-    /// nastaví barvu řádku podle operace a přidá obsluhu kontextového menu
+    // Zpětně kompatibilní metoda s parametry sloupců
     public void rowFormatingByOperation(TreeTableView<ComparedItemOperItemRowModel> treeTable,
                                         TreeTableColumn<?, ?> leftColName,
                                         TreeTableColumn<?, ?> leftColSize,
@@ -46,11 +46,28 @@ public class TreeTableGuiModify {
                                         TreeTableColumn<?, ?> rightColName,
                                         TreeTableColumn<?, ?> rightColSize,
                                         TreeTableColumn<?, ?> rightColLastModify) {
+        rowFormatingByOperation(treeTable,
+                leftColName, leftColSize, leftColLastModify,
+                operationCol,
+                rightColName, rightColSize, rightColLastModify,
+                null, null, null);
+    }
+
+    /// nastaví barvu řádku podle operace a přidá obsluhu kontextového menu včetně tasku pro blokování
+    public void rowFormatingByOperation(TreeTableView<ComparedItemOperItemRowModel> treeTable,
+                                        TreeTableColumn<?, ?> leftColName,
+                                        TreeTableColumn<?, ?> leftColSize,
+                                        TreeTableColumn<?, ?> leftColLastModify,
+                                        TreeTableColumn<?, ?> operationCol,
+                                        TreeTableColumn<?, ?> rightColName,
+                                        TreeTableColumn<?, ?> rightColSize,
+                                        TreeTableColumn<?, ?> rightColLastModify,
+                                        Supplier<TaskModel> taskSupplier,
+                                        Runnable onBlockChanged,
+                                        Runnable refreshStatistics) {
 
         treeTable.setRowFactory(tv -> {
             TreeTableRow<ComparedItemOperItemRowModel> row = new TreeTableRow<ComparedItemOperItemRowModel>() {
-                private String currentCssClass = null;
-
                 @Override
                 protected void updateItem(ComparedItemOperItemRowModel item, boolean empty) {
                     super.updateItem(item, empty);
@@ -63,7 +80,6 @@ public class TreeTableGuiModify {
                     if (item == null || empty || item.getOperation() == null) {
                         return; // Řádek je teď čistý a prázdný, končíme.
                     }
-
 
                     // 3. Přidání správné třídy podle operace
                     switch (item.getOperation()) {
@@ -86,12 +102,15 @@ public class TreeTableGuiModify {
 
             };
 
-            // OPRAVENO: Napojení kontextového menu na řádek TreeTableView
+            // OPRAVENO: Napojení kontextového menu na řádek TreeTableView s předáním taskSupplieru
             row.setOnContextMenuRequested(event -> {
                 treeTableContextMenuService.handleContextMenu(event, row, treeTable,
                         leftColName, leftColSize, leftColLastModify,
                         operationCol,
-                        rightColName, rightColSize, rightColLastModify);
+                        rightColName, rightColSize, rightColLastModify,
+                        taskSupplier,
+                        onBlockChanged,
+                        refreshStatistics);
             });
 
             return row;
@@ -116,7 +135,7 @@ public class TreeTableGuiModify {
         // vycentrování
         cell.setAlignment(javafx.geometry.Pos.CENTER);
         cell.setStyle("-fx-padding: 0px;");
-        // outomatická velikost podle šířky sloupce ařádků
+        // outomatická velikost podle šířky sloupce a řádků
         imageView.fitWidthProperty().bind(cell.widthProperty());
         imageView.fitHeightProperty().bind(cell.heightProperty());
 
@@ -169,7 +188,7 @@ public class TreeTableGuiModify {
             if (curentTreeItem != null) {
                 int level = treeTableView.getTreeItemLevel(curentTreeItem);
 
-                // Pokud máš root skrytý, první viditelné položky jsou level 1.
+                // Pokud má root skrytý, první viditelné položky jsou level 1.
                 // Pokud chceš level 1 bez odsazení, použij (level - 1).
                 // Pokud chceš odsazení už od začátku, nechej jen (level).
                 double indentPerLevel = 15;

@@ -301,7 +301,13 @@ public class BackupTaskController implements TaskController {
         });
 
         // nastavení generování Obarvených řádků podle operace
-        treeTableGuiModify.rowFormatingByOperation(filesTreeTable);
+        treeTableGuiModify.rowFormatingByOperation(filesTreeTable,
+                leftColName, leftColSize, leftColLastModify,
+                operationCol,
+                null, null, null,
+                () -> editableBackupTask,
+                () -> markAsDirty(),
+                () -> readAndSetStatistic());
 
         setIsDirtyFlagListener();
 

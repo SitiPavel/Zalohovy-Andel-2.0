@@ -2,7 +2,14 @@ package cz.sitina.bakalarskaprace.zalohovyandel.services.popupSevice;
 
 import cz.sitina.bakalarskaprace.zalohovyandel.models.ComparedItemOperItemRowModel;
 import cz.sitina.bakalarskaprace.zalohovyandel.models.FileItemModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.enums.CompareOperations;
+import cz.sitina.bakalarskaprace.zalohovyandel.models.taskType.TaskModel;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.BlockedTreeTableService;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableFolderOperationMakerService;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.popupSevice.TreeTableContextMenuService.ColumnSide;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
+import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.PopupUtility;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -10,6 +17,8 @@ import javafx.scene.input.ClipboardContent;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class TreeTableFunctionsContextMenuService {
 
@@ -44,6 +53,67 @@ public class TreeTableFunctionsContextMenuService {
         Path relativePath = resolveRelativePath(item);
         if (relativePath != null) {
             copyTextToClipboard(relativePath.toString());
+        }
+    }
+
+    /**
+     * Trvale přidá vybranou položku (soubor nebo složku) do blokovaných souborů / ignorovaných složek tasku.
+     * Aktualizuje operaci v tabulce na IGNORE / FOLDER_IGNORE, přepočítá statistiky a označí task jako změněný.
+     */
+    public void blockSingleItem(TreeItem<ComparedItemOperItemRowModel> treeItem,
+                                TaskModel taskModel,
+                                Runnable onBlockChanged,
+                                Runnable refreshStatistics) {
+        if (treeItem == null || treeItem.getValue() == null || taskModel == null) {
+            return;
+        }
+
+        ComparedItemOperItemRowModel rowItem = treeItem.getValue();
+        Path relativePath = resolveRelativePath(rowItem);
+        if (relativePath == null) {
+            return;
+        }
+
+        String cleanedPath = cleanRelativePath(relativePath.toString());
+        if (cleanedPath.isEmpty()) {
+            return;
+        }
+
+        Set<String> blockSet = taskModel.getBlockSet();
+
+        // 1. Kontrola, zda už cesta v blockSet přímo existuje
+        if (blockSet.contains(cleanedPath)) {
+            showInfoDialog("Položka je blokována",
+                    "Položka je již blokována!",
+                    "Vybraná položka \"" + cleanedPath + "\" se již nachází v seznamu blokovaných.");
+            return;
+        }
+
+        // 2. Kontrola, zda není zanořena pod již zablokovanou nadřazenou složkou
+        Optional<String> parentBlockedFolder = BlockedTreeTableService.findParentBlockedFolder(cleanedPath, blockSet);
+        if (parentBlockedFolder.isPresent()) {
+            showInfoDialog("Položka je blokována",
+                    "Položka je již blokována!",
+                    "Vybraná položka je zanořena v již zablokované složce \"" + parentBlockedFolder.get() + "\".");
+            return;
+        }
+
+        // 3. Přidání do blockSetu a pročištění redundancí
+        blockSet.add(cleanedPath);
+        BlockedTreeTableService.cleanRedundantPaths(blockSet);
+
+        // 4. Změna operace v TreeTableView
+        applyBlockOperationToTree(treeItem);
+
+        // 5. Aktualizace předků
+        TreeTableFolderOperationMakerService.updateOperationForParentFolders(treeItem);
+
+        // 6. Callbacky na přepočet statistik a označení tasku jako dirty
+        if (refreshStatistics != null) {
+            refreshStatistics.run();
+        }
+        if (onBlockChanged != null) {
+            onBlockChanged.run();
         }
     }
 
@@ -134,9 +204,123 @@ public class TreeTableFunctionsContextMenuService {
         }
     }
 
+    /**
+     * Trvale přidá všechny vybrané položky do blokovaných souborů / ignorovaných složek tasku.
+     * Aktualizuje operace v tabulce, přepočítá statistiky a označí task jako změněný.
+     * Pokud jsou VŠECHNY vybrané položky již zablokovány, zobrazí souhrnné info okno.
+     */
+    public void blockMultipleItems(List<TreeItem<ComparedItemOperItemRowModel>> selectedItems,
+                                   TaskModel taskModel,
+                                   Runnable onBlockChanged,
+                                   Runnable refreshStatistics) {
+        if (selectedItems == null || selectedItems.isEmpty() || taskModel == null) {
+            return;
+        }
+
+        Set<String> blockSet = taskModel.getBlockSet();
+        List<TreeItem<ComparedItemOperItemRowModel>> safeCopy = new ArrayList<>(selectedItems);
+
+        int newlyBlockedCount = 0;
+        int alreadyBlockedCount = 0;
+
+        for (TreeItem<ComparedItemOperItemRowModel> treeItem : safeCopy) {
+            if (treeItem == null || treeItem.getValue() == null) {
+                continue;
+            }
+
+            Path relativePath = resolveRelativePath(treeItem.getValue());
+            if (relativePath == null) {
+                continue;
+            }
+
+            String cleanedPath = cleanRelativePath(relativePath.toString());
+            if (cleanedPath.isEmpty()) {
+                continue;
+            }
+
+            // Kontrola, zda už cesta přímo existuje nebo je pod zablokovanou složkou
+            boolean isAlreadyBlocked = blockSet.contains(cleanedPath) ||
+                    BlockedTreeTableService.findParentBlockedFolder(cleanedPath, blockSet).isPresent();
+
+            if (isAlreadyBlocked) {
+                alreadyBlockedCount++;
+                continue;
+            }
+
+            blockSet.add(cleanedPath);
+            applyBlockOperationToTree(treeItem);
+            TreeTableFolderOperationMakerService.updateOperationForParentFolders(treeItem);
+            newlyBlockedCount++;
+        }
+
+        // Pokud byly všechny vybrané položky již zablokovány, zobrazíme hlášku pro multiple select
+        if (newlyBlockedCount == 0 && alreadyBlockedCount > 0) {
+            showInfoDialog("Položky jsou blokovány",
+                    "Položky jsou již blokovány!",
+                    "Všechny vybrané položky se již nacházejí v seznamu blokovaných nebo jsou zanořeny v blokované složce.");
+            return;
+        }
+
+        if (newlyBlockedCount > 0) {
+            BlockedTreeTableService.cleanRedundantPaths(blockSet);
+
+            if (refreshStatistics != null) {
+                refreshStatistics.run();
+            }
+            if (onBlockChanged != null) {
+                onBlockChanged.run();
+            }
+        }
+    }
+
     // =========================================================================
     // ======================= POMOCNÉ INTERNÍ METODY ==========================
     // =========================================================================
+
+    /**
+     * Nastaví operaci daného uzlu na IGNORE / FOLDER_IGNORE. Pokud je to složka,
+     * aplikuje operaci i na všechny její potomky.
+     */
+    private void applyBlockOperationToTree(TreeItem<ComparedItemOperItemRowModel> treeItem) {
+        if (treeItem == null || treeItem.getValue() == null) {
+            return;
+        }
+
+        if (treeItem.getValue().isDirectory()) {
+            PopupUtility.setAllChildrenOfFolder(treeItem, CompareOperations.FOLDER_IGNORE);
+            treeItem.getValue().setOperation(CompareOperations.FOLDER_IGNORE);
+        } else {
+            treeItem.getValue().setOperation(CompareOperations.IGNORE);
+        }
+    }
+
+    /**
+     * Normalizuje relativní cestu odstraněním počátečních a koncových lomítek.
+     */
+    private String cleanRelativePath(String pathStr) {
+        if (pathStr == null) {
+            return "";
+        }
+        pathStr = pathStr.trim();
+        while (pathStr.startsWith("/") || pathStr.startsWith("\\")) {
+            pathStr = pathStr.substring(1);
+        }
+        while (pathStr.endsWith("/") || pathStr.endsWith("\\")) {
+            pathStr = pathStr.substring(0, pathStr.length() - 1);
+        }
+        return pathStr;
+    }
+
+    /**
+     * Zobrazí informační dialog uživateli.
+     */
+    private void showInfoDialog(String title, String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
     /**
      * Pomocná rekurzivní metoda pro nastavení stavu expanded pro uzel a všechny jeho poduzly.

@@ -388,7 +388,10 @@ public class ManualSyncController implements TaskController {
         treeTableGuiModify.rowFormatingByOperation(filesTreeTable,
                 leftColName, leftColSize, leftColLastModify,
                 operationCol,
-                rightColName, rightColSize, rightColLastModify);
+                rightColName, rightColSize, rightColLastModify,
+                () -> editableManualTask,
+                () -> markAsDirty(),
+                () -> readAndSetStatistic());
 
         setIsDirtyFlagListener();
 
