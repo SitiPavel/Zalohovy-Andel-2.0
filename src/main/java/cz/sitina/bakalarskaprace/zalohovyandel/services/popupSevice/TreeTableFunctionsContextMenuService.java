@@ -57,6 +57,26 @@ public class TreeTableFunctionsContextMenuService {
     }
 
     /**
+     * Rekurzivně rozbalí vybranou složku včetně všech jejích vnořených podsložek.
+     */
+    public void expandSingleFolder(TreeItem<ComparedItemOperItemRowModel> folderItem) {
+        if (folderItem == null) {
+            return;
+        }
+        setExpandedRecursively(folderItem, true);
+    }
+
+    /**
+     * Rekurzivně sbalí vybranou složku včetně všech jejích vnořených podsložek.
+     */
+    public void collapseSingleFolder(TreeItem<ComparedItemOperItemRowModel> folderItem) {
+        if (folderItem == null) {
+            return;
+        }
+        setExpandedRecursively(folderItem, false);
+    }
+
+    /**
      * Trvale přidá vybranou položku (soubor nebo složku) do blokovaných souborů / ignorovaných složek tasku.
      * Aktualizuje operaci v tabulce na IGNORE / FOLDER_IGNORE, přepočítá statistiky a označí task jako změněný.
      */

@@ -209,11 +209,11 @@ public class TreeTableContextMenuService {
         // 4. Sbalit / Rozbalit vše ve vybraných složkách
         if (isFolder) {
             items.add(new RightClickMenuItem("Rozbalit všechny podsložky", iconManager.getFolderOpened(), () -> {
-                //TODO - rekurzivně rozbalí všechyn podložky vybrajé složky (pouze složky není na víběr pro soubor)
+                functionsService.expandSingleFolder(treeItem);
             }));
 
             items.add(new RightClickMenuItem("Sbalit všechny podsložky", iconManager.getFolderClosed(), () -> {
-                //TODO - rekurzivně sbalí všechyn podložky vybrajé složky (pouze složky není na víběr pro soubor)
+                functionsService.collapseSingleFolder(treeItem);
             }));
         }
 
