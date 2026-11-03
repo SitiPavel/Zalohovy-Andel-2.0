@@ -9,11 +9,16 @@ import cz.sitina.bakalarskaprace.zalohovyandel.services.TableServices.TreeTableF
 import cz.sitina.bakalarskaprace.zalohovyandel.services.popupSevice.TreeTableContextMenuService.ColumnSide;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.ErrorUtility;
 import cz.sitina.bakalarskaprace.zalohovyandel.services.utilities.PopupUtility;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +30,83 @@ public class TreeTableFunctionsContextMenuService {
     // =========================================================================
     // ==================== SEKCE 1: FUNKCE PRO SINGLE SELECT ==================
     // =========================================================================
+
+    /**
+     * Otevře systémový průzkumník souborů (Windows Explorer).
+     * - Pokud jde o složku, otevře přímo danou složku (zobrazí její obsah).
+     * - Pokud jde o soubor, otevře složku, ve které se soubor nachází, a označí ho.
+     */
+    public void showInExplorer(ComparedItemOperItemRowModel item, ColumnSide clickedSide) {
+        if (item == null) {
+            return;
+        }
+
+        Path targetPath = resolveAbsolutePathForSide(item, clickedSide);
+        if (targetPath == null || !Files.exists(targetPath)) {
+            Platform.runLater(() -> ErrorUtility.getInstance(
+                    "Položka nenalezena",
+                    "Cesta k položce neexistuje",
+                    "Zvolený soubor nebo složku se nepodařilo nalézt na disku:\n" + (targetPath != null ? targetPath : item.getNotNullPath())
+            ));
+            return;
+        }
+
+        Thread.ofVirtual().start(() -> {
+            try {
+                boolean isFolder = Files.isDirectory(targetPath);
+                ProcessBuilder processBuilder;
+                if (isFolder) {
+                    // Otevře přímo obsah složky v průzkumníku
+                    processBuilder = new ProcessBuilder("explorer.exe", targetPath.toAbsolutePath().toString());
+                } else {
+                    // Otevře nadřazenou složku a označí daný soubor
+                    processBuilder = new ProcessBuilder("explorer.exe", "/select,", targetPath.toAbsolutePath().toString());
+                }
+                processBuilder.start();
+            } catch (IOException e) {
+                Platform.runLater(() -> ErrorUtility.getInstance(
+                        "Chyba při otevírání průzkumníka",
+                        "Průzkumník souborů se nepodařilo spustit",
+                        e.getMessage()
+                ));
+            }
+        });
+    }
+
+    /**
+     * Otevře nebo spustí soubor pomocí výchozí systémové aplikace Windows.
+     * Pokud soubor nemá asociovanou aplikaci, systém Windows nabídne dialog pro výběr programu.
+     * Pokud je soubor spustitelný (např. .exe, .bat), spustí se.
+     */
+    public void openOrExecuteFile(ComparedItemOperItemRowModel item, ColumnSide clickedSide) {
+        if (item == null) {
+            return;
+        }
+
+        Path targetPath = resolveAbsolutePathForSide(item, clickedSide);
+        if (targetPath == null || !Files.exists(targetPath)) {
+            Platform.runLater(() -> ErrorUtility.getInstance(
+                    "Soubor nenalezen",
+                    "Soubor neexistuje",
+                    "Zvolený soubor se nepodařilo nalézt na disku:\n" + (targetPath != null ? targetPath : item.getNotNullPath())
+            ));
+            return;
+        }
+
+        Thread.ofVirtual().start(() -> {
+            try {
+                // Volání cmd /c start "" "cesta" spolehlivě ve Windows otevře aplikaci, spustí program nebo vyvolá dialog asociace
+                ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "start", "\"\"", targetPath.toAbsolutePath().toString());
+                processBuilder.start();
+            } catch (IOException e) {
+                Platform.runLater(() -> ErrorUtility.getInstance(
+                        "Chyba při spuštění souboru",
+                        "Soubor se nepodařilo otevřít",
+                        e.getMessage()
+                ));
+            }
+        });
+    }
 
     /**
      * Zkopíruje absolutní cestu položky do systémové schránky.

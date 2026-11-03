@@ -174,8 +174,7 @@ public class TreeTableContextMenuService {
             }
         }
         items.add(new RightClickMenuItem(explorerTitle, iconManager.getFolder20x20(), () -> {
-            // TODO: Bude implementováno v dalším kroku
-            System.out.println("Akce: Zobrazit v průzkumníku pro " + item.getNotNullPath());
+            functionsService.showInExplorer(item, clickedSide);
         }));
 
         // 2. Spustit / otevřít soubor (pouze pro soubory, ne pro složky)
@@ -192,8 +191,7 @@ public class TreeTableContextMenuService {
             }
 
             items.add(new RightClickMenuItem(openTitle, iconManager.getEntryIcon(), () -> {
-                // TODO: Bude implementováno v dalším kroku
-                System.out.println("Akce: Otevřít soubor " + item.getNotNullPath());
+                functionsService.openOrExecuteFile(item, clickedSide);
             }));
         }
 
