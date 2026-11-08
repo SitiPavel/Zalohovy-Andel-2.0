@@ -22,6 +22,7 @@ public class TreeTableContextMenuService {
     private final RightClickMenuService rightClickMenuService = new RightClickMenuService();
     private final IconManagerUtility iconManager = new IconManagerUtility();
     private final TreeTableFunctionsContextMenuService functionsService = new TreeTableFunctionsContextMenuService();
+    private final TreeTableViewItemDetailsService detailsService = new TreeTableViewItemDetailsService();
 
     public enum ColumnSide {
         LEFT,
@@ -224,8 +225,7 @@ public class TreeTableContextMenuService {
 
         // 6. Vlastnosti / Detail porovnání
         items.add(new RightClickMenuItem("Vlastnosti porovnání", iconManager.getFileProperties(), () -> {
-            // TODO: Bude implementováno v dalším kroku (otevření dvousloupcového okna)
-            System.out.println("Akce: Otevřít detail porovnání");
+            detailsService.showSingleItemDetails(treeItem);
         }));
 
         return items;
@@ -265,8 +265,7 @@ public class TreeTableContextMenuService {
 
         // 5. Statistika výběru
         items.add(new RightClickMenuItem("Statistika výběru", iconManager.getIcon_modified_left(), () -> {
-            // TODO: Bude implementováno v dalším kroku
-            System.out.println("Akce: Statistika výběru");
+            detailsService.showMultiItemsDetails(selectedItems);
         }));
 
         return items;

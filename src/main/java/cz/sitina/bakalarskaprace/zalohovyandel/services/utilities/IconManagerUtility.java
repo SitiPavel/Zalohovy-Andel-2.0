@@ -489,4 +489,29 @@ public class IconManagerUtility {
     public Image getFolderOpened() {return FolderOpened;}
 
     public Image getFolderClosed() {return FolderClosed;}
+
+    // =========================================================================
+    // Velké verze ikon operací souborů (*_lrg.png) pro detailní okno
+    // =========================================================================
+    private final Image iconEquals_lrg      = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_iconsSmall + "EQUALS_lrg.png")));
+    private final Image iconIgnore_lrg      = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_iconsSmall + "IGNORE_lrg.png")));
+    private final Image iconDeleteLeft_lrg  = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_iconsSmall + "DELETE_LEFT_lrg.png")));
+    private final Image iconDeleteRight_lrg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_iconsSmall + "DELETE_RIGHT_lrg.png")));
+    private final Image iconDeleteBoth_lrg  = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_iconsSmall + "DELETE_BOTH_lrg.png")));
+    private final Image iconUpdateLeft_lrg  = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_iconsSmall + "UPDATE_LEFT_lrg.png")));
+    private final Image iconUpdateRight_lrg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_iconsSmall + "UPDATE_RIGHT_lrg.png")));
+    private final Image iconAddLeft_lrg     = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_iconsSmall + "ADD_LEFT_lrg.png")));
+    private final Image iconAddRight_lrg    = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_iconsSmall + "ADD_RIGHT_lrg.png")));
+    private final Image iconUnknown_lrg     = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path_iconsSmall + "UNKNOWN_lrg.png")));
+
+    public Image getIconEquals_lrg() { return iconEquals_lrg; }
+    public Image getIconIgnore_lrg() { return iconIgnore_lrg; }
+    public Image getIconDeleteLeft_lrg() { return iconDeleteLeft_lrg; }
+    public Image getIconDeleteRight_lrg() { return iconDeleteRight_lrg; }
+    public Image getIconDeleteBoth_lrg() { return iconDeleteBoth_lrg; }
+    public Image getIconUpdateLeft_lrg() { return iconUpdateLeft_lrg; }
+    public Image getIconUpdateRight_lrg() { return iconUpdateRight_lrg; }
+    public Image getIconAddLeft_lrg() { return iconAddLeft_lrg; }
+    public Image getIconAddRight_lrg() { return iconAddRight_lrg; }
+    public Image getIconUnknown_lrg() { return iconUnknown_lrg; }
 }

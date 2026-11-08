@@ -173,6 +173,26 @@ public class TreeTableGuiModify {
         return null;
     }
 
+    /// OPRAVENO: Vrátí velkou ikonu operace (*_lrg.png) pro operace souborů a standardní pro složky
+    public Image getLargeIconForOperation(CompareOperations operation) {
+        if (operation == null) {
+            return null;
+        }
+        switch (operation) {
+            case EQUALS ->      {return iconManager.getIconEquals_lrg();}
+            case IGNORE ->      {return iconManager.getIconIgnore_lrg();}
+            case DELETE_LEFT -> {return iconManager.getIconDeleteLeft_lrg();}
+            case DELETE_RIGHT ->{return iconManager.getIconDeleteRight_lrg();}
+            case DELETE_BOTH -> {return iconManager.getIconDeleteBoth_lrg();}
+            case UPDATE_LEFT -> {return iconManager.getIconUpdateLeft_lrg();}
+            case UPDATE_RIGHT ->{return iconManager.getIconUpdateRight_lrg();}
+            case ADD_LEFT ->    {return iconManager.getIconAddLeft_lrg();}
+            case ADD_RIGHT ->   {return iconManager.getIconAddRight_lrg();}
+            case UNKNOWN ->     {return iconManager.getIconUnknown_lrg();}
+            default ->          {return getIconForOperation(operation);}
+        }
+    }
+
 
 
     /// --- Výpočet odsazení (Indentation) ---

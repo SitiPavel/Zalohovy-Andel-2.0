@@ -63,6 +63,13 @@
     -fx-font-weight: bold;
 }
 
+.darkText {
+    -fx-text-fill: -fx-color-textDark;
+    -fx-font-size: 15px;
+    -fx-font-weight: 300;
+    -fx-wrap-text: true;
+}
+
 .wrongBoltText {
     -fx-text-fill: -fx-color-mark2;
     -fx-font-size: 15px;
